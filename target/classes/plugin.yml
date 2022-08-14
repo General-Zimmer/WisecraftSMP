@@ -1,0 +1,17 @@
+name: WisecraftSMP
+version: '1.1-SNAPSHOT'
+main: xyz.wisecraft.smp.WisecraftSMP
+api-version: 1.18
+depend: [Essentials]
+softdepend:
+  - WisecraftCore
+authors: [General_Zimmer]
+commands:
+  wisecraft:
+    usage: /wisecraft <parameter>
+  wshop:
+    description: Get to shop quickly
+    usage: /wshop
+permission:
+  wisecraft.manage:
+    default: op
