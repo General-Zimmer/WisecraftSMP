@@ -47,6 +47,10 @@
                                     <pattern>io.papermc.lib</pattern>
                                     <shadedPattern>wisecraftsmp.paperlib</shadedPattern>
                                 </relocation>
+                                <relocation>
+                                    <pattern>org.jetbrains</pattern>
+                                    <shadedPattern>wisecraftsmp.annotations</shadedPattern>
+                                </relocation>
                             </relocations>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                         </configuration>
@@ -64,6 +68,10 @@
 
     <repositories>
         <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+        <repository>
             <id>spigotmc-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
@@ -79,6 +87,12 @@
             <id>ess-repo</id>
             <url>https://repo.essentialsx.net/releases/</url>
         </repository>
+        <repository>
+            <id>multiverse</id>
+            <url>https://repo.onarandombox.com/content/repositories/multiverse/</url>
+        </repository>
+
+
     </repositories>
 
     <dependencies>
@@ -104,6 +118,12 @@
             <groupId>io.papermc</groupId>
             <artifactId>paperlib</artifactId>
             <version>1.0.6</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>23.0.0</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
