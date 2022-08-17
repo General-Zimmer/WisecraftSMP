@@ -9,7 +9,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.TabExecutor;
 import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.core.wisecraftcore.WisecraftCoreApi;
-import xyz.wisecraft.smp.util.Methods;
+import xyz.wisecraft.smp.Methods;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package xyz.wisecraft.smp;
+package xyz.wisecraft.smp.events;
 
 import com.earth2me.essentials.Kit;
 import com.earth2me.essentials.User;
@@ -13,7 +13,8 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.scheduler.BukkitRunnable;
-import xyz.wisecraft.smp.util.Methods;
+import xyz.wisecraft.smp.WisecraftSMP;
+import xyz.wisecraft.smp.Methods;
 
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -102,10 +103,12 @@ public class Events implements Listener{
 
     @EventHandler
     public void finishTutorial(PlayerCommandPreprocessEvent e) {
-        if (e.getPlayer().getWorld().getName().equals("tutorial"))
-            switch (e.getPlayer().getWorld().getName()) {
+        String world = e.getPlayer().getWorld().getName();
+        String cmd = e.getMessage().split(" ")[0];
+        if (world.equals("tutorial"))
+            switch (cmd) {
             //I love this, makes it real clean looking.
-            case "resourceworld", "sethome" -> Methods.noFinishTut(e);
+            case "/resourceworld", "/sethome" -> Methods.noFinishTut(e);
         }
     }
 

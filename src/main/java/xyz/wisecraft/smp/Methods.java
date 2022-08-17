@@ -1,4 +1,4 @@
-package xyz.wisecraft.smp.util;
+package xyz.wisecraft.smp;
 
 import net.ess3.api.IEssentials;
 import org.bukkit.Bukkit;
@@ -12,7 +12,7 @@ public class Methods {
 
     public static void noFinishTut(PlayerCommandPreprocessEvent e) {
         e.setCancelled(true);
-        e.getPlayer().sendMessage(ChatColor.BLUE + "Finish the tutorial first!");
+        e.getPlayer().sendMessage(ChatColor.RED + "Finish the tutorial first!");
         e.getPlayer().sendMessage(ChatColor.GOLD + "You can always return with /wisecraft tutorial");
     }
 

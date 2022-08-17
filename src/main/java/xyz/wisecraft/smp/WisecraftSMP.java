@@ -8,6 +8,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.wisecraft.core.wisecraftcore.WisecraftCoreApi;
 import xyz.wisecraft.smp.cmds.wisecraft;
+import xyz.wisecraft.smp.events.Events;
 
 
 import java.util.UUID;
