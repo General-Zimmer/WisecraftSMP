@@ -23,12 +23,15 @@ public final class WisecraftSMP extends JavaPlugin {
     @SuppressWarnings("ConstantConditions")
     @Override
     public void onEnable() {
+        WisecraftSMP plugin = this;
+
         //This always first
         setupEssentials();
         setupWisecraftCore();
 
+
         //Then this
-        this.getServer().getPluginManager().registerEvents(new Events(this, ess, deathmap), this);
+        this.getServer().getPluginManager().registerEvents(new Events(plugin, ess, deathmap), plugin);
         this.getCommand("wisecraft").setExecutor(new wisecraft(ess, core));
         this.getCommand("wshop").setExecutor(new wisecraft(ess, core));
 
@@ -46,7 +49,6 @@ public final class WisecraftSMP extends JavaPlugin {
         if(!setupPlugin.isEnabled()) {return;}
 
         ess = (Essentials) this.getServer().getPluginManager().getPlugin("Essentials");
-
     }
 
     private void setupWisecraftCore() {

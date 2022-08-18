@@ -63,13 +63,20 @@ public class wisecraft implements TabExecutor {
         return true;
     }
     @Override
-    public List<String> onTabComplete(CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
         List<String> words = new ArrayList<>();
-        words.add("shop");
-        words.add("tutorial");
-        if (sender.hasPermission("wisecraft.manage")) {
-            words.add("save");
-            words.add("load");
+        switch (args.length) {
+            case 1 ->{
+                words.add("shop");
+                words.add("tutorial");
+                if (sender.hasPermission("wisecraft.manage")) {
+                    words.add("save");
+                    words.add("load");
+                }
+                return words;
+            }
+
+
         }
 
 
