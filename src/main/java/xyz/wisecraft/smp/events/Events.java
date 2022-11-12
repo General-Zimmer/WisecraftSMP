@@ -3,7 +3,10 @@ package xyz.wisecraft.smp.events;
 import com.earth2me.essentials.Kit;
 import com.earth2me.essentials.User;
 import net.ess3.api.IEssentials;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -11,25 +14,31 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
-import xyz.wisecraft.smp.WisecraftSMP;
+import xyz.wisecraft.smp.Angel;
 import xyz.wisecraft.smp.Methods;
+import xyz.wisecraft.smp.WisecraftSMP;
+import xyz.wisecraft.smp.threads.AngelRemove;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class Events implements Listener{
 
 
     private final IEssentials ess;
-    public final ConcurrentHashMap<UUID, Boolean> deathmap;
+    private final HashMap<UUID, Angel> gearMap;
     private final WisecraftSMP plugin;
 
 
-    public Events(WisecraftSMP plugin, IEssentials ess, ConcurrentHashMap<UUID, Boolean> deathmap) {
+    public Events(WisecraftSMP plugin, IEssentials ess) {
         this.ess = ess;
-        this.deathmap = deathmap;
+        this.gearMap = plugin.getGearmap();
         this.plugin = plugin;
     }
 
@@ -38,6 +47,10 @@ public class Events implements Listener{
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onjoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
+        if (plugin.getGearmap().containsKey(p.getUniqueId()))
+            plugin.getGearmap().get(e.getPlayer().getUniqueId()).setQuit(false);
+        else
+            gearMap.put(p.getUniqueId(), new Angel(p.hasPermission("wisecraft.donator")));
 
         new BukkitRunnable() {
             @Override
@@ -48,42 +61,37 @@ public class Events implements Listener{
         }.runTaskLater(plugin, 4);
     }
 
-
     @EventHandler
-    public void hasDied(PlayerDeathEvent e) {
-        UUID UUID = e.getEntity().getUniqueId();
-        deathmap.putIfAbsent(UUID, true);
-        new BukkitRunnable() {
+    public void onLeave(PlayerQuitEvent e) {
+        Player p = e.getPlayer();
+        Angel angel = plugin.getGearmap().get(p.getUniqueId());
 
-            @Override
-            public void run() {
-                deathmap.remove(UUID);
-            }
-        }.runTaskLaterAsynchronously(plugin, 10);
+
+        if (!angel.hasRemoveTimer()) {
+            angel.setRemoveTime(true);
+            new AngelRemove(plugin, e.getPlayer().getUniqueId(), angel).runTaskLater(plugin, 20*60*5); //5 minutes
+        }
+        angel.setQuit(true);
     }
 
 
 
+    //todo add a limitation to getting these items
     //The exception comes from kit expand
-    @EventHandler()
-    public void getStarterItemsBack(PlayerRespawnEvent e) throws Exception {
+    @EventHandler(priority = EventPriority.NORMAL)
+    public void getItemsBack(PlayerRespawnEvent e) throws Exception {
 
-        //Does dis guy have home?
+        //Does dis person have home?
         boolean hasHome = false;
         User user = ess.getUser(e.getPlayer());
         if (user.hasHome() || e.isBedSpawn() || e.isAnchorSpawn())
             hasHome = true;
-
-
-        //Give items if no home
+        //continue if no home
         if (hasHome) return;
-
 
         World tut = Bukkit.getWorld("tutorial");
         if (tut != null)
-
-
-            //Need a tick delay otherwise they will teleport to spawn. Need to figure out why
+            //todo Need a tick delay otherwise they will teleport to spawn. Need to figure out why
             new BukkitRunnable() {
             @Override
             public void run() {
@@ -95,21 +103,69 @@ public class Events implements Listener{
 
         Kit kit = new Kit("starter", ess);
         kit.expandItems(user);
+        this.gearMap.get(e.getPlayer().getUniqueId()).clear();
         e.getPlayer().sendMessage(ChatColor.BLUE + "You didn't /sethome or place a bed! You have been granted some new items.");
-        deathmap.remove(e.getPlayer().getUniqueId());
-
-
         }
 
     @EventHandler
     public void finishTutorial(PlayerCommandPreprocessEvent e) {
         String world = e.getPlayer().getWorld().getName();
-        String cmd = e.getMessage().split(" ")[0];
+        String cmd = e.getMessage().toLowerCase().split(" ")[0];
         if (world.equals("tutorial"))
             switch (cmd) {
             //I love this, makes it real clean looking.
             case "/resourceworld", "/sethome" -> Methods.noFinishTut(e);
         }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    public void getGrace(PlayerRespawnEvent e) {
+        PlayerInventory inv = e.getPlayer().getInventory();
+        Player p = e.getPlayer();
+        UUID UUID = p.getUniqueId();
+        Angel angel = this.gearMap.get(UUID);
+
+        if (angel.getGraces() <= 0) {return;}
+
+
+        List<ItemStack> tools = angel.getTools();
+        for(int i = 0; i < tools.size(); i++) {
+            inv.setItem(i, tools.get(i));
+        }
+
+        inv.setArmorContents(angel.getArmor());
+        angel.clear();
+        angel.decreaseGraces();
+        p.sendMessage(ChatColor.AQUA + "Your gear have been saved. You have " + angel.getGraces() + " graces left!");
+
+        if (!angel.hasGraceResetTimer()) {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    if (gearMap.containsKey(UUID)) {
+                        angel.resetGrace(p.hasPermission("wisecraft.donator"));
+                        angel.setGraceResetTimer(false);
+                        if (p.isOnline())
+                            p.sendMessage(ChatColor.AQUA + "Your graces has reset");
+                    }
+                }
+            }.runTaskLater(plugin, 20*60*10); //10 mintes
+            angel.setGraceResetTimer(true);
+        }
+    }
+
+    @EventHandler
+    public void savingGrace(PlayerDeathEvent e) {
+        Angel angel = this.gearMap.get(e.getEntity().getUniqueId());
+        if (angel.getGraces() <= 0) {return;}
+
+        List<ItemStack> drops = e.getDrops();
+        PlayerInventory inv = e.getEntity().getInventory();
+
+        angel.clear();
+        angel.toolSave(drops, inv);
+        angel.armorsave(drops, inv);
+
     }
 
 }

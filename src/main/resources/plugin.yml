@@ -15,3 +15,5 @@ commands:
 permission:
   wisecraft.manage:
     default: op
+  wisecraft.donator:
+    default: op

@@ -10,14 +10,13 @@ import xyz.wisecraft.core.wisecraftcore.WisecraftCoreApi;
 import xyz.wisecraft.smp.cmds.wisecraft;
 import xyz.wisecraft.smp.events.Events;
 
-
+import java.util.HashMap;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 public final class WisecraftSMP extends JavaPlugin {
 
     private IEssentials ess;
-    private final ConcurrentHashMap<UUID, Boolean> deathmap = new ConcurrentHashMap<>();
+    private final HashMap<UUID, Angel> gearMap = new HashMap<>();
     private WisecraftCoreApi core;
 
     @SuppressWarnings("ConstantConditions")
@@ -31,9 +30,9 @@ public final class WisecraftSMP extends JavaPlugin {
 
 
         //Then this
-        this.getServer().getPluginManager().registerEvents(new Events(plugin, ess, deathmap), plugin);
-        this.getCommand("wisecraft").setExecutor(new wisecraft(ess, core));
-        this.getCommand("wshop").setExecutor(new wisecraft(ess, core));
+        this.getServer().getPluginManager().registerEvents(new Events(plugin, ess), plugin);
+        this.getCommand("wisecraft").setExecutor(new wisecraft(ess, core, this));
+        this.getCommand("wshop").setExecutor(new wisecraft(ess, core, this));
 
     }
 
@@ -60,5 +59,9 @@ public final class WisecraftSMP extends JavaPlugin {
             return;
         }
         Bukkit.getConsoleSender().sendMessage("Couldn't get " + name + " provider");
+    }
+
+    public HashMap<UUID, Angel> getGearmap() {
+        return this.gearMap;
     }
 }

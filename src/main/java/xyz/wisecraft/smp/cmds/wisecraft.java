@@ -10,19 +10,12 @@ import org.bukkit.command.TabExecutor;
 import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.core.wisecraftcore.WisecraftCoreApi;
 import xyz.wisecraft.smp.Methods;
+import xyz.wisecraft.smp.WisecraftSMP;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class wisecraft implements TabExecutor {
-
-    private final WisecraftCoreApi core;
-    IEssentials ess;
-
-    public wisecraft(IEssentials ess, WisecraftCoreApi core) {
-        this.ess = ess;
-        this.core = core;
-    }
+public record wisecraft(IEssentials ess, WisecraftCoreApi core, WisecraftSMP plugin) implements TabExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
@@ -58,17 +51,24 @@ public class wisecraft implements TabExecutor {
                     if (sender.hasPermission("wisecraft.manage"))
                         core.loadPlayerdata();
                 }
+                //todo remove this after testing finishes
+                case "angel" -> {
+                    plugin.getGearmap().get(Bukkit.getPlayerExact(sender.getName()).getUniqueId()).resetGrace(Bukkit.getPlayerExact(sender.getName()).hasPermission("wisecraft.donator"));
+                    Bukkit.getPlayerExact(sender.getName()).sendMessage("Your graces has reset");
+                }
             }
         }
         return true;
     }
+    @SuppressWarnings("SwitchStatementWithTooFewBranches")
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
         List<String> words = new ArrayList<>();
         switch (args.length) {
-            case 1 ->{
+            case 1 -> {
                 words.add("shop");
                 words.add("tutorial");
+                words.add("angel");
                 if (sender.hasPermission("wisecraft.manage")) {
                     words.add("save");
                     words.add("load");
@@ -82,7 +82,6 @@ public class wisecraft implements TabExecutor {
 
         return words;
     }
-
 
 
 }
