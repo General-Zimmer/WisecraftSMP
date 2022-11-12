@@ -81,6 +81,7 @@ public class Events implements Listener{
     @EventHandler(priority = EventPriority.NORMAL)
     public void getItemsBack(PlayerRespawnEvent e) throws Exception {
 
+        //todo move getstarter items mechanic to angel for compatibility
         //Does dis person have home?
         boolean hasHome = false;
         User user = ess.getUser(e.getPlayer());
