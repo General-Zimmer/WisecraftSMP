@@ -22,7 +22,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import xyz.wisecraft.smp.Angel;
 import xyz.wisecraft.smp.Methods;
 import xyz.wisecraft.smp.WisecraftSMP;
-import xyz.wisecraft.smp.threads.AngelRemove;
 
 import java.util.HashMap;
 import java.util.List;
@@ -47,10 +46,10 @@ public class Events implements Listener{
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onjoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
-        if (plugin.getGearmap().containsKey(p.getUniqueId()))
-            plugin.getGearmap().get(e.getPlayer().getUniqueId()).setQuit(false);
-        else
+        if (!plugin.getGearmap().containsKey(p.getUniqueId()))
             gearMap.put(p.getUniqueId(), new Angel(p.hasPermission("wisecraft.donator")));
+
+
 
         new BukkitRunnable() {
             @Override
@@ -64,14 +63,12 @@ public class Events implements Listener{
     @EventHandler
     public void onLeave(PlayerQuitEvent e) {
         Player p = e.getPlayer();
+
         Angel angel = plugin.getGearmap().get(p.getUniqueId());
 
+        if (!angel.isGraceActive())
+            plugin.getGearmap().remove(p.getUniqueId());
 
-        if (!angel.hasRemoveTimer()) {
-            angel.setRemoveTime(true);
-            new AngelRemove(plugin, e.getPlayer().getUniqueId(), angel).runTaskLater(plugin, 20*60*5); //5 minutes
-        }
-        angel.setQuit(true);
     }
 
 
@@ -115,7 +112,7 @@ public class Events implements Listener{
         if (world.equals("tutorial"))
             switch (cmd) {
             //I love this, makes it real clean looking.
-            case "/resourceworld", "/sethome" -> Methods.noFinishTut(e);
+            case "/resourceworld", "/sethome", "/resource", "/wisecraft" -> Methods.noFinishTut(e);
         }
     }
 
@@ -139,19 +136,25 @@ public class Events implements Listener{
         angel.decreaseGraces();
         p.sendMessage(ChatColor.AQUA + "Your gear have been saved. You have " + angel.getGraces() + " graces left!");
 
-        if (!angel.hasGraceResetTimer()) {
+        if (!angel.isGraceActive()) {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if (gearMap.containsKey(UUID)) {
-                        angel.resetGrace(p.hasPermission("wisecraft.donator"));
-                        angel.setGraceResetTimer(false);
-                        if (p.isOnline())
-                            p.sendMessage(ChatColor.AQUA + "Your graces has reset");
+                    Player p2 = Bukkit.getPlayer(UUID);
+                        if (p2 == null) {
+                            plugin.getGearmap().remove(UUID);
+                            return;
+                        }
+
+                        Angel angel2 = plugin.getGearmap().get(UUID);
+
+                        angel2.resetGrace(p2.hasPermission("wisecraft.donator"));
+                        angel2.setGraceActive(false);
+                        p2.sendMessage(ChatColor.AQUA + "Your graces has reset");
                     }
-                }
-            }.runTaskLater(plugin, 20*60*10); //10 mintes
-            angel.setGraceResetTimer(true);
+
+            }.runTaskLater(plugin, 20*60*60); //1 hour
+            angel.setGraceActive(true);
         }
     }
 

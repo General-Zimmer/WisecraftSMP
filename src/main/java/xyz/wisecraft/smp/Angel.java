@@ -5,6 +5,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,18 +18,14 @@ public class Angel {
     private ItemStack[] armor;
     private List<ItemStack> tools;
     private int graces;
-    private boolean hasQuit;
-    private boolean hasRemoveTimerOn;
 
     public Angel(boolean hasPerm) {
 
 
         this.resetGrace(hasPerm);
         this.hasGraceResetTimer = false;
-        this.hasRemoveTimerOn = false;
         this.armor = new ItemStack[]{};
         this.tools = new ArrayList<>();
-        this.hasQuit = false;
     }
 
 
@@ -67,9 +64,18 @@ public class Angel {
     public void armorsave(List<ItemStack> drops, PlayerInventory inv) {
         //Armor save
         ItemStack[] armor = inv.getArmorContents();
-        for (ItemStack itemStack : armor)
-            drops.remove(itemStack);
-        this.armor = armor;
+        ArrayList<Material> containers = Methods.getContainerTypes();
+
+        List<ItemStack> changeArmor = new ArrayList<>(Arrays.stream(armor).toList());
+        int i = 0;
+        for (ItemStack item : armor) {
+
+            if (item != null && containers.contains(item.getType()))
+                changeArmor.set(i, new ItemStack(Material.AIR));
+            else drops.remove(item);
+            i++;
+        }
+        this.armor = changeArmor.toArray(new ItemStack[0]);
     }
     public void clear() {
         this.tools.clear();
@@ -91,13 +97,8 @@ public class Angel {
     public int getGraces() {return this.graces;}
     public void decreaseGraces() {--this.graces;}
 
-    public void setQuit(boolean bool) {this.hasQuit = bool;}
-    public boolean getQuit() {return this.hasQuit;}
 
-    public boolean hasRemoveTimer() {return this.hasRemoveTimerOn;}
-    public void setRemoveTime(boolean bool) {this.hasRemoveTimerOn = bool;}
-
-    public boolean hasGraceResetTimer() {return this.hasGraceResetTimer;}
-    public void setGraceResetTimer(boolean bool) {this.hasGraceResetTimer = bool;}
+    public boolean isGraceActive() {return this.hasGraceResetTimer;}
+    public void setGraceActive(boolean bool) {this.hasGraceResetTimer = bool;}
 
 }

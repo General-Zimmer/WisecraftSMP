@@ -8,14 +8,8 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Methods {
 
@@ -90,4 +84,30 @@ public class Methods {
         toolTypes.add(Material.BOW);
         return toolTypes;
     }
+
+    public static ArrayList<Material> getContainerTypes() {
+        ArrayList<Material> containers = new ArrayList<>();
+        containers.add(Material.SHULKER_BOX);
+        containers.add(Material.WHITE_SHULKER_BOX);
+        containers.add(Material.ORANGE_SHULKER_BOX);
+        containers.add(Material.MAGENTA_SHULKER_BOX);
+        containers.add(Material.LIGHT_BLUE_SHULKER_BOX);
+        containers.add(Material.YELLOW_SHULKER_BOX);
+        containers.add(Material.LIME_SHULKER_BOX);
+        containers.add(Material.PINK_SHULKER_BOX);
+        containers.add(Material.GRAY_SHULKER_BOX);
+        containers.add(Material.LIGHT_GRAY_SHULKER_BOX);
+        containers.add(Material.CYAN_SHULKER_BOX);
+        containers.add(Material.PURPLE_SHULKER_BOX);
+        containers.add(Material.BLUE_SHULKER_BOX);
+        containers.add(Material.BROWN_SHULKER_BOX);
+        containers.add(Material.GREEN_SHULKER_BOX);
+        containers.add(Material.RED_SHULKER_BOX);
+        containers.add(Material.BLACK_SHULKER_BOX);
+        containers.add(Material.BUNDLE);
+
+        return containers;
+    }
+
+
 }

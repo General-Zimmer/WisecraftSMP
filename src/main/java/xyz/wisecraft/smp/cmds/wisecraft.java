@@ -51,11 +51,7 @@ public record wisecraft(IEssentials ess, WisecraftCoreApi core, WisecraftSMP plu
                     if (sender.hasPermission("wisecraft.manage"))
                         core.loadPlayerdata();
                 }
-                //todo remove this after testing finishes
-                case "angel" -> {
-                    plugin.getGearmap().get(Bukkit.getPlayerExact(sender.getName()).getUniqueId()).resetGrace(Bukkit.getPlayerExact(sender.getName()).hasPermission("wisecraft.donator"));
-                    Bukkit.getPlayerExact(sender.getName()).sendMessage("Your graces has reset");
-                }
+
             }
         }
         return true;
@@ -68,7 +64,6 @@ public record wisecraft(IEssentials ess, WisecraftCoreApi core, WisecraftSMP plu
             case 1 -> {
                 words.add("shop");
                 words.add("tutorial");
-                words.add("angel");
                 if (sender.hasPermission("wisecraft.manage")) {
                     words.add("save");
                     words.add("load");
