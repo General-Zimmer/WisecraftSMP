@@ -50,7 +50,6 @@ public class Events implements Listener{
             gearMap.put(p.getUniqueId(), new Angel(p.hasPermission("wisecraft.donator")));
 
 
-
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -73,7 +72,7 @@ public class Events implements Listener{
 
 
 
-    //todo add a limitation to getting these items
+    //todo merge getting starter kit with saving Grace and make player not drop if they get kit
     //The exception comes from kit expand
     @EventHandler(priority = EventPriority.NORMAL)
     public void getItemsBack(PlayerRespawnEvent e) throws Exception {
@@ -84,8 +83,11 @@ public class Events implements Listener{
         User user = ess.getUser(e.getPlayer());
         if (user.hasHome() || e.isBedSpawn() || e.isAnchorSpawn())
             hasHome = true;
-        //continue if no home
-        if (hasHome) return;
+        //Give grace if has home
+        if (hasHome) {
+            Methods.giveGrace(plugin, e);
+            return;
+        }
 
         World tut = Bukkit.getWorld("tutorial");
         if (tut != null)
@@ -98,7 +100,7 @@ public class Events implements Listener{
             }
         }.runTaskLater(plugin, 1);
 
-
+        //todo move this to the thingy above for easier integration
         Kit kit = new Kit("starter", ess);
         kit.expandItems(user);
         this.gearMap.get(e.getPlayer().getUniqueId()).clear();
@@ -116,48 +118,6 @@ public class Events implements Listener{
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
-    public void getGrace(PlayerRespawnEvent e) {
-        PlayerInventory inv = e.getPlayer().getInventory();
-        Player p = e.getPlayer();
-        UUID UUID = p.getUniqueId();
-        Angel angel = this.gearMap.get(UUID);
-
-        if (angel.getGraces() <= 0) {return;}
-
-
-        List<ItemStack> tools = angel.getTools();
-        for(int i = 0; i < tools.size(); i++) {
-            inv.setItem(i, tools.get(i));
-        }
-
-        inv.setArmorContents(angel.getArmor());
-        angel.clear();
-        angel.decreaseGraces();
-        p.sendMessage(ChatColor.AQUA + "Your gear have been saved. You have " + angel.getGraces() + " graces left!");
-
-        if (!angel.isGraceActive()) {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    Player p2 = Bukkit.getPlayer(UUID);
-                        if (p2 == null) {
-                            plugin.getGearmap().remove(UUID);
-                            return;
-                        }
-
-                        Angel angel2 = plugin.getGearmap().get(UUID);
-
-                        angel2.resetGrace(p2.hasPermission("wisecraft.donator"));
-                        angel2.setGraceActive(false);
-                        p2.sendMessage(ChatColor.AQUA + "Your graces has reset");
-                    }
-
-            }.runTaskLater(plugin, 20*60*60); //1 hour
-            angel.setGraceActive(true);
-        }
-    }
-
     @EventHandler
     public void savingGrace(PlayerDeathEvent e) {
         Angel angel = this.gearMap.get(e.getEntity().getUniqueId());
@@ -168,7 +128,7 @@ public class Events implements Listener{
 
         angel.clear();
         angel.toolSave(drops, inv);
-        angel.armorsave(drops, inv);
+        angel.armorSave(drops, inv);
 
     }
 

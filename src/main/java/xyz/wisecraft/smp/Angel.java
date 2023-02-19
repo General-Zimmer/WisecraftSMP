@@ -24,8 +24,8 @@ public class Angel {
 
         this.resetGrace(hasPerm);
         this.hasGraceResetTimer = false;
-        this.armor = new ItemStack[]{};
-        this.tools = new ArrayList<>();
+        this.armor = null;
+        this.tools = null;
     }
 
 
@@ -61,7 +61,7 @@ public class Angel {
         this.tools = tools;
     }
 
-    public void armorsave(List<ItemStack> drops, PlayerInventory inv) {
+    public void armorSave(List<ItemStack> drops, PlayerInventory inv) {
         //Armor save
         ItemStack[] armor = inv.getArmorContents();
         ArrayList<Material> containers = Methods.getContainerTypes();
@@ -78,8 +78,8 @@ public class Angel {
         this.armor = changeArmor.toArray(new ItemStack[0]);
     }
     public void clear() {
-        this.tools.clear();
-        this.armor = new ItemStack[]{};
+        this.tools = null;
+        this.armor = null;
     }
 
     public ItemStack[] getArmor() {

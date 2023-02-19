@@ -23,7 +23,7 @@ public record wisecraft(IEssentials ess, WisecraftCoreApi core, WisecraftSMP plu
         if (sender instanceof ConsoleCommandSender) return true;
 
         if (cmd.getName().equals("wshop")) {
-            Methods.tpworld(ess, Bukkit.getWorld("shop"), sender);
+            Methods.tpworld(plugin, ess, Bukkit.getWorld("shop"), sender);
             return true;
         }
 
@@ -36,7 +36,7 @@ public record wisecraft(IEssentials ess, WisecraftCoreApi core, WisecraftSMP plu
 
             switch (args[0]) {
                 case "shop", "tutorial" -> {
-                    Methods.tpworld(ess, Bukkit.getWorld(args[0]), sender);
+                    Methods.tpworld(plugin, ess, Bukkit.getWorld(args[0]), sender);
                     return true;
                 }
                 case "save" -> {
