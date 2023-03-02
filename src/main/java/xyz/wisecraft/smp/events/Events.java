@@ -1,12 +1,8 @@
 package xyz.wisecraft.smp.events;
 
-import com.earth2me.essentials.Kit;
 import com.earth2me.essentials.User;
 import net.ess3.api.IEssentials;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -77,35 +73,18 @@ public class Events implements Listener{
     @EventHandler(priority = EventPriority.NORMAL)
     public void getItemsBack(PlayerRespawnEvent e) throws Exception {
 
-        //todo move getstarter items mechanic to angel for compatibility
+        //todo Move this to Player deaths and prevent player drops
         //Does dis person have home?
-        boolean hasHome = false;
         User user = ess.getUser(e.getPlayer());
-        if (user.hasHome() || e.isBedSpawn() || e.isAnchorSpawn())
-            hasHome = true;
-        //Give grace if has home
-        if (hasHome) {
+        if (user.hasHome() || e.isBedSpawn() || e.isAnchorSpawn()) {
             Methods.giveGrace(plugin, e);
-            return;
+
+        } else {
+            gearMap.get(e.getPlayer().getUniqueId()).getStarter(plugin, ess, user, e.getPlayer(), gearMap);
         }
 
-        World tut = Bukkit.getWorld("tutorial");
-        if (tut != null)
-            //todo Need a tick delay otherwise they will teleport to spawn. Need to figure out why
-            new BukkitRunnable() {
-            @Override
-            public void run() {
-                Location loc = new Location(tut, 5.5, 204, 8.5, -85, 2);
-                e.getPlayer().teleport(loc);
-            }
-        }.runTaskLater(plugin, 1);
 
-        //todo move this to the thingy above for easier integration
-        Kit kit = new Kit("starter", ess);
-        kit.expandItems(user);
-        this.gearMap.get(e.getPlayer().getUniqueId()).clear();
-        e.getPlayer().sendMessage(ChatColor.BLUE + "You didn't /sethome or place a bed! You have been granted some new items.");
-        }
+    }
 
     @EventHandler
     public void finishTutorial(PlayerCommandPreprocessEvent e) {

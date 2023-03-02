@@ -1,12 +1,15 @@
 package xyz.wisecraft.smp;
 
-import org.bukkit.Material;
+import com.earth2me.essentials.Kit;
+import com.earth2me.essentials.User;
+import net.ess3.api.IEssentials;
+import org.bukkit.*;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,6 +31,25 @@ public class Angel {
         this.tools = null;
     }
 
+
+    public void getStarter(WisecraftSMP plugin, IEssentials ess, User user, Player p, HashMap<UUID, Angel> gearMap) throws Exception {
+        World tut = Bukkit.getWorld("tutorial");
+        if (tut != null)
+            //todo Need a tick delay otherwise they will teleport to spawn. Need to figure out why
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    Location loc = new Location(tut, 5.5, 204, 8.5, -85, 2);
+                    p.teleport(loc);
+                }
+            }.runTaskLater(plugin, 1);
+
+        //todo move this to the thingy above for easier integration
+        Kit kit = new Kit("starter", ess);
+        kit.expandItems(user);
+        gearMap.get(p.getUniqueId()).clear();
+        p.sendMessage(ChatColor.BLUE + "You didn't /sethome or place a bed! You have been granted some new items.");
+    }
 
     public void toolSave(List<ItemStack> drops, PlayerInventory inv) {
         List<ItemStack> tools = new ArrayList<>();

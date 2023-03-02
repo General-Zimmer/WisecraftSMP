@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="WisecraftSMP" target="1.17" />
+      <module name="WisecraftSMP" target="17" />
     </bytecodeTargetLevel>
   </component>
 </project>
