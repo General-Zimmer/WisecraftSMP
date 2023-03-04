@@ -33,7 +33,7 @@ public class Angel {
         PlayerInventory inv = e.getPlayer().getInventory();
         Player p = e.getPlayer();
         UUID UUID = p.getUniqueId();
-
+        this.hasDied = false;
         // Check for remaining graces
         if (this.getGraces() <= 0) {return;}
 
@@ -54,13 +54,14 @@ public class Angel {
         this.decreaseGraces();
         p.sendMessage(ChatColor.AQUA + "Your gear have been saved. You have " + this.getGraces() + " graces left!");
 
-        this.cooldown(plugin, UUID);
+        this.safeDelete(plugin, UUID);
 
-        this.hasDied = false;
+
 
     }
 
     public void giveStarter(WisecraftSMP plugin, IEssentials ess, User user, Player p, HashMap<UUID, Angel> gearMap) throws Exception {
+        this.hasDied = false;
         World tut = Bukkit.getWorld("tutorial");
         if (tut != null)
             //todo Need a tick delay otherwise they will teleport to spawn. Need to figure out why
@@ -72,7 +73,6 @@ public class Angel {
                 }
             }.runTaskLater(plugin, 1);
 
-        //todo move this to the thingy above for easier integration
         Kit kit = new Kit("starter", ess);
         kit.expandItems(user);
         gearMap.get(p.getUniqueId()).clear();
@@ -87,12 +87,13 @@ public class Angel {
     }
 
     public void toolSave(List<ItemStack> drops, PlayerInventory inv) {
-        List<ItemStack> tools = new ArrayList<>(4);
+        int saveAmount = 4; // amount of tools to save
+        List<ItemStack> tools = new ArrayList<>(saveAmount);
         ItemStack air = new ItemStack(Material.AIR);
         ArrayList<Material> toolTypes = getToolTypes();
 
 
-        int tool_amount = 0;
+        int currentAmount = 0;
         //Tool save
         for(int i = 0; i < inv.getSize(); i++) {
             if (i > 8) break;
@@ -103,13 +104,13 @@ public class Angel {
                 continue;
             }
 
-            if (tool_amount < 4 && toolTypes.contains(item.getType())) {
+            if (currentAmount < saveAmount && toolTypes.contains(item.getType())) {
                 //add tool for recovery
                 tools.add(item);
                 if (!drops.remove(item))
                     Logger.getLogger("WisecraftSMP").log(Level.WARNING, "Tool WASN'T removed");
                 //grace limit
-                tool_amount++;
+                currentAmount++;
             }
             else
                 //Add air to keep item in the same position
@@ -154,29 +155,33 @@ public class Angel {
     public int getGraces() {return this.graces;}
     public void decreaseGraces() {--this.graces;}
 
-    public void cooldown(WisecraftSMP plugin, UUID UUID) {
-        // Cooldown
+    //todo Make tools be placed into enderchest or into a shulker box in the enderchest (if full), otherwise drop saved items on the corpse.
+    public boolean safeDelete(WisecraftSMP plugin, UUID UUID) {
+
         if (!this.isGraceActive()) {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    Player p2 = Bukkit.getPlayer(UUID);
-                    if (p2 == null) {
+                    Player p = Bukkit.getPlayer(UUID);
+                    if (p == null) {
                         plugin.getGearmap().remove(UUID);
                         return;
                     }
 
-                    Angel angel2 = plugin.getGearmap().get(UUID);
+                    Angel angel = plugin.getGearmap().get(UUID);
 
-                    angel2.resetGrace(p2.hasPermission("wisecraft.donator"));
-                    angel2.setGraceActive(false);
-                    p2.sendMessage(ChatColor.AQUA + "Your graces has reset");
+                    angel.resetGrace(p.hasPermission("wisecraft.donator"));
+                    angel.setGraceActive(false);
+                    p.sendMessage(ChatColor.AQUA + "Your graces has reset");
                 }
 
             }.runTaskLater(plugin, 20*60*60); // 1 hour
             this.setGraceActive(true);
+            return true;
         }
+        return false;
     }
+
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isGraceActive() {return this.hasGraceResetTimer;}
     public void setGraceActive(boolean bool) {this.hasGraceResetTimer = bool;}

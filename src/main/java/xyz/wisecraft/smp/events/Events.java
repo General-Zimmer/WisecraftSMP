@@ -63,15 +63,10 @@ public class Events implements Listener{
 
         Angel angel = plugin.getGearmap().get(UUID);
 
-        if (angel.hasDied()) {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    if (!p.isOnline())
-                        plugin.getGearmap().remove(UUID);
-                }
-            }.runTaskLaterAsynchronously(plugin, 20*60*60);
-        } else if (!angel.isGraceActive())
+        // Prevent items from being destroyed after leaving
+        if (angel.hasDied())
+            angel.safeDelete(plugin, UUID);
+        else if (!angel.safeDelete(plugin, UUID))
             plugin.getGearmap().remove(UUID);
 
     }
@@ -84,29 +79,17 @@ public class Events implements Listener{
 
         Player p = e.getPlayer();
         UUID UUID = p.getUniqueId();
+        Angel angel = plugin.getGearmap().get(UUID);
 
         //Does dis person have home?
         User user = ess.getUser(e.getPlayer());
         if (user.hasHome() || e.isBedSpawn() || e.isAnchorSpawn()) {
-            Angel angel = plugin.getGearmap().get(UUID);
             angel.giveGrace(plugin, e);
-
         } else {
             gearMap.get(e.getPlayer().getUniqueId()).giveStarter(plugin, ess, user, e.getPlayer(), gearMap);
         }
 
 
-    }
-
-    @EventHandler
-    public void finishTutorial(PlayerCommandPreprocessEvent e) {
-        String world = e.getPlayer().getWorld().getName();
-        String cmd = e.getMessage().toLowerCase().split(" ")[0];
-        if (world.equals("tutorial"))
-            switch (cmd) {
-            //I love this, makes it real clean looking.
-            case "/resourceworld", "/sethome", "/resource", "/wisecraft" -> Methods.noFinishTut(e);
-        }
     }
 
     @EventHandler
@@ -120,6 +103,17 @@ public class Events implements Listener{
 
         angel.saveGear(drops, inv);
 
+    }
+
+    @EventHandler
+    public void finishTutorial(PlayerCommandPreprocessEvent e) {
+        String world = e.getPlayer().getWorld().getName();
+        String cmd = e.getMessage().toLowerCase().split(" ")[0];
+        if (world.equals("tutorial"))
+            switch (cmd) {
+                //I love this, makes it real clean looking.
+                case "/resourceworld", "/sethome", "/resource", "/wisecraft" -> Methods.noFinishTut(e);
+            }
     }
 
 }
