@@ -8,14 +8,9 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 public class Methods {
 
@@ -52,54 +47,6 @@ public class Methods {
             Bukkit.getConsoleSender().sendMessage("Ess is null - wc SMP");
     }
 
-    public static void giveGrace(WisecraftSMP plugin, PlayerRespawnEvent e) {
-        PlayerInventory inv = e.getPlayer().getInventory();
-        Player p = e.getPlayer();
-        UUID UUID = p.getUniqueId();
-        Angel angel = plugin.getGearmap().get(UUID);
-
-        // Check for remaining graces
-        if (angel.getGraces() <= 0) {return;}
-
-
-        // Give tools
-        List<ItemStack> tools = angel.getTools();
-        if (tools != null)
-            for(int i = 0; i < tools.size(); i++)
-                inv.setItem(i, tools.get(i));
-
-        // Give armor
-        ItemStack[] armor = angel.getArmor();
-        if (armor != null)
-            inv.setArmorContents(armor);
-
-        // Last few things
-        angel.clear();
-        angel.decreaseGraces();
-        p.sendMessage(ChatColor.AQUA + "Your gear have been saved. You have " + angel.getGraces() + " graces left!");
-
-        // Cooldown
-        if (!angel.isGraceActive()) {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    Player p2 = Bukkit.getPlayer(UUID);
-                    if (p2 == null) {
-                        plugin.getGearmap().remove(UUID);
-                        return;
-                    }
-
-                    Angel angel2 = plugin.getGearmap().get(UUID);
-
-                    angel2.resetGrace(p2.hasPermission("wisecraft.donator"));
-                    angel2.setGraceActive(false);
-                    p2.sendMessage(ChatColor.AQUA + "Your graces has reset");
-                }
-
-            }.runTaskLater(plugin, 20*60*60); // 1 hour
-            angel.setGraceActive(true);
-        }
-    }
 
     //This is reeeal ugly but kinda beautiful
     public static ArrayList<Material> getToolTypes() {

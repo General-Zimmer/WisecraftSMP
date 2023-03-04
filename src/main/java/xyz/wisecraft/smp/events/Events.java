@@ -58,29 +58,41 @@ public class Events implements Listener{
     @EventHandler
     public void onLeave(PlayerQuitEvent e) {
         Player p = e.getPlayer();
+        UUID UUID = p.getUniqueId();
 
-        Angel angel = plugin.getGearmap().get(p.getUniqueId());
 
-        if (!angel.isGraceActive())
-            plugin.getGearmap().remove(p.getUniqueId());
+        Angel angel = plugin.getGearmap().get(UUID);
+
+        if (angel.hasDied()) {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    if (!p.isOnline())
+                        plugin.getGearmap().remove(UUID);
+                }
+            }.runTaskLaterAsynchronously(plugin, 20*60*60);
+        } else if (!angel.isGraceActive())
+            plugin.getGearmap().remove(UUID);
 
     }
 
 
 
-    //todo merge getting starter kit with saving Grace and make player not drop if they get kit
     //The exception comes from kit expand
     @EventHandler(priority = EventPriority.NORMAL)
     public void getItemsBack(PlayerRespawnEvent e) throws Exception {
 
-        //todo Move this to Player deaths and prevent player drops
+        Player p = e.getPlayer();
+        UUID UUID = p.getUniqueId();
+
         //Does dis person have home?
         User user = ess.getUser(e.getPlayer());
         if (user.hasHome() || e.isBedSpawn() || e.isAnchorSpawn()) {
-            Methods.giveGrace(plugin, e);
+            Angel angel = plugin.getGearmap().get(UUID);
+            angel.giveGrace(plugin, e);
 
         } else {
-            gearMap.get(e.getPlayer().getUniqueId()).getStarter(plugin, ess, user, e.getPlayer(), gearMap);
+            gearMap.get(e.getPlayer().getUniqueId()).giveStarter(plugin, ess, user, e.getPlayer(), gearMap);
         }
 
 
@@ -100,14 +112,13 @@ public class Events implements Listener{
     @EventHandler
     public void savingGrace(PlayerDeathEvent e) {
         Angel angel = this.gearMap.get(e.getEntity().getUniqueId());
+
         if (angel.getGraces() <= 0) {return;}
 
         List<ItemStack> drops = e.getDrops();
         PlayerInventory inv = e.getEntity().getInventory();
 
-        angel.clear();
-        angel.toolSave(drops, inv);
-        angel.armorSave(drops, inv);
+        angel.saveGear(drops, inv);
 
     }
 
