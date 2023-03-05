@@ -79,5 +79,11 @@
     <orderEntry type="library" name="Maven: io.papermc:paperlib:1.0.6" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains:annotations:23.0.0" level="project" />
     <orderEntry type="module" module-name="WisecraftCore" scope="PROVIDED" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: com.zaxxer:HikariCP:5.0.1" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.mariadb.jdbc:mariadb-java-client:3.0.6" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: com.songoda:UltimateTimber:2.3.5" level="project" />
+    <orderEntry type="module" module-name="Plugin" scope="PROVIDED" />
+    <orderEntry type="module" module-name="Core" scope="PROVIDED" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: com.songoda:SongodaCore:2.6.18" level="project" />
   </component>
 </module>
