@@ -30,13 +30,11 @@ public class Events implements Listener{
     private final HashMap<UUID, Angel> gearMap;
     private final WisecraftSMP plugin;
 
-
     public Events(WisecraftSMP plugin, IEssentials ess) {
         this.ess = ess;
         this.gearMap = plugin.getGearmap();
         this.plugin = plugin;
     }
-
 
 
     @EventHandler(priority = EventPriority.HIGHEST)
