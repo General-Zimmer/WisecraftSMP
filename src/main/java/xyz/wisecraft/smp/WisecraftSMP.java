@@ -6,7 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import xyz.wisecraft.core.wisecraftcore.WisecraftCoreApi;
+import xyz.wisecraft.core.WisecraftCoreApi;
 import xyz.wisecraft.smp.cmds.wisecraft;
 import xyz.wisecraft.smp.events.Events;
 

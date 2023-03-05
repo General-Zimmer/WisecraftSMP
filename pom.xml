@@ -126,5 +126,11 @@
             <version>23.0.0</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>xyz.wisecraft.core</groupId>
+            <artifactId>WisecraftCore</artifactId>
+            <version>2.0.0</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 </project>

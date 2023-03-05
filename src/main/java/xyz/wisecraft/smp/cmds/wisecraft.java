@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.TabExecutor;
 import org.jetbrains.annotations.NotNull;
-import xyz.wisecraft.core.wisecraftcore.WisecraftCoreApi;
+import xyz.wisecraft.core.WisecraftCoreApi;
 import xyz.wisecraft.smp.Methods;
 import xyz.wisecraft.smp.WisecraftSMP;
 
