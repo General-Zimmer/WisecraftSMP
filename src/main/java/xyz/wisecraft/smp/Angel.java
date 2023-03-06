@@ -27,6 +27,7 @@ public class Angel {
     public Angel(boolean hasPerm) {
 
         this.resetGrace(hasPerm);
+
     }
 
     public void giveGrace(WisecraftSMP plugin, PlayerRespawnEvent e) {
