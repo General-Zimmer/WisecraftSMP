@@ -59,8 +59,11 @@ public class PVPUtil {
             Chat.send(p, "HELP_SET_OTHERS");
     }
 
-    public static void reloadConfig() {
-        plugin.reloadConfig();
+    public static void reloadCase(Player p) {
+        if (p.hasPermission("pvptoggle.reload")) {
+            plugin.reloadConfig();
+            Chat.send(p, "RELOAD");
+        }
     }
 
     public static void consoleCase(ConsoleCommandSender console, String[] args, String color) {
@@ -73,7 +76,7 @@ public class PVPUtil {
                 Chat.send(console, "NO_PLAYER", args[1]);
             } else { //set pvp state
                 if (args[0].equals("reload")) {
-                    PVPUtil.reloadConfig();
+                    plugin.reloadConfig();
                     return;
                 } else if (args[0].equals("toggle")) {
                     Boolean current = plugin.players.get(other.getUniqueId());

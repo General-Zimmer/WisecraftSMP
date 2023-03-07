@@ -27,73 +27,64 @@ public class PVPCMD implements TabExecutor {
 
 		if (!cmd.getName().equalsIgnoreCase("pvp"))
 			return true;
-
-
-		if (sender instanceof Player p) { //check if command sender is player
-			if (!p.hasPermission("pvptoggle.allow")) {
-				return true;
-			}
-
-			if (args.length == 0) {
-				if (Util.hasCooldown(p)) {
-					return true;
-				}
-				// zero arg case
-				PVPUtil.zeroArg(p, color);
-				return true;
-			}
-			switch (args[0]) {
-				case "reload" -> {
-					if (p.hasPermission("pvptoggle.reload")) {
-						PVPUtil.reloadConfig();
-						Chat.send(p, "RELOAD");
-					}
-				}
-				case "help" -> PVPUtil.getHelp(p);
-				case "status" -> PVPUtil.status(sender, p, args);
-				default -> {
-					if (!sender.hasPermission("pvptoggle.others.set")) {
-						Chat.send(p, "COMMAND_NO_PERMISSION");
-						return true;
-					}
-					Player other = Bukkit.getPlayerExact(args[0]);
-					if (other == null) {
-						Chat.send(p, "NO_PLAYER", args[0]);
-						return true;
-					}
-					Boolean current = plugin.players.get(other.getUniqueId());
-					if (current) {
-						if (Util.setPlayerState(other, false, sender)) {
-							Chat.send(other, "PVP_STATE_ENABLED");
-							if (other != p)
-								Chat.send(p, "PVP_STATE_CHANGED_OTHERS", other.getName(), Util.getPlayerState(other.getUniqueId()));
-
-							if (plugin.getConfig().getBoolean("SETTINGS.PARTICLES"))
-								Util.particleEffect(other.getPlayer());
-							if (plugin.getConfig().getBoolean("SETTINGS.NAMETAG"))
-								Util.ChangeNametag(other.getPlayer(), color);
-						}
-					} else {
-						if (Util.setPlayerState(other, true, sender)) {
-							Chat.send(other, "PVP_STATE_DISABLED");
-							Chat.send(p, "PVP_STATE_CHANGED_OTHERS", other.getName(), Util.getPlayerState(other.getUniqueId()));
-							if (plugin.getConfig().getBoolean("SETTINGS.NAMETAG"))
-								Util.ChangeNametag(other.getPlayer(), "reset");
-						}
-					}
-
-				}
-
-			}
-			return false;
-
-		}
-
 		if (sender instanceof ConsoleCommandSender console)
 			PVPUtil.consoleCase(console, args, color);
 
 
-		return true;
+		//check if command sender is player
+		if (!(sender instanceof Player p)) return true;
+
+		if (!p.hasPermission("pvptoggle.allow")) return true;
+
+
+		if (args.length == 0) {
+			if (Util.hasCooldown(p)) return true;
+
+			// zero arg case
+			PVPUtil.zeroArg(p, color);
+			return true;
+		}
+		switch (args[0]) {
+			case "reload" -> PVPUtil.reloadCase(p);
+			case "help" -> PVPUtil.getHelp(p);
+			case "status" -> PVPUtil.status(sender, p, args);
+			default -> {
+				if (!sender.hasPermission("pvptoggle.others.set")) {
+					Chat.send(p, "COMMAND_NO_PERMISSION");
+					return true;
+				}
+				// Check if command target exists
+				Player other = Bukkit.getPlayerExact(args[0]);
+				if (other == null) {
+					Chat.send(p, "NO_PLAYER", args[0]);
+					return true;
+				}
+				// Switch PVP State on target
+				Boolean otherPlayerPVPState = plugin.players.get(other.getUniqueId());
+				if (otherPlayerPVPState) {
+					// Turn off
+					if (Util.setPlayerState(other, false, sender)) {
+						Chat.send(other, "PVP_STATE_ENABLED");
+						if (other != p)
+							Chat.send(p, "PVP_STATE_CHANGED_OTHERS", other.getName(), Util.getPlayerState(other.getUniqueId()));
+
+						if (plugin.getConfig().getBoolean("SETTINGS.PARTICLES"))
+							Util.particleEffect(other.getPlayer());
+						if (plugin.getConfig().getBoolean("SETTINGS.NAMETAG"))
+							Util.ChangeNametag(other.getPlayer(), color);
+					}
+				} else {
+					// Turn on
+					if (Util.setPlayerState(other, true, sender)) {
+						Chat.send(other, "PVP_STATE_DISABLED");
+						Chat.send(p, "PVP_STATE_CHANGED_OTHERS", other.getName(), Util.getPlayerState(other.getUniqueId()));
+						if (plugin.getConfig().getBoolean("SETTINGS.NAMETAG"))
+							Util.ChangeNametag(other.getPlayer(), "reset");
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	@SuppressWarnings("SwitchStatementWithTooFewBranches")
