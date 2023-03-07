@@ -72,9 +72,9 @@ public class Util {
 	
 	public static boolean hasCooldown(Player p) {
 		if(WisecraftSMP.instance.cooldowns.containsKey(p.getUniqueId()) ) {
-			Date lastChange = WisecraftSMP.instance.cooldowns.get(p.getUniqueId());
+			Date previousTime = WisecraftSMP.instance.cooldowns.get(p.getUniqueId());
 			Date currentTime = new Date();
-			int seconds = (int) (currentTime.getTime() - lastChange.getTime())/1000;
+			int seconds = (int) (currentTime.getTime() - previousTime.getTime())/1000;
 			if(seconds > WisecraftSMP.instance.getConfig().getInt("SETTINGS.COOLDOWN") || p.hasPermission("WisecraftSMP.bypass")) {
 				Util.removeCooldownTime(p);
 				return false;

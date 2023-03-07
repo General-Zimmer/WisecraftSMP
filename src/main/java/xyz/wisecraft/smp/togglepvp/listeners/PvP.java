@@ -1,22 +1,11 @@
 package xyz.wisecraft.smp.togglepvp.listeners;
 
-import java.util.Collection;
-import java.util.Iterator;
-
+import com.songoda.ultimatetimber.events.TreeDamageEvent;
 import org.bukkit.Material;
-import org.bukkit.entity.Arrow;
-import org.bukkit.entity.Firework;
-import org.bukkit.entity.LightningStrike;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
-import org.bukkit.entity.ThrownPotion;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.AreaEffectCloudApplyEvent;
-import org.bukkit.event.entity.EntityCombustByEntityEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.PotionSplashEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.weather.LightningStrikeEvent;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -24,7 +13,11 @@ import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.togglepvp.Chat;
 import xyz.wisecraft.smp.togglepvp.utils.Util;
 
+import java.util.Collection;
+import java.util.Iterator;
 
+//todo reorganize this mess
+//todo fix Timber being able to damage other players
 public class PvP implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
@@ -104,6 +97,11 @@ public class PvP implements Listener {
 		}
 	}
 
+	@EventHandler
+	public void onTimber(TreeDamageEvent e) {
+
+	}
+
 	@EventHandler(ignoreCancelled = true)
 	//fired when a player is shot with a flaming arrow
 	public void onFlameArrow(EntityCombustByEntityEvent event) {
@@ -130,9 +128,7 @@ public class PvP implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	//fired when a splash potion is thrown
 	public void onPotionSplash(PotionSplashEvent event) {
-		if (WisecraftSMP.blockedWorlds.contains(event.getEntity().getWorld().getName())) {
-			return;
-		}
+		if (WisecraftSMP.blockedWorlds.contains(event.getEntity().getWorld().getName())) return;
 
 		if(event.getPotion().getShooter() instanceof Player) {
 			for(LivingEntity entity : event.getAffectedEntities()) {
@@ -170,15 +166,13 @@ public class PvP implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	//fired when lingering potion cloud is active
 	public void onCloudEffects(AreaEffectCloudApplyEvent event) {
-		if (WisecraftSMP.blockedWorlds.contains(event.getEntity().getWorld().getName())) {
-			return;
-		}
+		if (WisecraftSMP.blockedWorlds.contains(event.getEntity().getWorld().getName())) return;
 
 		if(event.getEntity().getSource() instanceof Player) {
 			Iterator<LivingEntity> it = event.getAffectedEntities().iterator();
 			while(it.hasNext()) {
 				LivingEntity entity = it.next();
-				if(entity instanceof Player && entity != null) {
+				if(entity instanceof Player) {
 					Player attacker = (Player) event.getEntity().getSource();
 					Boolean attackerState = WisecraftSMP.instance.players.get(attacker.getUniqueId());
 					Player victim = (Player) entity;
@@ -199,9 +193,8 @@ public class PvP implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	//fired when a player uses a fishing rod
 	public void onPlayerFishing (PlayerFishEvent event) {
-		if (WisecraftSMP.blockedWorlds.contains(event.getPlayer().getWorld().getName())) {
-			return;
-		}
+		if (WisecraftSMP.blockedWorlds.contains(event.getPlayer().getWorld().getName())) return;
+
 
 		if (event.getCaught() instanceof final Player victim) {
 			final Player attacker = event.getPlayer();
@@ -226,7 +219,9 @@ public class PvP implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	public void onLightningStrike(LightningStrikeEvent event){
 		if(event.getCause() == LightningStrikeEvent.Cause.TRIDENT){
-			event.getLightning().setMetadata("TRIDENT", new FixedMetadataValue(WisecraftSMP.instance, event.getLightning().getLocation()));
+			event.getLightning().setMetadata("TRIDENT", new FixedMetadataValue(
+					WisecraftSMP.instance, event.getLightning().getLocation()
+			));
 		}
 	}
 }

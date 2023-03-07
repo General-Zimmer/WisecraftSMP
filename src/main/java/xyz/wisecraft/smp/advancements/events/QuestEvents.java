@@ -102,20 +102,20 @@ public class QuestEvents implements Listener {
 		}
 	}
 
-	//todo rewrite to a cleaner way of checking
-	//Keep at the bottom, it's ugly
 	@EventHandler
 	public void level(PlayerLevelChangeEvent e) {
 		Player p = e.getPlayer();
 		int lvl = e.getNewLevel();
 
-		if (lvl >= 100) {
-			NamespacedKey key = new NamespacedKey(plugin, "hugexp");
-			Methods.gibCri("lvl100", key, p);
-		}
-		if (lvl >= 250) {
-			NamespacedKey key = new NamespacedKey(plugin, "massivexp");
-			Methods.gibCri("lvl250", key, p);
+		switch (lvl) {
+			case 100 -> {
+				NamespacedKey key = new NamespacedKey(plugin, "hugexp");
+				Methods.gibCri("lvl100", key, p);
+			}
+			case 250 -> {
+				NamespacedKey key = new NamespacedKey(plugin, "massivexp");
+				Methods.gibCri("lvl250", key, p);
+			}
 		}
 	}
 
@@ -153,9 +153,11 @@ public class QuestEvents implements Listener {
 
 
 				//Noble check
-				if (!p.getAdvancementProgress(advNoble).isDone() && luck.getPlayerAdapter(Player.class).getUser(p).getNodes().contains(nobleN))
+				if (!p.getAdvancementProgress(advNoble).isDone() &&
+						luck.getPlayerAdapter(Player.class).getUser(p).getNodes().contains(nobleN))
 					Methods.removeRole(plugin, luck, p, "noble");
-				else if (p.getAdvancementProgress(advNoble).isDone() && !luck.getPlayerAdapter(Player.class).getUser(p).getNodes().contains(nobleN))
+				else if (p.getAdvancementProgress(advNoble).isDone() &&
+						!luck.getPlayerAdapter(Player.class).getUser(p).getNodes().contains(nobleN))
 					//sync with main
 					new BukkitRunnable() {
 						@Override
