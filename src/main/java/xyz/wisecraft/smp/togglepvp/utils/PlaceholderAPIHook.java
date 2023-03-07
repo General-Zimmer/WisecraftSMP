@@ -6,7 +6,6 @@ import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.WisecraftSMP;
 
-//todo Fix this hook
 public class PlaceholderAPIHook extends PlaceholderExpansion {
 
 	private final WisecraftSMP plugin;
