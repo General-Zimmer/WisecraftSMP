@@ -1,4 +1,4 @@
-package xyz.wisecraft.smp;
+package xyz.wisecraft.smp.util;
 
 import net.ess3.api.IEssentials;
 import org.bukkit.Bukkit;
@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+import xyz.wisecraft.smp.WisecraftSMP;
 
 import java.util.ArrayList;
 
@@ -21,8 +22,9 @@ public class Methods {
     }
 
 
-    public static void tpworld(WisecraftSMP plugin, IEssentials ess, World world, CommandSender sender) {
-
+    public static void tpworld(World world, CommandSender sender) {
+        WisecraftSMP plugin = WisecraftSMP.instance;
+        IEssentials ess = WisecraftSMP.ess;
 
         if (world == null) {
             sender.sendMessage(ChatColor.RED + "World does not exist");

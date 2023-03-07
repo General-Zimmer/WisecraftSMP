@@ -9,13 +9,23 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.TabExecutor;
 import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.core.WisecraftCoreApi;
-import xyz.wisecraft.smp.Methods;
 import xyz.wisecraft.smp.WisecraftSMP;
+import xyz.wisecraft.smp.util.Methods;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public record wisecraft(IEssentials ess, WisecraftCoreApi core, WisecraftSMP plugin) implements TabExecutor {
+public class wisecraft implements TabExecutor {
+
+    WisecraftSMP plugin;
+    IEssentials ess;
+    WisecraftCoreApi core;
+
+    public wisecraft() {
+        this.plugin = WisecraftSMP.instance;
+        ess = WisecraftSMP.ess;
+        core = WisecraftSMP.core;
+    }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
@@ -23,7 +33,7 @@ public record wisecraft(IEssentials ess, WisecraftCoreApi core, WisecraftSMP plu
         if (sender instanceof ConsoleCommandSender) return true;
 
         if (cmd.getName().equals("wshop")) {
-            Methods.tpworld(plugin, ess, Bukkit.getWorld("shop"), sender);
+            Methods.tpworld(Bukkit.getWorld("shop"), sender);
             return true;
         }
 
@@ -36,7 +46,7 @@ public record wisecraft(IEssentials ess, WisecraftCoreApi core, WisecraftSMP plu
 
             switch (args[0]) {
                 case "shop", "tutorial" -> {
-                    Methods.tpworld(plugin, ess, Bukkit.getWorld(args[0]), sender);
+                    Methods.tpworld(Bukkit.getWorld(args[0]), sender);
                     return true;
                 }
                 case "save" -> {
@@ -56,6 +66,7 @@ public record wisecraft(IEssentials ess, WisecraftCoreApi core, WisecraftSMP plu
         }
         return true;
     }
+
     @SuppressWarnings("SwitchStatementWithTooFewBranches")
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {

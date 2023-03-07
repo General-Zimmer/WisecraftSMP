@@ -6,7 +6,7 @@
 
     <groupId>xyz.wisecraft.smp</groupId>
     <artifactId>WisecraftSMP</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>2.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>WisecraftSMP</name>
@@ -68,6 +68,10 @@
 
     <repositories>
         <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+        <repository>
             <id>spigotmc-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
@@ -87,6 +91,15 @@
             <id>multiverse</id>
             <url>https://repo.onarandombox.com/content/repositories/multiverse/</url>
         </repository>
+        <repository>
+            <id>placeholderapi</id>
+            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+        </repository>
+        <repository>
+            <id>upstream</id>
+            <url>https://ci.nametagedit.com/plugin/repository/everything/</url>
+        </repository>
+
 
 
     </repositories>
@@ -111,10 +124,10 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>io.papermc</groupId>
-            <artifactId>paperlib</artifactId>
-            <version>1.0.6</version>
-            <scope>compile</scope>
+            <groupId>net.luckperms</groupId>
+            <artifactId>api</artifactId>
+            <version>5.4</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.jetbrains</groupId>
@@ -126,6 +139,24 @@
             <groupId>xyz.wisecraft.core</groupId>
             <artifactId>WisecraftCore</artifactId>
             <version>2.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.songoda</groupId>
+            <artifactId>Plugin</artifactId>
+            <version>2.3.5</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.clip</groupId>
+            <artifactId>placeholderapi</artifactId>
+            <version>2.10.9</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.nametagedit</groupId>
+            <artifactId>nametagedit</artifactId>
+            <version>4.4.16</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

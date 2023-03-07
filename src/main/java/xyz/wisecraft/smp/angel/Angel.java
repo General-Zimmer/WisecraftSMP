@@ -1,4 +1,4 @@
-package xyz.wisecraft.smp;
+package xyz.wisecraft.smp.angel;
 
 import com.earth2me.essentials.Kit;
 import com.earth2me.essentials.User;
@@ -9,12 +9,14 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
+import xyz.wisecraft.smp.util.Methods;
+import xyz.wisecraft.smp.WisecraftSMP;
 
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static xyz.wisecraft.smp.Methods.getToolTypes;
+import static xyz.wisecraft.smp.util.Methods.getToolTypes;
 
 public class Angel {
 
@@ -23,13 +25,14 @@ public class Angel {
     private List<ItemStack> tools = null;
     private int graces;
     private boolean hasDied = false;
+    private final WisecraftSMP plugin;
 
     public Angel(boolean hasPerm) {
-
+        plugin = WisecraftSMP.instance;
         this.resetGrace(hasPerm);
     }
 
-    public void giveGrace(WisecraftSMP plugin, PlayerRespawnEvent e) {
+    public void giveGrace(PlayerRespawnEvent e) {
         PlayerInventory inv = e.getPlayer().getInventory();
         Player p = e.getPlayer();
         UUID UUID = p.getUniqueId();

@@ -2,43 +2,109 @@ package xyz.wisecraft.smp;
 
 import com.earth2me.essentials.Essentials;
 import net.ess3.api.IEssentials;
+import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.wisecraft.core.WisecraftCoreApi;
+import xyz.wisecraft.smp.advancements.Command;
+import xyz.wisecraft.smp.advancements.events.Ibba;
+import xyz.wisecraft.smp.advancements.events.QuestEvents;
+import xyz.wisecraft.smp.advancements.events.timberEvents;
+import xyz.wisecraft.smp.advancements.threads.gibRoles;
+import xyz.wisecraft.smp.angel.Angel;
 import xyz.wisecraft.smp.cmds.wisecraft;
-import xyz.wisecraft.smp.events.Events;
+import xyz.wisecraft.smp.angel.events.AngelEvents;
+import xyz.wisecraft.smp.togglepvp.NewCommands;
+import xyz.wisecraft.smp.togglepvp.PlayerJoin;
+import xyz.wisecraft.smp.togglepvp.listeners.PlayerChangeWorld;
+import xyz.wisecraft.smp.togglepvp.listeners.PlayerLeave;
+import xyz.wisecraft.smp.togglepvp.listeners.PvP;
+import xyz.wisecraft.smp.togglepvp.utils.PersistentData;
+import xyz.wisecraft.smp.togglepvp.utils.PlaceholderAPIHook;
 
+import java.io.File;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 public final class WisecraftSMP extends JavaPlugin {
 
-    private IEssentials ess;
-    private final HashMap<UUID, Angel> gearMap = new HashMap<>();
-    private WisecraftCoreApi core;
+    public static WisecraftSMP instance;
+    public static IEssentials ess;
+    public static WisecraftCoreApi core;
+    public static LuckPerms luck;
+    public static final HashMap<UUID, Angel> gearMap = new HashMap<>();
+    public static String server_name;
+
+    // PVPToggle stuff
+
+    public FileConfiguration config;
+    public static List<String> blockedWorlds;
+    public HashMap<UUID,Boolean> players = new HashMap<>(); //False is pvp on True is pvp off
+    public HashMap<UUID, Date> cooldowns = new HashMap<>();
+
+    public PersistentData dataUtils;
 
     @SuppressWarnings("ConstantConditions")
     @Override
     public void onEnable() {
-        WisecraftSMP plugin = this;
+        instance = this;
+        this.config = getConfig();
 
         //This always first
         setupEssentials();
         setupWisecraftCore();
+        setupLuckPerms();
+
+        //Config stuff
+        this.saveDefaultConfig();
+        this.setServer_name(this.getConfig().getString("server_name"));
 
 
-        //Then this
-        this.getServer().getPluginManager().registerEvents(new Events(plugin, ess), plugin);
-        this.getCommand("wisecraft").setExecutor(new wisecraft(ess, core, this));
-        this.getCommand("wshop").setExecutor(new wisecraft(ess, core, this));
+        //Then these events
+        this.getServer().getPluginManager().registerEvents(new AngelEvents(), this);
+        this.getServer().getPluginManager().registerEvents(new QuestEvents(), this);
+        this.getServer().getPluginManager().registerEvents(new Ibba(), this);
+        if (setupTimber())
+            this.getServer().getPluginManager().registerEvents(new timberEvents(), this);
 
+
+        //Register commands
+        wisecraft wiseCMD = new wisecraft();
+        this.getCommand("wisecraft").setExecutor(wiseCMD);
+        this.getCommand("wshop").setExecutor(wiseCMD);
+        this.getCommand("autoroles").setExecutor(new Command());
+
+        // Check for new citizens. This is async right after this step.
+        new gibRoles().runTaskTimer(this, 18000, 18000);
+
+        // PVPToggle data
+        File PVPData = new File(getDataFolder(), "togglepvp");
+        dataUtils = new PersistentData(PVPData);
+
+        //register events PVPToggle
+        Bukkit.getPluginManager().registerEvents(new PlayerJoin(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerLeave(), this);
+        Bukkit.getPluginManager().registerEvents(new PvP(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerChangeWorld(), this);
+        //register command
+        this.getCommand("pvp").setExecutor(new NewCommands());
+
+        blockedWorlds = config.getStringList("SETTINGS.BLOCKED_WORLDS");
+
+        if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            new PlaceholderAPIHook(this).register();
+        }
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        // Me: We don't do that here
     }
 
 
@@ -60,8 +126,26 @@ public final class WisecraftSMP extends JavaPlugin {
         }
         Bukkit.getConsoleSender().sendMessage("Couldn't get " + name + " provider");
     }
+    private boolean setupTimber() {
+        Plugin setupPlugin = getServer().getPluginManager().getPlugin("UltimateTimber");
+        if (setupPlugin == null) {return false;}
+        return setupPlugin.isEnabled();
+    }
+    private void setupLuckPerms() {
+        String name = "LuckPerms";
 
+
+        RegisteredServiceProvider<LuckPerms> provider = getServer().getServicesManager().getRegistration(LuckPerms.class);
+        if (provider != null) {
+            this.luck = provider.getProvider();
+            return;
+        }
+        Bukkit.getConsoleSender().sendMessage("Couldn't get " + name + " provider");
+    }
     public HashMap<UUID, Angel> getGearmap() {
         return this.gearMap;
     }
+
+    public String getServer_name() {return this.server_name;}
+    public void setServer_name(String name) { this.server_name = name;}
 }
