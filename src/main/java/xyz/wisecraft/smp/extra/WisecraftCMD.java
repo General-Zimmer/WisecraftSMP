@@ -81,7 +81,7 @@ public class WisecraftCMD implements TabExecutor {
         }
 
 
-        return words;
+        return null;
     }
 
 
