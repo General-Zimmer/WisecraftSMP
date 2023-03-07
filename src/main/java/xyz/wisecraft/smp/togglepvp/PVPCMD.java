@@ -11,13 +11,14 @@ import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.togglepvp.utils.Util;
 
 
-public class NewCommands implements CommandExecutor {
+public class PVPCMD implements CommandExecutor {
 
 	WisecraftSMP plugin = WisecraftSMP.instance;
+	String color = "&c";
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
 
-		String color = "&c";
+
 		if(!cmd.getName().equalsIgnoreCase("pvp")) {return true;}
 
 
@@ -26,27 +27,9 @@ public class NewCommands implements CommandExecutor {
 
 
 				if (args.length == 0) {
-					if(!Util.getCooldown(p) || p.hasPermission("pvptoggle.bypass")) {
-						Boolean current = plugin.players.get(p.getUniqueId());
-							if(current) {
-								Util.setCooldownTime(p);
-								if (Util.setPlayerState(p, false, p)) {
-                                    Chat.send(p, "PVP_STATE_ENABLED");
-                                    if (plugin.getConfig().getBoolean("SETTINGS.PARTICLES")) {
-                                        Util.particleEffect(p.getPlayer());
-                                    }
-                        			if(plugin.getConfig().getBoolean("SETTINGS.NAMETAG")) {
-                        				Util.ChangeNametag(p.getPlayer(), color);
-                        			}
-                                }
-							} else {
-							    if (Util.setPlayerState(p, true, p)) {
-                                    Chat.send(p, "PVP_STATE_DISABLED");
-    								if(plugin.getConfig().getBoolean("SETTINGS.NAMETAG"))
-    									Util.ChangeNametag(p.getPlayer(), "reset");
-                                }
-							}
-					}
+					if(Util.hasCooldown(p)) {return true;}
+					// zero arg case
+					zeroArg(p);
 					return true;
 				}
 				switch (args[0]) {
@@ -54,9 +37,7 @@ public class NewCommands implements CommandExecutor {
 						if (p.hasPermission("pvptoggle.reload")) {
 							reloadConfig();
 							Chat.send(p, "RELOAD");
-
 						}
-
 					}
 					case "help" -> getHelp(p);
 					case "status" -> {
@@ -78,30 +59,31 @@ public class NewCommands implements CommandExecutor {
 					default -> {
 						if (!sender.hasPermission("pvptoggle.others.set")) {
 							Chat.send(p, "COMMAND_NO_PERMISSION");
+							return true;
 						}
-						Player other1 = Bukkit.getPlayerExact(args[0]);
-						if (other1 == null) {
+						Player other = Bukkit.getPlayerExact(args[0]);
+						if (other == null) {
 							Chat.send(p, "NO_PLAYER", args[0]);
 							return true;
 						}
-						Boolean current = plugin.players.get(other1.getUniqueId());
+						Boolean current = plugin.players.get(other.getUniqueId());
 						if (current) {
-							if (Util.setPlayerState(other1, false, sender)) {
-								Chat.send(other1, "PVP_STATE_ENABLED");
-								if (other1 != p)
-									Chat.send(p, "PVP_STATE_CHANGED_OTHERS", other1.getName(), Util.getPlayerState(other1.getUniqueId()));
+							if (Util.setPlayerState(other, false, sender)) {
+								Chat.send(other, "PVP_STATE_ENABLED");
+								if (other != p)
+									Chat.send(p, "PVP_STATE_CHANGED_OTHERS", other.getName(), Util.getPlayerState(other.getUniqueId()));
 
 								if (plugin.getConfig().getBoolean("SETTINGS.PARTICLES"))
-									Util.particleEffect(other1.getPlayer());
+									Util.particleEffect(other.getPlayer());
 								if (plugin.getConfig().getBoolean("SETTINGS.NAMETAG"))
-									Util.ChangeNametag(other1.getPlayer(), color);
+									Util.ChangeNametag(other.getPlayer(), color);
 							}
 						} else {
-							if (Util.setPlayerState(other1, true, sender)) {
-								Chat.send(other1, "PVP_STATE_DISABLED");
-								Chat.send(p, "PVP_STATE_CHANGED_OTHERS", other1.getName(), Util.getPlayerState(other1.getUniqueId()));
+							if (Util.setPlayerState(other, true, sender)) {
+								Chat.send(other, "PVP_STATE_DISABLED");
+								Chat.send(p, "PVP_STATE_CHANGED_OTHERS", other.getName(), Util.getPlayerState(other.getUniqueId()));
 								if (plugin.getConfig().getBoolean("SETTINGS.NAMETAG"))
-									Util.ChangeNametag(other1.getPlayer(), "reset");
+									Util.ChangeNametag(other.getPlayer(), "reset");
 							}
 						}
 
@@ -170,6 +152,28 @@ public class NewCommands implements CommandExecutor {
 			}
 		}
 		return true;
+	}
+
+	private void zeroArg(Player p) {
+		Boolean current = plugin.players.get(p.getUniqueId());
+		if(current) {
+			Util.setCooldownTime(p);
+			if (Util.setPlayerState(p, false, p)) {
+				Chat.send(p, "PVP_STATE_ENABLED");
+				// Particles
+				if (plugin.getConfig().getBoolean("SETTINGS.PARTICLES"))
+					Util.particleEffect(p.getPlayer());
+				// Nametag
+				if(plugin.getConfig().getBoolean("SETTINGS.NAMETAG"))
+					Util.ChangeNametag(p.getPlayer(), color);
+			}
+		} else {
+			if (Util.setPlayerState(p, true, p)) {
+				Chat.send(p, "PVP_STATE_DISABLED");
+				if(plugin.getConfig().getBoolean("SETTINGS.NAMETAG"))
+					Util.ChangeNametag(p.getPlayer(), "reset");
+			}
+		}
 	}
 
 	private void getHelp(Player p) {

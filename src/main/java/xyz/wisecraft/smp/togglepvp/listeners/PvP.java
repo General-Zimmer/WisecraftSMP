@@ -45,7 +45,7 @@ public class PvP implements Listener {
 				Chat.send(attacker, "PVP_DISABLED");
 			} else if (victimState != null && victimState) {
 				event.setCancelled(true);
-				Chat.send(attacker, "PVP_DISABLED_OTHERS", victim.getDisplayName());
+				Chat.send(attacker, "PVP_DISABLED_OTHERS", victim.getName());
 			} else {
 				Util.setCooldownTime(attacker);
 				Util.setCooldownTime(victim);
@@ -65,7 +65,7 @@ public class PvP implements Listener {
 						Chat.send(attacker, "PVP_DISABLED");
 					} else if(victimState != null && victimState) {
 						event.setCancelled(true);
-						Chat.send(attacker, "PVP_DISABLED_OTHERS", victim.getDisplayName());
+						Chat.send(attacker, "PVP_DISABLED_OTHERS", victim.getName());
 					} else {
 						Util.setCooldownTime(attacker);
 						Util.setCooldownTime(victim);
@@ -85,7 +85,7 @@ public class PvP implements Listener {
 					Chat.send(attacker, "PVP_DISABLED");
 				} else if (victimState != null && victimState) {
 					event.setCancelled(true);
-					Chat.send(attacker, "PVP_DISABLED_OTHERS", victim.getDisplayName());
+					Chat.send(attacker, "PVP_DISABLED_OTHERS", victim.getName());
 				} else {
 					Util.setCooldownTime(attacker);
 					Util.setCooldownTime(victim);
@@ -156,7 +156,7 @@ public class PvP implements Listener {
 									event.setIntensity(ent, 0);
 								}
 							}
-							Chat.send(attacker, "PVP_DISABLED_OTHERS", victim.getDisplayName());
+							Chat.send(attacker, "PVP_DISABLED_OTHERS", victim.getName());
 						} else {
 							Util.setCooldownTime(attacker);
 							Util.setCooldownTime(victim);
@@ -213,7 +213,7 @@ public class PvP implements Listener {
 					Chat.send(attacker, "PVP_DISABLED");
 				} else if (victimState != null && victimState) {
 					event.setCancelled(true);
-					Chat.send(attacker, "PVP_DISABLED_OTHERS", victim.getDisplayName());
+					Chat.send(attacker, "PVP_DISABLED_OTHERS", victim.getName());
 				} else {
 					Util.setCooldownTime(attacker);
 					Util.setCooldownTime(victim);

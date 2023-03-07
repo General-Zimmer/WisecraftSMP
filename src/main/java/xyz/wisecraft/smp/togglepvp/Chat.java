@@ -6,7 +6,7 @@ import xyz.wisecraft.smp.WisecraftSMP;
 
 public class Chat {
 
-	// sends message without a parameter
+	// sends message without a argument
 	public static void send(CommandSender sender, String message) {
 		String msg = WisecraftSMP.instance.getConfig().getString("MESSAGES." + message);
 		if(msg.equals(""))
@@ -14,22 +14,22 @@ public class Chat {
 		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
 	}
 
-	// sends message with a parameter
-	public static void send(CommandSender sender, String message, String parameter) {
+	// sends message with a argument
+	public static void send(CommandSender sender, String message, String argument) {
 		String msg = WisecraftSMP.instance.getConfig().getString("MESSAGES." + message);
 		if(msg.equals(""))
 			return;
-		String output = msg.replaceAll("<parameter>", parameter);
+		String output = msg.replaceAll("<argument>", argument);
 		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', output));
 	}
 	
-	// sends message with a parameter and pvp state
-	public static void send(CommandSender sender, String message, String parameter, Boolean pvpState) {
+	// sends message with a argument and pvp state
+	public static void send(CommandSender sender, String message, String argument, Boolean pvpState) {
 		String msg = WisecraftSMP.instance.getConfig().getString("MESSAGES." + message);
-		if(msg.equals(""))
+		if(msg != null && msg.equals(""))
 			return;
-		String output = msg.replaceAll("<parameter>", parameter);
-		if(pvpState == true) {
+		String output = msg.replaceAll("<argument>", argument);
+		if(pvpState) {
 			output = output.replaceAll("<pvpstate>", "off");
 		} else {
 			output = output.replaceAll("<pvpstate>", "on");

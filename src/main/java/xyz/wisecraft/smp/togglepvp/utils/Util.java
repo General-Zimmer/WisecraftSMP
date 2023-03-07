@@ -61,6 +61,8 @@ public class Util {
 	}
 
 	public static void setCooldownTime(Player p) {
+		if (p.hasPermission("pvptoggle.bypass")) return;
+
 		WisecraftSMP.instance.cooldowns.put(p.getUniqueId(), new Date());
 	}
 	
@@ -68,8 +70,8 @@ public class Util {
 		WisecraftSMP.instance.cooldowns.remove(p.getUniqueId());
 	}
 	
-	public static boolean getCooldown(Player p) {
-		if(WisecraftSMP.instance.cooldowns.containsKey(p.getUniqueId())) {
+	public static boolean hasCooldown(Player p) {
+		if(WisecraftSMP.instance.cooldowns.containsKey(p.getUniqueId()) ) {
 			Date lastChange = WisecraftSMP.instance.cooldowns.get(p.getUniqueId());
 			Date currentTime = new Date();
 			int seconds = (int) (currentTime.getTime() - lastChange.getTime())/1000;

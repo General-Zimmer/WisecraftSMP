@@ -17,7 +17,7 @@ import xyz.wisecraft.smp.advancements.threads.gibRoles;
 import xyz.wisecraft.smp.angel.Angel;
 import xyz.wisecraft.smp.extra.WisecraftCMD;
 import xyz.wisecraft.smp.angel.events.AngelEvents;
-import xyz.wisecraft.smp.togglepvp.NewCommands;
+import xyz.wisecraft.smp.togglepvp.PVPCMD;
 import xyz.wisecraft.smp.togglepvp.PlayerJoin;
 import xyz.wisecraft.smp.togglepvp.listeners.PlayerChangeWorld;
 import xyz.wisecraft.smp.togglepvp.listeners.PlayerLeave;
@@ -92,7 +92,7 @@ public final class WisecraftSMP extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new PvP(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerChangeWorld(), this);
         //register command
-        this.getCommand("pvp").setExecutor(new NewCommands());
+        this.getCommand("pvp").setExecutor(new PVPCMD());
 
         blockedWorlds = config.getStringList("SETTINGS.BLOCKED_WORLDS");
 
