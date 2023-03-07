@@ -34,7 +34,7 @@ permission:
     description: allows player to see other player's pvp state
     default: op
   pvptoggle.others.set:
-    description: allows player to set other players pvp state
+    description: allows player to set other player's pvp state
     default: op
   pvptoggle.bypass:
     description: allows player to bypass cooldown
