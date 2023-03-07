@@ -1,6 +1,5 @@
 package xyz.wisecraft.smp.extra;
 
-import net.ess3.api.IEssentials;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -17,13 +16,9 @@ import java.util.List;
 
 public class WisecraftCMD implements TabExecutor {
 
-    WisecraftSMP plugin;
-    IEssentials ess;
-    WisecraftCoreApi core;
+    private final WisecraftCoreApi core;
 
     public WisecraftCMD() {
-        this.plugin = WisecraftSMP.instance;
-        this.ess = WisecraftSMP.ess;
         this.core = WisecraftSMP.core;
     }
 
