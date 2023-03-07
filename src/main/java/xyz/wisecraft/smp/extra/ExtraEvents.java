@@ -1,4 +1,4 @@
-package xyz.wisecraft.smp.util;
+package xyz.wisecraft.smp.extra;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -10,6 +10,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.angel.Angel;
+import xyz.wisecraft.smp.util.Methods;
 
 import java.util.HashMap;
 import java.util.UUID;

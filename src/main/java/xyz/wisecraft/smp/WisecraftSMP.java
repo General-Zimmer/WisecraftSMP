@@ -15,7 +15,7 @@ import xyz.wisecraft.smp.advancements.events.QuestEvents;
 import xyz.wisecraft.smp.advancements.events.timberEvents;
 import xyz.wisecraft.smp.advancements.threads.gibRoles;
 import xyz.wisecraft.smp.angel.Angel;
-import xyz.wisecraft.smp.cmds.wisecraft;
+import xyz.wisecraft.smp.extra.WisecraftCMD;
 import xyz.wisecraft.smp.angel.events.AngelEvents;
 import xyz.wisecraft.smp.togglepvp.NewCommands;
 import xyz.wisecraft.smp.togglepvp.PlayerJoin;
@@ -74,7 +74,7 @@ public final class WisecraftSMP extends JavaPlugin {
 
 
         //Register commands
-        wisecraft wiseCMD = new wisecraft();
+        WisecraftCMD wiseCMD = new WisecraftCMD();
         this.getCommand("wisecraft").setExecutor(wiseCMD);
         this.getCommand("wshop").setExecutor(wiseCMD);
         this.getCommand("autoroles").setExecutor(new Command());

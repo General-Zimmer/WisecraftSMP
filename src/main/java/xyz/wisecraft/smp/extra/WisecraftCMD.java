@@ -1,4 +1,4 @@
-package xyz.wisecraft.smp.cmds;
+package xyz.wisecraft.smp.extra;
 
 import net.ess3.api.IEssentials;
 import org.bukkit.Bukkit;
@@ -15,16 +15,16 @@ import xyz.wisecraft.smp.util.Methods;
 import java.util.ArrayList;
 import java.util.List;
 
-public class wisecraft implements TabExecutor {
+public class WisecraftCMD implements TabExecutor {
 
     WisecraftSMP plugin;
     IEssentials ess;
     WisecraftCoreApi core;
 
-    public wisecraft() {
+    public WisecraftCMD() {
         this.plugin = WisecraftSMP.instance;
-        ess = WisecraftSMP.ess;
-        core = WisecraftSMP.core;
+        this.ess = WisecraftSMP.ess;
+        this.core = WisecraftSMP.core;
     }
 
     @Override
