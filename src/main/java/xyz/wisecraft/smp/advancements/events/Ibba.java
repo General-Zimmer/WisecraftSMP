@@ -31,7 +31,7 @@ public class Ibba implements Listener {
         }
     }
 
-@EventHandler
+    @EventHandler
     public void ledgehog(PlayerDeathEvent e) {
 
         Player p = e.getEntity();

@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import xyz.wisecraft.core.WisecraftCoreApi;
 import xyz.wisecraft.core.data.templates.Infop;
 import xyz.wisecraft.core.data.templates.Timers;
 import xyz.wisecraft.smp.WisecraftSMP;
@@ -87,35 +86,31 @@ public class timberEvents implements Listener {
         int trees = infom.get(UUID).getTimber()+1;
         infom.get(UUID).setTimber(trees);
 
-        //todo rewrite to a cleaner way of checking
         //Check for achievements
         if (trees >= 1000) {
             NamespacedKey key = new NamespacedKey(plugin, "lumberjack");
             Methods.gibCri("tree1000", key, p);
         }
-
         if (trees >= 5000) {
             NamespacedKey key = new NamespacedKey(plugin, "experiencedlumb");
             Methods.gibCri("tree5000", key, p);
         }
-
         if (trees >= 10000) {
             NamespacedKey key = new NamespacedKey(plugin, "expertlumb");
             Methods.gibCri("tree10000", key, p);
         }
-
         if (trees >= 20000) {
             NamespacedKey key = new NamespacedKey(plugin, "juggerjack");
 
             Methods.gibCri("tree20000", key, p);
         }
 
-        //Add timer
+        //todo Use new Date(); for timers
         if (!timers.containsKey(UUID)) {
-            timers.put(UUID, new Timers(0, 3));
+            timers.put(UUID, new Timers(6));
         }
         else {
-            timers.get(UUID).setTree(3);
+            timers.get(UUID).setTree(6);
         }
     }
 }
