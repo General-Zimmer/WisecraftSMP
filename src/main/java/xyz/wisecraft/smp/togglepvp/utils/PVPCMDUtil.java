@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.togglepvp.Chat;
 
-public class PVPUtil {
+public class PVPCMDUtil {
 
     private static final WisecraftSMP plugin = WisecraftSMP.instance;
     public static void status(CommandSender sender, Player p, String[] args) {

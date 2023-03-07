@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.WisecraftSMP;
-import xyz.wisecraft.smp.togglepvp.utils.PVPUtil;
+import xyz.wisecraft.smp.togglepvp.utils.PVPCMDUtil;
 import xyz.wisecraft.smp.togglepvp.utils.Util;
 
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ public class PVPCMD implements TabExecutor {
 		if (!cmd.getName().equalsIgnoreCase("pvp"))
 			return true;
 		if (sender instanceof ConsoleCommandSender console)
-			PVPUtil.consoleCase(console, args, color);
+			PVPCMDUtil.consoleCase(console, args, color);
 
 
 		//check if command sender is player
@@ -41,13 +41,13 @@ public class PVPCMD implements TabExecutor {
 			if (Util.hasCooldown(p)) return true;
 
 			// zero arg case
-			PVPUtil.zeroArg(p, color);
+			PVPCMDUtil.zeroArg(p, color);
 			return true;
 		}
 		switch (args[0]) {
-			case "reload" -> PVPUtil.reloadCase(p);
-			case "help" -> PVPUtil.getHelp(p);
-			case "status" -> PVPUtil.status(sender, p, args);
+			case "reload" -> PVPCMDUtil.reloadCase(p);
+			case "help" -> PVPCMDUtil.getHelp(p);
+			case "status" -> PVPCMDUtil.status(sender, p, args);
 			default -> {
 				if (!sender.hasPermission("pvptoggle.others.set")) {
 					Chat.send(p, "COMMAND_NO_PERMISSION");
