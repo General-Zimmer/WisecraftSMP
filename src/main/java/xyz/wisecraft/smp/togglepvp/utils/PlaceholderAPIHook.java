@@ -2,7 +2,7 @@ package xyz.wisecraft.smp.togglepvp.utils;
 
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.WisecraftSMP;
 
@@ -14,26 +14,21 @@ public class PlaceholderAPIHook extends PlaceholderExpansion {
 	public PlaceholderAPIHook(WisecraftSMP plugin) {
 		this.plugin = plugin;
 	}
-	
+
 	@Override
-	public String onPlaceholderRequest(Player player, @NotNull String identifier) {
+	public String onRequest(OfflinePlayer player, @NotNull String identifier) {
 		if(player == null) { return ""; }
-		
+
 		//Placeholder: %WisecraftSMP_positive_rep%
 		if(identifier.equals("pvp_state")) {
-			return WisecraftSMP.instance.players.get(player.getUniqueId()) ? "&aOff" : "&cOn";
+			return plugin.players.get(player.getUniqueId()) ? "&aOff" : "&cOn";
 		}
-		
+
 		return null;
 	}
 	
 	@Override
 	public boolean persist() {
-		return true;
-	}
-	
-	@Override
-	public boolean canRegister() {
 		return true;
 	}
 	
@@ -44,7 +39,7 @@ public class PlaceholderAPIHook extends PlaceholderExpansion {
 
 	@Override
 	public @NotNull String getAuthor() {
-		return plugin.getDescription().getAuthors().toString();
+		return "General_Zimmer";
 	}
 
 

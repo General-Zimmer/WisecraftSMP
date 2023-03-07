@@ -85,7 +85,7 @@
     <orderEntry type="module" module-name="Plugin" scope="PROVIDED" />
     <orderEntry type="module" module-name="Core" scope="PROVIDED" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.songoda:SongodaCore:2.6.18" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: me.clip:placeholderapi:2.10.9" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: me.clip:placeholderapi:2.11.2" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.nametagedit:nametagedit:4.4.16" level="project" />
   </component>
 </module>

@@ -55,17 +55,18 @@ public final class WisecraftSMP extends JavaPlugin {
         instance = this;
         this.config = getConfig();
 
-        //This always first
+        // This always first
         setupEssentials();
         setupWisecraftCore();
         setupLuckPerms();
+        setupPAPI();
 
         //Config stuff
         this.saveDefaultConfig();
         this.setServer_name(this.getConfig().getString("server_name"));
 
 
-        //Then these events
+        // Then these events
         this.getServer().getPluginManager().registerEvents(new AngelEvents(), this);
         this.getServer().getPluginManager().registerEvents(new QuestEvents(), this);
         this.getServer().getPluginManager().registerEvents(new Ibba(), this);
@@ -73,7 +74,7 @@ public final class WisecraftSMP extends JavaPlugin {
             this.getServer().getPluginManager().registerEvents(new timberEvents(), this);
 
 
-        //Register commands
+        // Register commands
         WisecraftCMD wiseCMD = new WisecraftCMD();
         this.getCommand("wisecraft").setExecutor(wiseCMD);
         this.getCommand("wshop").setExecutor(wiseCMD);
@@ -86,19 +87,17 @@ public final class WisecraftSMP extends JavaPlugin {
         File PVPData = new File(getDataFolder(), "togglepvp");
         dataUtils = new PersistentData(PVPData);
 
-        //register events PVPToggle
+        // register events PVPToggle
         Bukkit.getPluginManager().registerEvents(new PlayerJoin(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerLeave(), this);
         Bukkit.getPluginManager().registerEvents(new PvP(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerChangeWorld(), this);
-        //register command
+        // register command
         this.getCommand("pvp").setExecutor(new PVPCMD());
 
         blockedWorlds = config.getStringList("SETTINGS.BLOCKED_WORLDS");
 
-        if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            new PlaceholderAPIHook(this).register();
-        }
+
     }
 
     @Override
@@ -121,7 +120,7 @@ public final class WisecraftSMP extends JavaPlugin {
 
         RegisteredServiceProvider<WisecraftCoreApi> provider = getServer().getServicesManager().getRegistration(WisecraftCoreApi.class);
         if (provider != null) {
-            this.core = provider.getProvider();
+            core = provider.getProvider();
             return;
         }
         Bukkit.getConsoleSender().sendMessage("Couldn't get " + name + " provider");
@@ -137,15 +136,22 @@ public final class WisecraftSMP extends JavaPlugin {
 
         RegisteredServiceProvider<LuckPerms> provider = getServer().getServicesManager().getRegistration(LuckPerms.class);
         if (provider != null) {
-            this.luck = provider.getProvider();
+            luck = provider.getProvider();
             return;
         }
         Bukkit.getConsoleSender().sendMessage("Couldn't get " + name + " provider");
     }
-    public HashMap<UUID, Angel> getGearmap() {
-        return this.gearMap;
+
+    private void setupPAPI() {
+        if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            new PlaceholderAPIHook(this).register();
+        }
     }
 
-    public String getServer_name() {return this.server_name;}
-    public void setServer_name(String name) { this.server_name = name;}
+    public HashMap<UUID, Angel> getGearmap() {
+        return gearMap;
+    }
+
+    public String getServer_name() {return server_name;}
+    public void setServer_name(String name) { server_name = name;}
 }
