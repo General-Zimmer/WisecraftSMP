@@ -16,7 +16,7 @@ import xyz.wisecraft.smp.advancements.util.exceptions.AdvancementNoExist;
 import java.util.Date;
 
 
-public class Methods {
+public class UtilAdv {
 
     private static AdvancementProgress gibAdv(NamespacedKey key, Player p) throws Exception {
         Advancement a = Bukkit.getAdvancement(key);
@@ -30,7 +30,7 @@ public class Methods {
         WisecraftSMP plugin = WisecraftSMP.instance;
 
         try {
-            AdvancementProgress prog = Methods.gibAdv(key, p);
+            AdvancementProgress prog = UtilAdv.gibAdv(key, p);
             if (!prog.isDone()) {
                 new BukkitRunnable() {
 
@@ -63,7 +63,7 @@ public class Methods {
     @SuppressWarnings("ConstantConditions")
     public static void addRole(WisecraftSMP plugin, LuckPerms luck, Player p, String roleName) {
         luck.getUserManager().modifyUser(p.getUniqueId(), user -> {
-            InheritanceNode role = Methods.createRole(plugin, luck, roleName);
+            InheritanceNode role = UtilAdv.createRole(plugin, luck, roleName);
             //Add role and save/commit
 
             user.data().add(role);
@@ -74,7 +74,7 @@ public class Methods {
     @SuppressWarnings("ConstantConditions")
     public static void removeRole(WisecraftSMP plugin, LuckPerms luck, Player p, String roleName) {
         luck.getUserManager().modifyUser(p.getUniqueId(), user -> {
-            InheritanceNode role = Methods.createRole(plugin, luck, roleName);
+            InheritanceNode role = UtilAdv.createRole(plugin, luck, roleName);
             //Add role and save/commit
             user.data().remove(role);
             luck.getUserManager().saveUser(user);

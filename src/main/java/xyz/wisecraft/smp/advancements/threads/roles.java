@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.wisecraft.core.data.templates.Infop;
 import xyz.wisecraft.smp.WisecraftSMP;
-import xyz.wisecraft.smp.advancements.util.Methods;
+import xyz.wisecraft.smp.advancements.util.UtilAdv;
 
 
 import java.util.ArrayList;
@@ -29,8 +29,8 @@ public class roles extends BukkitRunnable {
     }
     public void run() {
 
-        Node citizenN = Methods.buildNode(plugin, "citizen");
-        Node nobleN = Methods.buildNode(plugin, "noble");
+        Node citizenN = UtilAdv.buildNode(plugin, "citizen");
+        Node nobleN = UtilAdv.buildNode(plugin, "noble");
 
         for (Player p : players) {
 
@@ -61,7 +61,7 @@ public class roles extends BukkitRunnable {
             NamespacedKey key = new NamespacedKey(plugin, "citizen");
 
             // Give it if all are true
-            Methods.gibCri("citizen", key, p);
+            UtilAdv.gibCri("citizen", key, p);
         }
     }
 
@@ -72,7 +72,7 @@ public class roles extends BukkitRunnable {
             NamespacedKey key = new NamespacedKey(plugin, "noble");
 
             // Give it if all are true
-            Methods.gibCri("noble", key, p);
+            UtilAdv.gibCri("noble", key, p);
         }
     }
 

@@ -18,7 +18,7 @@ import org.bukkit.event.player.PlayerLevelChangeEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.wisecraft.smp.WisecraftSMP;
-import xyz.wisecraft.smp.advancements.util.Methods;
+import xyz.wisecraft.smp.advancements.util.UtilAdv;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,13 +44,13 @@ public class QuestEvents implements Listener {
 		Advancement advCitizen = Bukkit.getAdvancement(keyCit);
 		//Citzen check
 		if (adv.equals(advCitizen))
-			Methods.addRole(plugin, luck, p, "citizen");
+			UtilAdv.addRole(plugin, luck, p, "citizen");
 
 		NamespacedKey keyNob = new NamespacedKey(plugin, "nobility");
 		Advancement advNoble = Bukkit.getAdvancement(keyNob);
 		//Noble check
 		if (adv.equals(advNoble))
-			Methods.addRole(plugin, luck, p, "noble");
+			UtilAdv.addRole(plugin, luck, p, "noble");
 	}
 
 	@EventHandler
@@ -64,7 +64,7 @@ public class QuestEvents implements Listener {
 		wlds.add("resource_end");
 		if (wlds.contains(wld)) {
 			NamespacedKey key = new NamespacedKey(plugin, "regenworld");
-			Methods.gibCri("resourceworld", key, p);
+			UtilAdv.gibCri("resourceworld", key, p);
 		}
 	}
 
@@ -77,7 +77,7 @@ public class QuestEvents implements Listener {
 		if (e.getDeathMessage().equalsIgnoreCase(p.getName() + " experienced kinetic energy") ) {
 			NamespacedKey key = new NamespacedKey(plugin, "accident_flying");
 
-			Methods.gibCri("wall", key, p);
+			UtilAdv.gibCri("wall", key, p);
 		}
 
 	}
@@ -93,12 +93,12 @@ public class QuestEvents implements Listener {
 		if (bundle.equals(res)) {
 			Player p = Bukkit.getPlayer(e.getWhoClicked().getUniqueId());
 			NamespacedKey key = new NamespacedKey(plugin, "bundle");
-			Methods.gibCri("bundle", key, p);
+			UtilAdv.gibCri("bundle", key, p);
 		}
 		if (elytra.equals(res)) {
 			Player p = Bukkit.getPlayer(e.getWhoClicked().getUniqueId());
 			NamespacedKey key = new NamespacedKey(plugin, "craft_elytra");
-			Methods.gibCri("elytra", key, p);
+			UtilAdv.gibCri("elytra", key, p);
 		}
 	}
 
@@ -110,11 +110,11 @@ public class QuestEvents implements Listener {
 		switch (lvl) {
 			case 100 -> {
 				NamespacedKey key = new NamespacedKey(plugin, "hugexp");
-				Methods.gibCri("lvl100", key, p);
+				UtilAdv.gibCri("lvl100", key, p);
 			}
 			case 250 -> {
 				NamespacedKey key = new NamespacedKey(plugin, "massivexp");
-				Methods.gibCri("lvl250", key, p);
+				UtilAdv.gibCri("lvl250", key, p);
 			}
 		}
 	}
@@ -133,15 +133,15 @@ public class QuestEvents implements Listener {
 				NamespacedKey keyNob = new NamespacedKey(plugin, "nobility");
 				Advancement advNoble = Bukkit.getAdvancement(keyNob);
 
-				Node citizenN = Methods.buildNode(plugin, "citizen");
-				Node nobleN = Methods.buildNode(plugin, "noble");
+				Node citizenN = UtilAdv.buildNode(plugin, "citizen");
+				Node nobleN = UtilAdv.buildNode(plugin, "noble");
 
 				boolean advC = p.getAdvancementProgress(advCitizen).isDone();
 				boolean roleC = luck.getPlayerAdapter(Player.class).getUser(p).getNodes().contains(citizenN);
 
 				//Citzen check
 				if (!advC && roleC)
-					Methods.removeRole(plugin, luck, p, "citizen");
+					UtilAdv.removeRole(plugin, luck, p, "citizen");
 				else if (advC && !roleC)
 					//sync with main
 					new BukkitRunnable() {
@@ -155,7 +155,7 @@ public class QuestEvents implements Listener {
 				//Noble check
 				if (!p.getAdvancementProgress(advNoble).isDone() &&
 						luck.getPlayerAdapter(Player.class).getUser(p).getNodes().contains(nobleN))
-					Methods.removeRole(plugin, luck, p, "noble");
+					UtilAdv.removeRole(plugin, luck, p, "noble");
 				else if (p.getAdvancementProgress(advNoble).isDone() &&
 						!luck.getPlayerAdapter(Player.class).getUser(p).getNodes().contains(nobleN))
 					//sync with main

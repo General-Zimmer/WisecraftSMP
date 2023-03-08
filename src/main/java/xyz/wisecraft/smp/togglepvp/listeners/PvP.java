@@ -12,7 +12,7 @@ import org.bukkit.event.weather.LightningStrikeEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import xyz.wisecraft.core.data.templates.Timers;
 import xyz.wisecraft.smp.WisecraftSMP;
-import xyz.wisecraft.smp.advancements.util.Methods;
+import xyz.wisecraft.smp.advancements.util.UtilAdv;
 import xyz.wisecraft.smp.togglepvp.Chat;
 import xyz.wisecraft.smp.togglepvp.utils.Util;
 
@@ -99,30 +99,33 @@ public class PvP implements Listener {
 		}
 	}
 
-	@EventHandler
+	@EventHandler(ignoreCancelled = true)
 	public void onTimber(TreeDamageEvent e) {
 
-		Player p = e.getPlayer();
-		Timers times = WisecraftSMP.core.getTimers().get(p.getUniqueId());
-		double seconds = Methods.calcCurrentSeconds(times.getTree());
-
+		Player victim = e.getVictim();
+		UUID victimUUID = victim.getUniqueId();
 		List<Player> players = new ArrayList<>();
 		// Check who broke a tree recently
-		for (Player player : Bukkit.getOnlinePlayers()) {
-			UUID UUID = player.getUniqueId();
-			if (!p.getUniqueId().toString().equals(UUID.toString()) && seconds < 6) {
-				players.add(player);
+		for (Player attacker : Bukkit.getOnlinePlayers()) {
+			Timers times = WisecraftSMP.core.getTimers().get(attacker.getUniqueId());
+			double seconds = UtilAdv.calcCurrentSeconds(times.getTree());
+			UUID attackerUUID = attacker.getUniqueId();
+
+			if (!victimUUID.toString().equals(attackerUUID.toString()) && seconds < 2.5) {
+				players.add(attacker);
 			}
 		}
 		if (players.isEmpty())
 			return;
 
 
-		//Are they near the player who died?
-		for (Player p1 : players)
-			if (p.getLocation().distanceSquared(p1.getLocation()) <= 100) {
-
+		// Are they near the player who takes damage?
+		for (Player attacker : players) {
+			if (victim.getLocation().distanceSquared(attacker.getLocation()) <= 1024) {
+				e.setCancelled(true);
+				Chat.send(attacker, "PVP_DISABLED_OTHERS", victim.getName());
 			}
+		}
 	}
 
 	@EventHandler(ignoreCancelled = true)

@@ -9,7 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ArrowBodyCountChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import xyz.wisecraft.smp.WisecraftSMP;
-import xyz.wisecraft.smp.advancements.util.Methods;
+import xyz.wisecraft.smp.advancements.util.UtilAdv;
 
 public class Ibba implements Listener {
     private final WisecraftSMP plugin;
@@ -27,7 +27,7 @@ public class Ibba implements Listener {
         if (e.getNewAmount() >= 10) {
             NamespacedKey key = new NamespacedKey(plugin, "hedgehog");
 
-            Methods.gibCri("hedge", key, p);
+            UtilAdv.gibCri("hedge", key, p);
         }
     }
 
@@ -38,7 +38,7 @@ public class Ibba implements Listener {
         if (e.getDeathMessage().equalsIgnoreCase(p.getName() + " fell from a high place") & p.getArrowsInBody() >= 25) {
             NamespacedKey key = new NamespacedKey(plugin, "ledgehog");
 
-            Methods.gibCri("ledgehog", key, p);
+            UtilAdv.gibCri("ledgehog", key, p);
         }
     }
 }

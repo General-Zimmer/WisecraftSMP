@@ -6,9 +6,11 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.TabExecutor;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.core.WisecraftCoreApi;
 import xyz.wisecraft.smp.WisecraftSMP;
+import xyz.wisecraft.smp.advancements.util.UtilAdv;
 import xyz.wisecraft.smp.util.Methods;
 
 import java.util.ArrayList;
@@ -25,37 +27,43 @@ public class WisecraftCMD implements TabExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
 
-        if (sender instanceof ConsoleCommandSender) return true;
+        if ( !(sender instanceof Player)) return true;
+        Player p = ((Player) sender).getPlayer();
+        if (p == null) return true;
+
 
         if (cmd.getName().equals("wshop")) {
-            Methods.tpworld(Bukkit.getWorld("shop"), sender);
+            Methods.tpworld(Bukkit.getWorld("shop"), p);
             return true;
         }
 
         if (cmd.getName().equals("wisecraft")) {
 
             if (args.length == 0) {
-                sender.sendMessage(ChatColor.YELLOW + "You can choose to teleport to either shop or tutorial");
+                p.sendMessage(ChatColor.YELLOW + "You can choose to teleport to either shop or tutorial");
                 return true;
             }
 
             switch (args[0]) {
                 case "shop", "tutorial" -> {
-                    Methods.tpworld(Bukkit.getWorld(args[0]), sender);
+                    Methods.tpworld(Bukkit.getWorld(args[0]), p);
                     return true;
                 }
                 case "save" -> {
                     if (core == null) return true;
 
-                    if (sender.hasPermission("wisecraft.manage"))
+                    if (p.hasPermission("wisecraft.manage"))
                         core.savePlayerdata();
                 }
                 case "load" -> {
                     if (core == null) return true;
 
-                    if (sender.hasPermission("wisecraft.manage"))
+                    if (p.hasPermission("wisecraft.manage"))
                         core.loadPlayerdata();
                 }
+                case "time" -> p.sendMessage(Double.toString(UtilAdv.calcCurrentSeconds(
+                        core.getTimers().get(
+                                p.getUniqueId()).getTree())));
 
             }
         }

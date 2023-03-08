@@ -11,7 +11,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import xyz.wisecraft.core.data.templates.Infop;
 import xyz.wisecraft.core.data.templates.Timers;
 import xyz.wisecraft.smp.WisecraftSMP;
-import xyz.wisecraft.smp.advancements.util.Methods;
+import xyz.wisecraft.smp.advancements.util.UtilAdv;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -36,14 +36,14 @@ public class timberEvents implements Listener {
     public void Dying(PlayerDeathEvent e) {
         Player p = e.getEntity().getPlayer();
         Timers times = timers.get(p.getUniqueId());
-        double seconds = Methods.calcCurrentSeconds(times.getTree());
+        double seconds = UtilAdv.calcCurrentSeconds(times.getTree());
 
         if (e.getDeathMessage().equalsIgnoreCase(p.getName() + " died")) {
 
 
             if (seconds < 6) {
                 NamespacedKey key = new NamespacedKey(plugin, "move");
-                Methods.gibCri("move", key, p);
+                UtilAdv.gibCri("move", key, p);
                 e.setDeathMessage(p.getName() + " was crushed under their timber");
 
             }
@@ -78,7 +78,7 @@ public class timberEvents implements Listener {
 
         //1 tree required achievement
         NamespacedKey timbKey = new NamespacedKey(plugin, "timber");
-        Methods.gibCri("tree", timbKey, p);
+        UtilAdv.gibCri("tree", timbKey, p);
 
 
         //Increment tree stat
@@ -88,20 +88,20 @@ public class timberEvents implements Listener {
         //Check for achievements
         if (trees >= 1000) {
             NamespacedKey key = new NamespacedKey(plugin, "lumberjack");
-            Methods.gibCri("tree1000", key, p);
+            UtilAdv.gibCri("tree1000", key, p);
         }
         if (trees >= 5000) {
             NamespacedKey key = new NamespacedKey(plugin, "experiencedlumb");
-            Methods.gibCri("tree5000", key, p);
+            UtilAdv.gibCri("tree5000", key, p);
         }
         if (trees >= 10000) {
             NamespacedKey key = new NamespacedKey(plugin, "expertlumb");
-            Methods.gibCri("tree10000", key, p);
+            UtilAdv.gibCri("tree10000", key, p);
         }
         if (trees >= 20000) {
             NamespacedKey key = new NamespacedKey(plugin, "juggerjack");
 
-            Methods.gibCri("tree20000", key, p);
+            UtilAdv.gibCri("tree20000", key, p);
         }
 
         if (!timers.containsKey(UUID)) {
