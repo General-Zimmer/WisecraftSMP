@@ -32,13 +32,13 @@ public class PvP implements Listener {
 		//check if attack was a player
 		if (event.getDamager() instanceof Player attacker && event.getEntity() instanceof Player victim) {
 			//player who hit
-			Boolean attackerState = WisecraftSMP.instance.players.get(attacker.getUniqueId());
+			Boolean isAttackerPVPOff = WisecraftSMP.instance.players.get(attacker.getUniqueId());
 			//player who was hit
-			Boolean victimState = WisecraftSMP.instance.players.get(victim.getUniqueId());
-			if (attackerState) {
+			Boolean isVictimPVPOff = WisecraftSMP.instance.players.get(victim.getUniqueId());
+			if (isAttackerPVPOff) {
 				event.setCancelled(true);
 				Chat.send(attacker, "PVP_DISABLED");
-			} else if (victimState != null && victimState) {
+			} else if (isVictimPVPOff != null && isVictimPVPOff) {
 				event.setCancelled(true);
 				Chat.send(attacker, "PVP_DISABLED_OTHERS", victim.getName());
 			} else {
@@ -50,15 +50,15 @@ public class PvP implements Listener {
 			if(arrow.getShooter() instanceof Player) {
 				if(event.getEntity() instanceof Player victim) {
 					Player attacker = (Player) arrow.getShooter();
-					Boolean attackerState = WisecraftSMP.instance.players.get(attacker.getUniqueId());
-					Boolean victimState = WisecraftSMP.instance.players.get(victim.getUniqueId());
+					Boolean isAttackerPVPOff = WisecraftSMP.instance.players.get(attacker.getUniqueId());
+					Boolean isVictimPVPOff = WisecraftSMP.instance.players.get(victim.getUniqueId());
 					if(attacker == victim) {
 						return;
 					}
-					if(attackerState) {
+					if(isAttackerPVPOff) {
 						event.setCancelled(true);
 						Chat.send(attacker, "PVP_DISABLED");
-					} else if(victimState != null && victimState) {
+					} else if(isVictimPVPOff != null && isVictimPVPOff) {
 						event.setCancelled(true);
 						Chat.send(attacker, "PVP_DISABLED_OTHERS", victim.getName());
 					} else {
@@ -70,15 +70,15 @@ public class PvP implements Listener {
 			//checks if damage was done by a potion
 		} else if(event.getDamager() instanceof ThrownPotion potion) {
 			if (potion.getShooter() instanceof Player attacker && event.getEntity() instanceof Player victim) {
-				Boolean attackerState = WisecraftSMP.instance.players.get(attacker.getUniqueId());
-				Boolean victimState = WisecraftSMP.instance.players.get(victim.getUniqueId());
+				Boolean isAttackerPVPOff = WisecraftSMP.instance.players.get(attacker.getUniqueId());
+				Boolean isVictimPVPOff = WisecraftSMP.instance.players.get(victim.getUniqueId());
 				if(attacker == victim) {
 					return;
 				}
-				if (attackerState) {
+				if (isAttackerPVPOff) {
 					event.setCancelled(true);
 					Chat.send(attacker, "PVP_DISABLED");
-				} else if (victimState != null && victimState) {
+				} else if (isVictimPVPOff != null && isVictimPVPOff) {
 					event.setCancelled(true);
 					Chat.send(attacker, "PVP_DISABLED_OTHERS", victim.getName());
 				} else {
@@ -87,13 +87,13 @@ public class PvP implements Listener {
 				}
 			}
 		} else if (event.getDamager() instanceof LightningStrike && event.getDamager().getMetadata("TRIDENT").size() >= 1 && event.getEntity() instanceof Player victim) {
-			Boolean victimState = WisecraftSMP.instance.players.get(victim.getUniqueId());
-			if (victimState != null && victimState) {
+			Boolean isVictimPVPOff = WisecraftSMP.instance.players.get(victim.getUniqueId());
+			if (isVictimPVPOff != null && isVictimPVPOff) {
 				event.setCancelled(true);
 			}
 		} else if (event.getDamager() instanceof Firework && event.getEntity() instanceof Player victim) {
-			Boolean victimState = WisecraftSMP.instance.players.get(victim.getUniqueId());
-			if (victimState != null && victimState) {
+			Boolean isVictimPVPOff = WisecraftSMP.instance.players.get(victim.getUniqueId());
+			if (isVictimPVPOff != null && isVictimPVPOff) {
 				event.setCancelled(true);
 			}
 		}
@@ -121,14 +121,13 @@ public class PvP implements Listener {
 
 		// Are they near the player who takes damage?
 		for (Player attacker : players) {
+			Boolean isAttackerPVPOff = WisecraftSMP.instance.players.get(attacker.getUniqueId());
+			Boolean isVictimPVPOff = WisecraftSMP.instance.players.get(victim.getUniqueId());
+			if (!isVictimPVPOff && !isAttackerPVPOff) return;
 			if (victim.getLocation().distanceSquared(attacker.getLocation()) <= 1024) {
-				Boolean attackerState = WisecraftSMP.instance.players.get(attacker.getUniqueId());
-				Boolean victimState = WisecraftSMP.instance.players.get(victim.getUniqueId());
-				if (victimState && attackerState) {
 					e.setCancelled(true);
 					Chat.send(attacker, "PVP_DISABLED_OTHERS", victim.getName());
 				}
-			}
 		}
 	}
 
@@ -141,11 +140,11 @@ public class PvP implements Listener {
 
 		if(event.getCombuster() instanceof Arrow arrow) {
 			if(arrow.getShooter() instanceof Player attacker && event.getEntity() instanceof Player victim) {
-				Boolean attackerState = WisecraftSMP.instance.players.get(attacker.getUniqueId());
-				Boolean victimState = WisecraftSMP.instance.players.get(victim.getUniqueId());
-				if (attackerState) {
+				Boolean isAttackerPVPOff = WisecraftSMP.instance.players.get(attacker.getUniqueId());
+				Boolean isVictimPVPOff = WisecraftSMP.instance.players.get(victim.getUniqueId());
+				if (isAttackerPVPOff) {
 					event.setCancelled(true);
-				} else if (victimState != null && victimState) {
+				} else if (isVictimPVPOff != null && isVictimPVPOff) {
 					event.setCancelled(true);
 				} else {
 					Util.setCooldownTime(attacker);
@@ -164,10 +163,10 @@ public class PvP implements Listener {
 			for(LivingEntity entity : event.getAffectedEntities()) {
 				if(entity instanceof Player victim) {
 					Player attacker = (Player) event.getPotion().getShooter();
-					Boolean attackerState = WisecraftSMP.instance.players.get(attacker.getUniqueId());
-					Boolean victimState = WisecraftSMP.instance.players.get(victim.getUniqueId());
+					Boolean isAttackerPVPOff = WisecraftSMP.instance.players.get(attacker.getUniqueId());
+					Boolean isVictimPVPOff = WisecraftSMP.instance.players.get(victim.getUniqueId());
 					if(attacker != victim) {
-						if(attackerState) {
+						if(isAttackerPVPOff) {
 							Collection<LivingEntity> affected = event.getAffectedEntities();
 							for(LivingEntity ent : affected){
 								if(ent instanceof Player && ent != attacker){
@@ -175,7 +174,7 @@ public class PvP implements Listener {
 								}
 							}
 							Chat.send(attacker, "PVP_DISABLED");
-						} else if(victimState != null && victimState) {
+						} else if(isVictimPVPOff != null && isVictimPVPOff) {
 							Collection<LivingEntity> affected = event.getAffectedEntities();
 							for(LivingEntity ent : affected){
 								if(ent instanceof Player && ent != attacker){
@@ -204,12 +203,12 @@ public class PvP implements Listener {
 				LivingEntity entity = it.next();
 				if(entity instanceof Player) {
 					Player attacker = (Player) event.getEntity().getSource();
-					Boolean attackerState = WisecraftSMP.instance.players.get(attacker.getUniqueId());
+					Boolean isAttackerPVPOff = WisecraftSMP.instance.players.get(attacker.getUniqueId());
 					Player victim = (Player) entity;
-					Boolean victimState = WisecraftSMP.instance.players.get(victim.getUniqueId());
-					if(victimState != null && victimState) {
+					Boolean isVictimPVPOff = WisecraftSMP.instance.players.get(victim.getUniqueId());
+					if(isVictimPVPOff != null && isVictimPVPOff) {
 						it.remove();
-					} else if(attackerState) {
+					} else if(isAttackerPVPOff) {
 						it.remove();
 					} else {
 						Util.setCooldownTime(attacker);
@@ -228,13 +227,13 @@ public class PvP implements Listener {
 
 		if (event.getCaught() instanceof final Player victim) {
 			final Player attacker = event.getPlayer();
-			Boolean attackerState = WisecraftSMP.instance.players.get(attacker.getUniqueId());
-			Boolean victimState = WisecraftSMP.instance.players.get(victim.getUniqueId());
+			Boolean isAttackerPVPOff = WisecraftSMP.instance.players.get(attacker.getUniqueId());
+			Boolean isVictimPVPOff = WisecraftSMP.instance.players.get(victim.getUniqueId());
 			if (attacker.getInventory().getItemInMainHand().getType() == Material.FISHING_ROD || attacker.getInventory().getItemInOffHand().getType() == Material.FISHING_ROD) {
-				if (attackerState) {
+				if (isAttackerPVPOff) {
 					event.setCancelled(true);
 					Chat.send(attacker, "PVP_DISABLED");
-				} else if (victimState != null && victimState) {
+				} else if (isVictimPVPOff != null && isVictimPVPOff) {
 					event.setCancelled(true);
 					Chat.send(attacker, "PVP_DISABLED_OTHERS", victim.getName());
 				} else {

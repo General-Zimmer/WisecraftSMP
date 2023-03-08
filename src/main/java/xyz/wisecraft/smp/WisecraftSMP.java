@@ -46,7 +46,7 @@ public final class WisecraftSMP extends JavaPlugin {
     public FileConfiguration config;
     public static List<String> blockedWorlds;
     /**
-     * //False is pvp on True is pvp off
+     * //False is pvp on. True is pvp off
      */
     public HashMap<UUID,Boolean> players = new HashMap<>();
     public HashMap<UUID, Date> cooldowns = new HashMap<>();
