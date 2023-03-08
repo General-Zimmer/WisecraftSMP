@@ -84,7 +84,7 @@ public class PVPCMD implements TabExecutor {
 				}
 			}
 		}
-		return false;
+		return true;
 	}
 
 	@SuppressWarnings("SwitchStatementWithTooFewBranches")
