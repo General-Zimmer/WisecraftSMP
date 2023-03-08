@@ -109,13 +109,14 @@ public class PvP implements Listener {
 
 		if (attacker != null) {
 			Boolean isAttackerPVPOff = WisecraftSMP.instance.players.get(attacker.getUniqueId());
-			if (isVictimPVPOff)
-				Chat.send(attacker, "PVP_DISABLED_OTHERS", victim.getName());
-			else if (isAttackerPVPOff)
-				Chat.send(attacker, "PVP_DISABLED");
-			else
+			if (isVictimPVPOff) {
 				e.setCancelled(true);
-
+				Chat.send(attacker, "PVP_DISABLED_OTHERS", victim.getName());
+			}
+			else if (isAttackerPVPOff) {
+				e.setCancelled(true);
+				Chat.send(attacker, "PVP_DISABLED");
+			}
 		}
 	}
 
