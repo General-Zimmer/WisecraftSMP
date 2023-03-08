@@ -122,8 +122,12 @@ public class PvP implements Listener {
 		// Are they near the player who takes damage?
 		for (Player attacker : players) {
 			if (victim.getLocation().distanceSquared(attacker.getLocation()) <= 1024) {
-				e.setCancelled(true);
-				Chat.send(attacker, "PVP_DISABLED_OTHERS", victim.getName());
+				Boolean attackerState = WisecraftSMP.instance.players.get(attacker.getUniqueId());
+				Boolean victimState = WisecraftSMP.instance.players.get(victim.getUniqueId());
+				if (victimState && attackerState) {
+					e.setCancelled(true);
+					Chat.send(attacker, "PVP_DISABLED_OTHERS", victim.getName());
+				}
 			}
 		}
 	}
