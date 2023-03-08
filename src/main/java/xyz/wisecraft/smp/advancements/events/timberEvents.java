@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import xyz.wisecraft.core.data.templates.Infop;
@@ -12,9 +13,7 @@ import xyz.wisecraft.core.data.templates.Timers;
 import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.advancements.util.Methods;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static xyz.wisecraft.smp.WisecraftSMP.core;
@@ -33,27 +32,27 @@ public class timberEvents implements Listener {
 
 
     @SuppressWarnings("ConstantConditions")
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void Dying(PlayerDeathEvent e) {
         Player p = e.getEntity().getPlayer();
         Timers times = timers.get(p.getUniqueId());
-
+        double seconds = Methods.calcCurrentSeconds(times.getTree());
 
         if (e.getDeathMessage().equalsIgnoreCase(p.getName() + " died")) {
 
-            if (times.getTree() > 0) {
+
+            if (seconds < 6) {
                 NamespacedKey key = new NamespacedKey(plugin, "move");
                 Methods.gibCri("move", key, p);
                 e.setDeathMessage(p.getName() + " was crushed under their timber");
-                return;
-            }
 
+            }
 
             List<Player> players = new ArrayList<>();
             // Check who broke a tree recently
             for (Player player : Bukkit.getOnlinePlayers()) {
                 UUID UUID = player.getUniqueId();
-                if (!p.getUniqueId().toString().equals(UUID.toString()) && timers.get(UUID).getTree() > 0) {
+                if (!p.getUniqueId().toString().equals(UUID.toString()) && seconds < 6) {
                     players.add(player);
                 }
             }
@@ -105,12 +104,11 @@ public class timberEvents implements Listener {
             Methods.gibCri("tree20000", key, p);
         }
 
-        //todo Use new Date(); for timers
         if (!timers.containsKey(UUID)) {
-            timers.put(UUID, new Timers(6));
+            timers.put(UUID, new Timers(new Date()));
         }
         else {
-            timers.get(UUID).setTree(6);
+            timers.get(UUID).setTree(new Date());
         }
     }
 }

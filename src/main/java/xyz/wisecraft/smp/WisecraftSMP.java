@@ -33,10 +33,11 @@ import java.util.UUID;
 
 public final class WisecraftSMP extends JavaPlugin {
 
-    public static WisecraftSMP instance;
-    public static IEssentials ess;
-    public static WisecraftCoreApi core;
-    public static LuckPerms luck;
+    //todo make these fields private
+    public static WisecraftSMP instance = null;
+    public static IEssentials ess = null;
+    public static WisecraftCoreApi core = null;
+    public static LuckPerms luck = null;
     public static final HashMap<UUID, Angel> gearMap = new HashMap<>();
     public static String server_name;
 
@@ -49,10 +50,14 @@ public final class WisecraftSMP extends JavaPlugin {
 
     public PersistentData dataUtils;
 
+    public WisecraftSMP() {
+        instance = this;
+    }
+
     @SuppressWarnings("ConstantConditions")
     @Override
     public void onEnable() {
-        instance = this;
+
         this.config = getConfig();
 
         // This always first

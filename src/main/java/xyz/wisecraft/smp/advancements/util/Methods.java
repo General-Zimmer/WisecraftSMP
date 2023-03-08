@@ -13,6 +13,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.advancements.util.exceptions.AdvancementNoExist;
 
+import java.util.Date;
+
 
 public class Methods {
 
@@ -44,6 +46,11 @@ public class Methods {
                 Bukkit.getConsoleSender().sendMessage("Missing Advancement: " + ex.getMessage());
             }
         }
+    }
+
+    public static double calcCurrentSeconds(Date previousDate) {
+        Date currentDate = new Date();
+        return (currentDate.getTime() - previousDate.getTime())/1000.0;
     }
 
     public static InheritanceNode createRole(WisecraftSMP plugin, LuckPerms luck, String group) {

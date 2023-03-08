@@ -1,6 +1,7 @@
 package xyz.wisecraft.smp.togglepvp.listeners;
 
 import com.songoda.ultimatetimber.events.TreeDamageEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -9,12 +10,13 @@ import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.weather.LightningStrikeEvent;
 import org.bukkit.metadata.FixedMetadataValue;
+import xyz.wisecraft.core.data.templates.Timers;
 import xyz.wisecraft.smp.WisecraftSMP;
+import xyz.wisecraft.smp.advancements.util.Methods;
 import xyz.wisecraft.smp.togglepvp.Chat;
 import xyz.wisecraft.smp.togglepvp.utils.Util;
 
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.*;
 
 //todo reorganize this mess
 //todo fix Timber being able to damage other players
@@ -100,6 +102,27 @@ public class PvP implements Listener {
 	@EventHandler
 	public void onTimber(TreeDamageEvent e) {
 
+		Player p = e.getPlayer();
+		Timers times = WisecraftSMP.core.getTimers().get(p.getUniqueId());
+		double seconds = Methods.calcCurrentSeconds(times.getTree());
+
+		List<Player> players = new ArrayList<>();
+		// Check who broke a tree recently
+		for (Player player : Bukkit.getOnlinePlayers()) {
+			UUID UUID = player.getUniqueId();
+			if (!p.getUniqueId().toString().equals(UUID.toString()) && seconds < 6) {
+				players.add(player);
+			}
+		}
+		if (players.isEmpty())
+			return;
+
+
+		//Are they near the player who died?
+		for (Player p1 : players)
+			if (p.getLocation().distanceSquared(p1.getLocation()) <= 100) {
+
+			}
 	}
 
 	@EventHandler(ignoreCancelled = true)
