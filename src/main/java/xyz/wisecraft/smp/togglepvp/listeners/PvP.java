@@ -1,22 +1,24 @@
 package xyz.wisecraft.smp.togglepvp.listeners;
 
 import com.songoda.ultimatetimber.events.TreeDamageEvent;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.*;
+import org.bukkit.event.entity.AreaEffectCloudApplyEvent;
+import org.bukkit.event.entity.EntityCombustByEntityEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.weather.LightningStrikeEvent;
 import org.bukkit.metadata.FixedMetadataValue;
-import xyz.wisecraft.core.data.templates.Timers;
 import xyz.wisecraft.smp.WisecraftSMP;
-import xyz.wisecraft.smp.advancements.util.UtilAdv;
+import xyz.wisecraft.smp.extra.UtilCommon;
 import xyz.wisecraft.smp.togglepvp.Chat;
 import xyz.wisecraft.smp.togglepvp.utils.Util;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
 
 //todo reorganize this mess
 //todo fix Timber being able to damage other players
@@ -103,31 +105,11 @@ public class PvP implements Listener {
 	public void onTimber(TreeDamageEvent e) {
 
 		Player victim = e.getVictim();
-		UUID victimUUID = victim.getUniqueId();
-		List<Player> players = new ArrayList<>();
-		// Check who broke a tree recently
-		for (Player attacker : Bukkit.getOnlinePlayers()) {
-			Timers times = WisecraftSMP.core.getTimers().get(attacker.getUniqueId());
-			double seconds = UtilAdv.calcCurrentSeconds(times.getTree());
-			UUID attackerUUID = attacker.getUniqueId();
 
-			if (!victimUUID.toString().equals(attackerUUID.toString()) && seconds < 2.5) {
-				players.add(attacker);
-			}
-		}
-		if (players.isEmpty())
-			return;
-
-
-		// Are they near the player who takes damage?
-		for (Player attacker : players) {
-			Boolean isAttackerPVPOff = WisecraftSMP.instance.players.get(attacker.getUniqueId());
-			Boolean isVictimPVPOff = WisecraftSMP.instance.players.get(victim.getUniqueId());
-			if (!isVictimPVPOff && !isAttackerPVPOff) return;
-			if (victim.getLocation().distanceSquared(attacker.getLocation()) <= 1024) {
-					e.setCancelled(true);
-					Chat.send(attacker, "PVP_DISABLED_OTHERS", victim.getName());
-				}
+		Player attacker = UtilCommon.checkDistance(victim, true, 2.5);
+		if (attacker != null) {
+			e.setCancelled(true);
+			Chat.send(attacker, "PVP_DISABLED_OTHERS", victim.getName());
 		}
 	}
 
@@ -201,10 +183,9 @@ public class PvP implements Listener {
 			Iterator<LivingEntity> it = event.getAffectedEntities().iterator();
 			while(it.hasNext()) {
 				LivingEntity entity = it.next();
-				if(entity instanceof Player) {
+				if(entity instanceof Player victim) {
 					Player attacker = (Player) event.getEntity().getSource();
 					Boolean isAttackerPVPOff = WisecraftSMP.instance.players.get(attacker.getUniqueId());
-					Player victim = (Player) entity;
 					Boolean isVictimPVPOff = WisecraftSMP.instance.players.get(victim.getUniqueId());
 					if(isVictimPVPOff != null && isVictimPVPOff) {
 						it.remove();

@@ -1,7 +1,6 @@
 package xyz.wisecraft.smp.advancements.events;
 
 import com.songoda.ultimatetimber.events.TreeFellEvent;
-import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -12,8 +11,10 @@ import xyz.wisecraft.core.data.templates.Infop;
 import xyz.wisecraft.core.data.templates.Timers;
 import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.advancements.util.UtilAdv;
+import xyz.wisecraft.smp.extra.UtilCommon;
 
-import java.util.*;
+import java.util.Date;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static xyz.wisecraft.smp.WisecraftSMP.core;
@@ -34,38 +35,26 @@ public class timberEvents implements Listener {
     @SuppressWarnings("ConstantConditions")
     @EventHandler(priority = EventPriority.LOWEST)
     public void Dying(PlayerDeathEvent e) {
-        Player p = e.getEntity().getPlayer();
-        Timers times = timers.get(p.getUniqueId());
-        double seconds = UtilAdv.calcCurrentSeconds(times.getTree());
+        Player victim = e.getEntity().getPlayer();
+        Timers times = timers.get(victim.getUniqueId());
+        double secSinceVictimTimber = UtilAdv.calcCurrentSeconds(times.getTree());
 
-        if (e.getDeathMessage().equalsIgnoreCase(p.getName() + " died")) {
+        if (e.getDeathMessage().equalsIgnoreCase(victim.getName() + " died")) {
 
 
-            if (seconds < 6) {
+            // Could overwrite someone else killing them. Also, some trees could be made high and have leaves
+            // behind them allowing exeptional high time here
+            if (secSinceVictimTimber < 1.7) {
                 NamespacedKey key = new NamespacedKey(plugin, "move");
-                UtilAdv.gibCri("move", key, p);
-                e.setDeathMessage(p.getName() + " was crushed under their timber");
-
-            }
-
-            List<Player> players = new ArrayList<>();
-            // Check who broke a tree recently
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                UUID UUID = player.getUniqueId();
-                if (!p.getUniqueId().toString().equals(UUID.toString()) && seconds < 6) {
-                    players.add(player);
-                }
-            }
-            if (players.isEmpty())
+                UtilAdv.gibCri("move", key, victim);
+                e.setDeathMessage(victim.getName() + " was crushed under their timber");
                 return;
+            }
 
+            Player attacker = UtilCommon.checkDistance(victim, false, 2.5);
 
-            //Are they near the player who died?
-            for (Player p1 : players)
-                if (p.getLocation().distanceSquared(p1.getLocation()) <= 100) {
-                    e.setDeathMessage(p.getName() + " was crushed under a tree because of " + p1.getName());
-
-                }
+            if (attacker != null)
+                e.setDeathMessage(victim.getName() + " was crushed under a tree because of " + attacker.getName());
 
         }
     }
