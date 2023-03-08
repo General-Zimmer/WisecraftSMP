@@ -35,12 +35,13 @@ public class timberEvents implements Listener {
     @SuppressWarnings("ConstantConditions")
     @EventHandler(priority = EventPriority.LOWEST)
     public void Dying(PlayerDeathEvent e) {
-        Player victim = e.getEntity().getPlayer();
-        Timers times = timers.get(victim.getUniqueId());
-        double secSinceVictimTimber = UtilAdv.calcCurrentSeconds(times.getTree());
+        Player victim = e.getPlayer();
+
+
 
         if (e.getDeathMessage().equalsIgnoreCase(victim.getName() + " died")) {
-
+            Timers times = timers.get(victim.getUniqueId());
+            double secSinceVictimTimber = UtilAdv.calcCurrentSeconds(times.getTree());
 
             // Could overwrite someone else killing them. Also, some trees could be made high and have leaves
             // behind them allowing exeptional high time here
@@ -51,7 +52,7 @@ public class timberEvents implements Listener {
                 return;
             }
 
-            Player attacker = UtilCommon.getWhoTimber(victim, false, 2.5);
+            Player attacker = UtilCommon.getWhoTimber(victim, 2.5);
 
             if (attacker != null)
                 e.setDeathMessage(victim.getName() + " was crushed under a tree because of " + attacker.getName());

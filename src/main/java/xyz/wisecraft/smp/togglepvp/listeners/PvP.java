@@ -103,13 +103,19 @@ public class PvP implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public void onTimber(TreeDamageEvent e) {
-
 		Player victim = e.getVictim();
+		Player attacker = UtilCommon.getWhoTimber(victim, 2.5);
+		Boolean isVictimPVPOff = WisecraftSMP.instance.players.get(victim.getUniqueId());
 
-		Player attacker = UtilCommon.getWhoTimber(victim, true, 2.5);
 		if (attacker != null) {
-			e.setCancelled(true);
-			Chat.send(attacker, "PVP_DISABLED_OTHERS", victim.getName());
+			Boolean isAttackerPVPOff = WisecraftSMP.instance.players.get(attacker.getUniqueId());
+			if (isVictimPVPOff)
+				Chat.send(attacker, "PVP_DISABLED_OTHERS", victim.getName());
+			else if (isAttackerPVPOff)
+				Chat.send(attacker, "PVP_DISABLED");
+			else
+				e.setCancelled(true);
+
 		}
 	}
 

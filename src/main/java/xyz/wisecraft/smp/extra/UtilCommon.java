@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class UtilCommon {
-    public static Player getWhoTimber(Player victim, boolean checkPVPStates, double timeFrame) {
+    public static Player getWhoTimber(Player victim, double timeFrame) {
 
         UUID victimUUID = victim.getUniqueId();
         HashMap<Double, Player> players = whoBrokeTree(victimUUID, timeFrame);
@@ -20,11 +20,6 @@ public class UtilCommon {
         // Are they near the player who takes damage?
         HashMap<Double, Player> attackers = new HashMap<>();
         for (Map.Entry<Double, Player> attacker : players.entrySet()) {
-            // Variables
-            Boolean isAttackerPVPOff = WisecraftSMP.instance.players.get(attacker.getValue().getUniqueId());
-            Boolean isVictimPVPOff = WisecraftSMP.instance.players.get(victim.getUniqueId());
-            // check PVPStates
-            if (checkPVPStates && (!isVictimPVPOff && !isAttackerPVPOff)) return null;
 
             // Distance is 32
             if (victim.getLocation().distanceSquared(attacker.getValue().getLocation()) <= 1024)
