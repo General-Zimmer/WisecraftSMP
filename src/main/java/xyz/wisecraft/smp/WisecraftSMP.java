@@ -10,18 +10,16 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import xyz.wisecraft.core.WisecraftCoreApi;
 import xyz.wisecraft.smp.advancements.Command;
-import xyz.wisecraft.smp.advancements.events.Ibba;
-import xyz.wisecraft.smp.advancements.events.QuestEvents;
-import xyz.wisecraft.smp.advancements.events.timberEvents;
+import xyz.wisecraft.smp.advancements.listeners.Ibba;
+import xyz.wisecraft.smp.advancements.listeners.QuestListeners;
+import xyz.wisecraft.smp.advancements.listeners.timberListeners;
 import xyz.wisecraft.smp.advancements.threads.gibRoles;
 import xyz.wisecraft.smp.angel.Angel;
 import xyz.wisecraft.smp.extra.WisecraftCMD;
-import xyz.wisecraft.smp.angel.events.AngelEvents;
+import xyz.wisecraft.smp.angel.listeners.AngelListeners;
 import xyz.wisecraft.smp.togglepvp.PVPCMD;
-import xyz.wisecraft.smp.togglepvp.PlayerJoin;
-import xyz.wisecraft.smp.togglepvp.listeners.PlayerChangeWorld;
-import xyz.wisecraft.smp.togglepvp.listeners.PlayerLeave;
-import xyz.wisecraft.smp.togglepvp.listeners.PvP;
+import xyz.wisecraft.smp.togglepvp.listeners.PlayerListener;
+import xyz.wisecraft.smp.togglepvp.listeners.PvPListener;
 import xyz.wisecraft.smp.togglepvp.utils.PersistentData;
 import xyz.wisecraft.smp.togglepvp.utils.PlaceholderAPIHook;
 
@@ -75,11 +73,11 @@ public final class WisecraftSMP extends JavaPlugin {
 
 
         // Then these events
-        this.getServer().getPluginManager().registerEvents(new AngelEvents(), this);
-        this.getServer().getPluginManager().registerEvents(new QuestEvents(), this);
+        this.getServer().getPluginManager().registerEvents(new AngelListeners(), this);
+        this.getServer().getPluginManager().registerEvents(new QuestListeners(), this);
         this.getServer().getPluginManager().registerEvents(new Ibba(), this);
         if (setupTimber())
-            this.getServer().getPluginManager().registerEvents(new timberEvents(), this);
+            this.getServer().getPluginManager().registerEvents(new timberListeners(), this);
 
 
         // Register commands
@@ -96,10 +94,8 @@ public final class WisecraftSMP extends JavaPlugin {
         dataUtils = new PersistentData(PVPData);
 
         // register events PVPToggle
-        Bukkit.getPluginManager().registerEvents(new PlayerJoin(), this);
-        Bukkit.getPluginManager().registerEvents(new PlayerLeave(), this);
-        Bukkit.getPluginManager().registerEvents(new PvP(), this);
-        Bukkit.getPluginManager().registerEvents(new PlayerChangeWorld(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PvPListener(), this);
         // register command
         this.getCommand("pvp").setExecutor(new PVPCMD());
 

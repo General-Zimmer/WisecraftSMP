@@ -1,4 +1,4 @@
-package xyz.wisecraft.smp.advancements.events;
+package xyz.wisecraft.smp.advancements.listeners;
 
 import com.songoda.ultimatetimber.events.TreeFellEvent;
 import org.bukkit.NamespacedKey;
@@ -19,13 +19,13 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static xyz.wisecraft.smp.WisecraftSMP.core;
 
-public class timberEvents implements Listener {
+public class timberListeners implements Listener {
 
     private final WisecraftSMP plugin;
     private final ConcurrentHashMap<UUID, Infop> infom;
     private final ConcurrentHashMap<UUID, Timers> timers;
 
-    public timberEvents() {
+    public timberListeners() {
         this.plugin = WisecraftSMP.instance;
         this.infom = core.getInfom();
         this.timers = core.getTimers();

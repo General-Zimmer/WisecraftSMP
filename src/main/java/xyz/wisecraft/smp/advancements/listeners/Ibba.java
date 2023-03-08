@@ -1,4 +1,4 @@
-package xyz.wisecraft.smp.advancements.events;
+package xyz.wisecraft.smp.advancements.listeners;
 
 
 import org.bukkit.NamespacedKey;

@@ -1,4 +1,4 @@
-package xyz.wisecraft.smp.angel.events;
+package xyz.wisecraft.smp.angel.listeners;
 
 import com.earth2me.essentials.User;
 import net.ess3.api.IEssentials;
@@ -19,14 +19,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-public class AngelEvents implements Listener {
+public class AngelListeners implements Listener {
 
 
     private final IEssentials ess;
     private final HashMap<UUID, Angel> gearMap;
     private final WisecraftSMP plugin;
 
-    public AngelEvents() {
+    public AngelListeners() {
         this.plugin = WisecraftSMP.instance;
         this.ess = WisecraftSMP.ess;
         this.gearMap = plugin.getGearmap();

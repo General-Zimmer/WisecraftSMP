@@ -22,7 +22,7 @@ import java.util.Iterator;
 
 //todo reorganize this mess
 //todo fix Timber being able to damage other players
-public class PvP implements Listener {
+public class PvPListener implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	//fired when an entity is hit

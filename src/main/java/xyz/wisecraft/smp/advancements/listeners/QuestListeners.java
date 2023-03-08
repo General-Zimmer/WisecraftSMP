@@ -1,4 +1,4 @@
-package xyz.wisecraft.smp.advancements.events;
+package xyz.wisecraft.smp.advancements.listeners;
 
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.node.Node;
@@ -23,12 +23,12 @@ import xyz.wisecraft.smp.advancements.util.UtilAdv;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuestEvents implements Listener {
+public class QuestListeners implements Listener {
 
 	private final WisecraftSMP plugin;
 	private final LuckPerms luck;
 
-	public QuestEvents() {
+	public QuestListeners() {
 		this.plugin = WisecraftSMP.instance;
 		this.luck = WisecraftSMP.luck;
 	}
