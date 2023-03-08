@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class UtilCommon {
-    public static Player checkDistance(Player victim, boolean checkPVPStates, double timeFrame) {
+    public static Player getWhoTimber(Player victim, boolean checkPVPStates, double timeFrame) {
 
         UUID victimUUID = victim.getUniqueId();
         HashMap<Double, Player> players = whoBrokeTree(victimUUID, timeFrame);

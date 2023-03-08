@@ -106,7 +106,7 @@ public class PvP implements Listener {
 
 		Player victim = e.getVictim();
 
-		Player attacker = UtilCommon.checkDistance(victim, true, 2.5);
+		Player attacker = UtilCommon.getWhoTimber(victim, true, 2.5);
 		if (attacker != null) {
 			e.setCancelled(true);
 			Chat.send(attacker, "PVP_DISABLED_OTHERS", victim.getName());

@@ -51,7 +51,7 @@ public class timberEvents implements Listener {
                 return;
             }
 
-            Player attacker = UtilCommon.checkDistance(victim, false, 2.5);
+            Player attacker = UtilCommon.getWhoTimber(victim, false, 2.5);
 
             if (attacker != null)
                 e.setDeathMessage(victim.getName() + " was crushed under a tree because of " + attacker.getName());
