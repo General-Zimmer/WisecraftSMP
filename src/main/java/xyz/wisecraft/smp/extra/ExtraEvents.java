@@ -9,7 +9,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.wisecraft.smp.WisecraftSMP;
-import xyz.wisecraft.smp.angel.Angel;
+import xyz.wisecraft.smp.savinggrace.Angel;
 import xyz.wisecraft.smp.util.Methods;
 
 import java.util.HashMap;

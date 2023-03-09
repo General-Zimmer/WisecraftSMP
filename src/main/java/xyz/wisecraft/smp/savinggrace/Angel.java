@@ -1,4 +1,4 @@
-package xyz.wisecraft.smp.angel;
+package xyz.wisecraft.smp.savinggrace;
 
 import com.earth2me.essentials.Kit;
 import com.earth2me.essentials.User;

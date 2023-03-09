@@ -1,4 +1,4 @@
-package xyz.wisecraft.smp.angel.listeners;
+package xyz.wisecraft.smp.savinggrace.listeners;
 
 import com.earth2me.essentials.User;
 import net.ess3.api.IEssentials;
@@ -13,7 +13,7 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import xyz.wisecraft.smp.WisecraftSMP;
-import xyz.wisecraft.smp.angel.Angel;
+import xyz.wisecraft.smp.savinggrace.Angel;
 
 import java.util.HashMap;
 import java.util.List;
