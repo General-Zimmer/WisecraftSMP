@@ -12,16 +12,19 @@ import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.weather.LightningStrikeEvent;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.potion.PotionEffect;
+import org.checkerframework.checker.index.qual.Positive;
 import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.extra.UtilCommon;
 import xyz.wisecraft.smp.togglepvp.Chat;
+import xyz.wisecraft.smp.togglepvp.enums.PositivePotions;
 import xyz.wisecraft.smp.togglepvp.utils.Util;
 
 import java.util.Collection;
 import java.util.Iterator;
 
 //todo reorganize this mess
-//todo fix Timber being able to damage other players
+//todo Only prevent bad positon effects
 public class PvPListener implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
@@ -145,29 +148,35 @@ public class PvPListener implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	//fired when a splash potion is thrown
-	public void onPotionSplash(PotionSplashEvent event) {
-		if (WisecraftSMP.blockedWorlds.contains(event.getEntity().getWorld().getName())) return;
+	public void onPotionSplash(PotionSplashEvent e) {
+		if (WisecraftSMP.blockedWorlds.contains(e.getEntity().getWorld().getName())) return;
 
-		if(event.getPotion().getShooter() instanceof Player) {
-			for(LivingEntity entity : event.getAffectedEntities()) {
+
+		if(e.getPotion().getShooter() instanceof Player) {
+			for (PotionEffect PEffect : e.getPotion().getEffects() ) {
+				if (PositivePotions.getPositiveEffects().contains(PEffect.getType()))
+					return;
+			}
+			Collection<LivingEntity> affected = e.getAffectedEntities();
+			for(LivingEntity entity : affected) {
 				if(entity instanceof Player victim) {
-					Player attacker = (Player) event.getPotion().getShooter();
+					Player attacker = (Player) e.getPotion().getShooter();
 					Boolean isAttackerPVPOff = WisecraftSMP.instance.players.get(attacker.getUniqueId());
 					Boolean isVictimPVPOff = WisecraftSMP.instance.players.get(victim.getUniqueId());
 					if(attacker != victim) {
 						if(isAttackerPVPOff) {
-							Collection<LivingEntity> affected = event.getAffectedEntities();
-							for(LivingEntity ent : affected){
-								if(ent instanceof Player && ent != attacker){
-									event.setIntensity(ent, 0);
+
+							for(LivingEntity livingEntity : affected){
+
+								if(livingEntity instanceof Player && livingEntity != attacker){
+									e.setIntensity(livingEntity, 0);
 								}
 							}
 							Chat.send(attacker, "PVP_DISABLED");
 						} else if(isVictimPVPOff != null && isVictimPVPOff) {
-							Collection<LivingEntity> affected = event.getAffectedEntities();
 							for(LivingEntity ent : affected){
 								if(ent instanceof Player && ent != attacker){
-									event.setIntensity(ent, 0);
+									e.setIntensity(ent, 0);
 								}
 							}
 							Chat.send(attacker, "PVP_DISABLED_OTHERS", victim.getName());
