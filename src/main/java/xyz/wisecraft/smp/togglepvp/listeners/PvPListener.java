@@ -27,15 +27,11 @@ public class PvPListener implements Listener {
 	@EventHandler(ignoreCancelled = true)
 	//fired when an entity is hit
 	public void onHit(EntityDamageByEntityEvent event) {
-		if (WisecraftSMP.blockedWorlds.contains(event.getEntity().getWorld().getName())) {
-			return;
-		}
+		if (WisecraftSMP.blockedWorlds.contains(event.getEntity().getWorld().getName())) return;
 
 		//check if attack was a player
 		if (event.getDamager() instanceof Player attacker && event.getEntity() instanceof Player victim) {
-			//player who hit
 			Boolean isAttackerPVPOff = WisecraftSMP.instance.players.get(attacker.getUniqueId());
-			//player who was hit
 			Boolean isVictimPVPOff = WisecraftSMP.instance.players.get(victim.getUniqueId());
 			if (isAttackerPVPOff) {
 				event.setCancelled(true);
@@ -69,12 +65,9 @@ public class PvPListener implements Listener {
 					}
 				}
 			}
-			//checks if damage was done by a potion
 		} else if (event.getDamager() instanceof LightningStrike && event.getDamager().getMetadata("TRIDENT").size() >= 1 && event.getEntity() instanceof Player victim) {
 			Boolean isVictimPVPOff = WisecraftSMP.instance.players.get(victim.getUniqueId());
-			if (isVictimPVPOff != null && isVictimPVPOff) {
-				event.setCancelled(true);
-			}
+			if (isVictimPVPOff != null && isVictimPVPOff) event.setCancelled(true);
 		} else if (event.getDamager() instanceof Firework && event.getEntity() instanceof Player victim) {
 			Boolean isVictimPVPOff = WisecraftSMP.instance.players.get(victim.getUniqueId());
 			if (isVictimPVPOff != null && isVictimPVPOff) {
@@ -98,6 +91,9 @@ public class PvPListener implements Listener {
 			else if (isAttackerPVPOff) {
 				e.setCancelled(true);
 				Chat.send(attacker, "PVP_DISABLED");
+			} else {
+				Util.setCooldownTime(attacker);
+				Util.setCooldownTime(victim);
 			}
 		}
 	}
