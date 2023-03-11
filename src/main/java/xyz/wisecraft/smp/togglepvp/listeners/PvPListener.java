@@ -12,12 +12,10 @@ import org.bukkit.event.entity.PotionSplashEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.weather.LightningStrikeEvent;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.potion.PotionEffect;
-import org.checkerframework.checker.index.qual.Positive;
 import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.extra.UtilCommon;
 import xyz.wisecraft.smp.togglepvp.Chat;
-import xyz.wisecraft.smp.togglepvp.enums.PositivePotions;
+import xyz.wisecraft.smp.togglepvp.utils.PVPUtil;
 import xyz.wisecraft.smp.togglepvp.utils.Util;
 
 import java.util.Collection;
@@ -73,24 +71,6 @@ public class PvPListener implements Listener {
 				}
 			}
 			//checks if damage was done by a potion
-		} else if(event.getDamager() instanceof ThrownPotion potion) {
-			if (potion.getShooter() instanceof Player attacker && event.getEntity() instanceof Player victim) {
-				Boolean isAttackerPVPOff = WisecraftSMP.instance.players.get(attacker.getUniqueId());
-				Boolean isVictimPVPOff = WisecraftSMP.instance.players.get(victim.getUniqueId());
-				if(attacker == victim) {
-					return;
-				}
-				if (isAttackerPVPOff) {
-					event.setCancelled(true);
-					Chat.send(attacker, "PVP_DISABLED");
-				} else if (isVictimPVPOff != null && isVictimPVPOff) {
-					event.setCancelled(true);
-					Chat.send(attacker, "PVP_DISABLED_OTHERS", victim.getName());
-				} else {
-					Util.setCooldownTime(attacker);
-					Util.setCooldownTime(victim);
-				}
-			}
 		} else if (event.getDamager() instanceof LightningStrike && event.getDamager().getMetadata("TRIDENT").size() >= 1 && event.getEntity() instanceof Player victim) {
 			Boolean isVictimPVPOff = WisecraftSMP.instance.players.get(victim.getUniqueId());
 			if (isVictimPVPOff != null && isVictimPVPOff) {
@@ -153,13 +133,11 @@ public class PvPListener implements Listener {
 
 
 		if(e.getPotion().getShooter() instanceof Player) {
-			for (PotionEffect PEffect : e.getPotion().getEffects() ) {
-				if (PositivePotions.getPositiveEffects().contains(PEffect.getType()))
-					return;
-			}
 			Collection<LivingEntity> affected = e.getAffectedEntities();
 			for(LivingEntity entity : affected) {
 				if(entity instanceof Player victim) {
+					if (PVPUtil.isEffectsPositive(e.getPotion().getEffects())) return;
+
 					Player attacker = (Player) e.getPotion().getShooter();
 					Boolean isAttackerPVPOff = WisecraftSMP.instance.players.get(attacker.getUniqueId());
 					Boolean isVictimPVPOff = WisecraftSMP.instance.players.get(victim.getUniqueId());
@@ -192,15 +170,17 @@ public class PvPListener implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	//fired when lingering potion cloud is active
-	public void onCloudEffects(AreaEffectCloudApplyEvent event) {
-		if (WisecraftSMP.blockedWorlds.contains(event.getEntity().getWorld().getName())) return;
+	public void onCloudEffects(AreaEffectCloudApplyEvent e) {
+		if (WisecraftSMP.blockedWorlds.contains(e.getEntity().getWorld().getName())) return;
 
-		if(event.getEntity().getSource() instanceof Player) {
-			Iterator<LivingEntity> it = event.getAffectedEntities().iterator();
+		if(e.getEntity().getSource() instanceof Player) {
+			Iterator<LivingEntity> it = e.getAffectedEntities().iterator();
 			while(it.hasNext()) {
 				LivingEntity entity = it.next();
 				if(entity instanceof Player victim) {
-					Player attacker = (Player) event.getEntity().getSource();
+					if (PVPUtil.isEffectsPositive(e.getEntity().getBasePotionData().getType().getEffectType())) return;
+
+					Player attacker = (Player) e.getEntity().getSource();
 					Boolean isAttackerPVPOff = WisecraftSMP.instance.players.get(attacker.getUniqueId());
 					Boolean isVictimPVPOff = WisecraftSMP.instance.players.get(victim.getUniqueId());
 					if(isVictimPVPOff != null && isVictimPVPOff) {

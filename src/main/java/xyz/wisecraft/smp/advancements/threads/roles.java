@@ -68,7 +68,7 @@ public class roles extends BukkitRunnable {
     public void gibNoble(Player p) {
         //Check if user meets requirements
         Infop data = infom.get(p.getUniqueId());
-        if (data.getTime() >= 1200 && data.getBlocksPlace() >= 10000 && data.getBlocksBroke() >= 20000) {
+        if (data.getTime() >= 1200 && data.getBlocksPlace() >= 10000 && data.getBlocksBroke() >= 15000) {
             NamespacedKey key = new NamespacedKey(plugin, "noble");
 
             // Give it if all are true
