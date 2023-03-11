@@ -26,27 +26,27 @@ public class PvPListener implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	//fired when an entity is hit
-	public void onHit(EntityDamageByEntityEvent event) {
-		if (WisecraftSMP.blockedWorlds.contains(event.getEntity().getWorld().getName())) return;
+	public void onHit(EntityDamageByEntityEvent e) {
+		if (WisecraftSMP.blockedWorlds.contains(e.getEntity().getWorld().getName())) return;
 
 		//check if attack was a player
-		if (event.getDamager() instanceof Player attacker && event.getEntity() instanceof Player victim) {
+		if (e.getDamager() instanceof Player attacker && e.getEntity() instanceof Player victim) {
 			Boolean isAttackerPVPOff = WisecraftSMP.instance.players.get(attacker.getUniqueId());
 			Boolean isVictimPVPOff = WisecraftSMP.instance.players.get(victim.getUniqueId());
 			if (isAttackerPVPOff) {
-				event.setCancelled(true);
+				e.setCancelled(true);
 				Chat.send(attacker, "PVP_DISABLED");
 			} else if (isVictimPVPOff != null && isVictimPVPOff) {
-				event.setCancelled(true);
+				e.setCancelled(true);
 				Chat.send(attacker, "PVP_DISABLED_OTHERS", victim.getName());
 			} else {
 				Util.setCooldownTime(attacker);
 				Util.setCooldownTime(victim);
 			}
 			//checks if damage was done by a projectile
-		} else if (event.getDamager() instanceof Projectile arrow) {
+		} else if (e.getDamager() instanceof Projectile arrow) {
 			if(arrow.getShooter() instanceof Player) {
-				if(event.getEntity() instanceof Player victim) {
+				if(e.getEntity() instanceof Player victim) {
 					Player attacker = (Player) arrow.getShooter();
 					Boolean isAttackerPVPOff = WisecraftSMP.instance.players.get(attacker.getUniqueId());
 					Boolean isVictimPVPOff = WisecraftSMP.instance.players.get(victim.getUniqueId());
@@ -54,10 +54,10 @@ public class PvPListener implements Listener {
 						return;
 					}
 					if(isAttackerPVPOff) {
-						event.setCancelled(true);
+						e.setCancelled(true);
 						Chat.send(attacker, "PVP_DISABLED");
 					} else if(isVictimPVPOff != null && isVictimPVPOff) {
-						event.setCancelled(true);
+						e.setCancelled(true);
 						Chat.send(attacker, "PVP_DISABLED_OTHERS", victim.getName());
 					} else {
 						Util.setCooldownTime(attacker);
@@ -65,14 +65,14 @@ public class PvPListener implements Listener {
 					}
 				}
 			}
-		} else if (event.getDamager() instanceof LightningStrike && event.getDamager().getMetadata("TRIDENT").size() >= 1 && event.getEntity() instanceof Player victim) {
+		} else if (e.getDamager() instanceof LightningStrike && e.getDamager().getMetadata("TRIDENT").size() >= 1 && e.getEntity() instanceof Player victim) {
 			Boolean isVictimPVPOff = WisecraftSMP.instance.players.get(victim.getUniqueId());
-			if (isVictimPVPOff != null && isVictimPVPOff) event.setCancelled(true);
-		} else if (event.getDamager() instanceof Firework && event.getEntity() instanceof Player victim) {
+			if (isVictimPVPOff != null && isVictimPVPOff) e.setCancelled(true);
+		} else if (e.getDamager() instanceof Firework && e.getEntity() instanceof Player victim) {
 			Boolean isVictimPVPOff = WisecraftSMP.instance.players.get(victim.getUniqueId());
-			if (isVictimPVPOff != null && isVictimPVPOff) {
-				event.setCancelled(true);
-			}
+			if (isVictimPVPOff != null && isVictimPVPOff)
+				e.setCancelled(true);
+
 		}
 	}
 
@@ -80,39 +80,37 @@ public class PvPListener implements Listener {
 	public void onTimber(TreeDamageEvent e) {
 		Player victim = e.getVictim();
 		Player attacker = UtilCommon.getWhoTimber(victim, 2.5);
-		Boolean isVictimPVPOff = WisecraftSMP.instance.players.get(victim.getUniqueId());
+		if (attacker == null) return;
 
-		if (attacker != null) {
-			Boolean isAttackerPVPOff = WisecraftSMP.instance.players.get(attacker.getUniqueId());
-			if (isVictimPVPOff) {
-				e.setCancelled(true);
-				Chat.send(attacker, "PVP_DISABLED_OTHERS", victim.getName());
-			}
-			else if (isAttackerPVPOff) {
-				e.setCancelled(true);
-				Chat.send(attacker, "PVP_DISABLED");
-			} else {
-				Util.setCooldownTime(attacker);
-				Util.setCooldownTime(victim);
-			}
+		Boolean isVictimPVPOff = WisecraftSMP.instance.players.get(victim.getUniqueId());
+		Boolean isAttackerPVPOff = WisecraftSMP.instance.players.get(attacker.getUniqueId());
+		if (isVictimPVPOff) {
+			e.setCancelled(true);
+			Chat.send(attacker, "PVP_DISABLED_OTHERS", victim.getName());
+		} else if (isAttackerPVPOff) {
+			e.setCancelled(true);
+			Chat.send(attacker, "PVP_DISABLED");
+		} else {
+			Util.setCooldownTime(attacker);
+			Util.setCooldownTime(victim);
 		}
+
 	}
 
 	@EventHandler(ignoreCancelled = true)
 	//fired when a player is shot with a flaming arrow
-	public void onFlameArrow(EntityCombustByEntityEvent event) {
-		if (WisecraftSMP.blockedWorlds.contains(event.getEntity().getWorld().getName())) {
-			return;
-		}
+	public void onFlameArrow(EntityCombustByEntityEvent e) {
+		if (WisecraftSMP.blockedWorlds.contains(e.getEntity().getWorld().getName())) return;
 
-		if(event.getCombuster() instanceof Arrow arrow) {
-			if(arrow.getShooter() instanceof Player attacker && event.getEntity() instanceof Player victim) {
+		if(e.getCombuster() instanceof Arrow arrow) {
+			if(arrow.getShooter() instanceof Player attacker && e.getEntity() instanceof Player victim) {
 				Boolean isAttackerPVPOff = WisecraftSMP.instance.players.get(attacker.getUniqueId());
 				Boolean isVictimPVPOff = WisecraftSMP.instance.players.get(victim.getUniqueId());
+
 				if (isAttackerPVPOff) {
-					event.setCancelled(true);
+					e.setCancelled(true);
 				} else if (isVictimPVPOff != null && isVictimPVPOff) {
-					event.setCancelled(true);
+					e.setCancelled(true);
 				} else {
 					Util.setCooldownTime(attacker);
 					Util.setCooldownTime(victim);
@@ -138,14 +136,13 @@ public class PvPListener implements Listener {
 					Boolean isVictimPVPOff = WisecraftSMP.instance.players.get(victim.getUniqueId());
 					if(attacker != victim) {
 						if(isAttackerPVPOff) {
-
 							for(LivingEntity livingEntity : affected){
-
 								if(livingEntity instanceof Player && livingEntity != attacker){
 									e.setIntensity(livingEntity, 0);
 								}
 							}
 							Chat.send(attacker, "PVP_DISABLED");
+
 						} else if(isVictimPVPOff != null && isVictimPVPOff) {
 							for(LivingEntity ent : affected){
 								if(ent instanceof Player && ent != attacker){
@@ -193,20 +190,20 @@ public class PvPListener implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	//fired when a player uses a fishing rod
-	public void onPlayerFishing (PlayerFishEvent event) {
-		if (WisecraftSMP.blockedWorlds.contains(event.getPlayer().getWorld().getName())) return;
+	public void onPlayerFishing (PlayerFishEvent e) {
+		if (WisecraftSMP.blockedWorlds.contains(e.getPlayer().getWorld().getName())) return;
 
 
-		if (event.getCaught() instanceof final Player victim) {
-			final Player attacker = event.getPlayer();
+		if (e.getCaught() instanceof final Player victim) {
+			final Player attacker = e.getPlayer();
 			Boolean isAttackerPVPOff = WisecraftSMP.instance.players.get(attacker.getUniqueId());
 			Boolean isVictimPVPOff = WisecraftSMP.instance.players.get(victim.getUniqueId());
 			if (attacker.getInventory().getItemInMainHand().getType() == Material.FISHING_ROD || attacker.getInventory().getItemInOffHand().getType() == Material.FISHING_ROD) {
 				if (isAttackerPVPOff) {
-					event.setCancelled(true);
+					e.setCancelled(true);
 					Chat.send(attacker, "PVP_DISABLED");
 				} else if (isVictimPVPOff != null && isVictimPVPOff) {
-					event.setCancelled(true);
+					e.setCancelled(true);
 					Chat.send(attacker, "PVP_DISABLED_OTHERS", victim.getName());
 				} else {
 					Util.setCooldownTime(attacker);
@@ -218,10 +215,10 @@ public class PvPListener implements Listener {
 
 	//Tag lightning strike as from a trident
 	@EventHandler(ignoreCancelled = true)
-	public void onLightningStrike(LightningStrikeEvent event){
-		if(event.getCause() == LightningStrikeEvent.Cause.TRIDENT){
-			event.getLightning().setMetadata("TRIDENT", new FixedMetadataValue(
-					WisecraftSMP.instance, event.getLightning().getLocation()
+	public void onLightningStrike(LightningStrikeEvent e){
+		if(e.getCause() == LightningStrikeEvent.Cause.TRIDENT){
+			e.getLightning().setMetadata("TRIDENT", new FixedMetadataValue(
+					WisecraftSMP.instance, e.getLightning().getLocation()
 			));
 		}
 	}
