@@ -25,7 +25,6 @@ import java.util.Iterator;
 public class PvPListener implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
-	//fired when an entity is hit
 	public void onHit(EntityDamageByEntityEvent e) {
 		if (WisecraftSMP.blockedWorlds.contains(e.getEntity().getWorld().getName())) return;
 
@@ -45,24 +44,23 @@ public class PvPListener implements Listener {
 			}
 			//checks if damage was done by a projectile
 		} else if (e.getDamager() instanceof Projectile arrow) {
-			if(arrow.getShooter() instanceof Player) {
-				if(e.getEntity() instanceof Player victim) {
-					Player attacker = (Player) arrow.getShooter();
-					Boolean isAttackerPVPOff = WisecraftSMP.instance.players.get(attacker.getUniqueId());
-					Boolean isVictimPVPOff = WisecraftSMP.instance.players.get(victim.getUniqueId());
-					if(attacker == victim) {
-						return;
-					}
-					if(isAttackerPVPOff) {
-						e.setCancelled(true);
-						Chat.send(attacker, "PVP_DISABLED");
-					} else if(isVictimPVPOff != null && isVictimPVPOff) {
-						e.setCancelled(true);
-						Chat.send(attacker, "PVP_DISABLED_OTHERS", victim.getName());
-					} else {
-						Util.setCooldownTime(attacker);
-						Util.setCooldownTime(victim);
-					}
+			if(!(arrow.getShooter() instanceof Player)) return;
+
+			if(e.getEntity() instanceof Player victim) {
+				Player attacker = (Player) arrow.getShooter();
+				Boolean isAttackerPVPOff = WisecraftSMP.instance.players.get(attacker.getUniqueId());
+				Boolean isVictimPVPOff = WisecraftSMP.instance.players.get(victim.getUniqueId());
+				if(attacker == victim) return;
+
+				if(isAttackerPVPOff) {
+					e.setCancelled(true);
+					Chat.send(attacker, "PVP_DISABLED");
+				} else if(isVictimPVPOff != null && isVictimPVPOff) {
+					e.setCancelled(true);
+					Chat.send(attacker, "PVP_DISABLED_OTHERS", victim.getName());
+				} else {
+					Util.setCooldownTime(attacker);
+					Util.setCooldownTime(victim);
 				}
 			}
 		} else if (e.getDamager() instanceof LightningStrike && e.getDamager().getMetadata("TRIDENT").size() >= 1 && e.getEntity() instanceof Player victim) {

@@ -11,6 +11,17 @@ import java.util.Map;
 import java.util.UUID;
 
 public class UtilCommon {
+    /**
+     * Note: This can give false positives due to the fact that 1. trees can be made to last longer than TimeFrame or
+     * 2. if multiple people nearby are using Timber and the culprit wasn't the one with the highest time or
+     * 3. if someone can get over 32 blocks away from the victim
+     * <p>
+     * A Timber cooldown of over TimeFrame is needed to prevent people from abusing 2. false positive reason
+     *
+     * @param victim Player that was hit by a tree
+     * @param timeFrame The time from Timber was used until it probably finished its animation
+     * @return Finds who might have used Timber
+     */
     public static Player getWhoTimber(Player victim, double timeFrame) {
 
         UUID victimUUID = victim.getUniqueId();
@@ -32,7 +43,7 @@ public class UtilCommon {
         for (Map.Entry<Double, Player> attacker : attackers.entrySet()) {
             double timberSecAgo = attacker.getKey();
             if (timberSecAgo <= timeFrame && timberSecAgo > biggest)
-                biggest = attacker.getKey();
+                biggest = timberSecAgo;
         }
 
         if (biggest < 0) return null;
