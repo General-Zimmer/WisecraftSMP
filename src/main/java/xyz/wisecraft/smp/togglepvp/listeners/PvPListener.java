@@ -22,7 +22,6 @@ import java.util.Collection;
 import java.util.Iterator;
 
 //todo reorganize this mess
-//todo Only prevent bad positon effects
 public class PvPListener implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
