@@ -20,6 +20,10 @@ public class Util {
 	
 	private static final float radius = .75f;
 
+	/**
+	 * Get the state the player is in.
+	 * @return PVP State, returns false if the result is null
+	 */
 	public static boolean getPlayerState(UUID uuid){
 		Boolean result = WisecraftSMP.instance.players.get(uuid);
 		if(result==null) return false;
@@ -30,7 +34,9 @@ public class Util {
 		WisecraftSMP.instance.players.put(uuid,state);
 	}
 
-	// Set player state while performing checks to make sure it's a valid switch.
+	/**
+	 * Set player state while performing checks to make sure it's a valid switch.
+	 */
 	public static boolean setPlayerState(Player player, boolean state, CommandSender caller) {
 		if (player == null) {
 			return false;

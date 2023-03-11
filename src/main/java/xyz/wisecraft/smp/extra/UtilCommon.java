@@ -58,9 +58,9 @@ public class UtilCommon {
             Timers attackerTimer = WisecraftSMP.core.getTimers().get(attacker.getUniqueId());
             double secSinceAttackerTimber = UtilAdv.calcCurrentSeconds(attackerTimer.getTree());
             UUID attackerUUID = attacker.getUniqueId();
-            if (!victimUUID.toString().equals(attackerUUID.toString()) && secSinceAttackerTimber < timeFrame) {
+
+            if (!victimUUID.toString().equals(attackerUUID.toString()) && secSinceAttackerTimber < timeFrame)
                 players.put(secSinceAttackerTimber, attacker);
-            }
         }
         if (players.isEmpty())
             return null;
