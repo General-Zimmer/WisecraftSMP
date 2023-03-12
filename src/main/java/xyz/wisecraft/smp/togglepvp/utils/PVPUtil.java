@@ -1,8 +1,10 @@
 package xyz.wisecraft.smp.togglepvp.utils;
 
+import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import xyz.wisecraft.smp.WisecraftSMP;
+import xyz.wisecraft.smp.togglepvp.Chat;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,4 +47,29 @@ public class PVPUtil {
     public static boolean isEffectsPositive(PotionEffectType effect) {
         return PVPUtil.getPositiveEffects().contains(effect);
     }
+
+    /**
+     * Checks if 2 players have pvp disabled, and reset cooldown time if they don't.
+     * @param attacker Player who attacked @param victim
+     * @return returns true if either players have pvp disabled
+     */
+    public static boolean checkPVPStates(Player attacker, Player victim) {
+        if(attacker == null || attacker.equals(victim)) return false;
+
+        Boolean isVictimPVPOff = WisecraftSMP.instance.players.get(victim.getUniqueId());
+        Boolean isAttackerPVPOff = WisecraftSMP.instance.players.get(attacker.getUniqueId());
+        if(isAttackerPVPOff) {
+            Chat.send(attacker, "PVP_DISABLED_OTHERS", victim.getName());
+            return true;
+        } else if (isVictimPVPOff != null && isVictimPVPOff) {
+            Chat.send(attacker, "PVP_DISABLED");
+            return true;
+        } else {
+            Util.setCooldownTime(attacker);
+            Util.setCooldownTime(victim);
+            return false;
+        }
+
+    }
+
 }
