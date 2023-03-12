@@ -17,11 +17,9 @@ public class PlayerListener implements Listener {
     public PlayerListener() {
         for(Player p : Bukkit.getOnlinePlayers()) {
             if(!WisecraftSMP.instance.getConfig().getBoolean("SETTINGS.PERSISTENT_PVP_STATE")) {
-                //add player to players hash map and set their pvp state
                 WisecraftSMP.instance.players.put(p.getUniqueId(), WisecraftSMP.instance.getConfig().getBoolean("SETTINGS.DEFAULT_PVP_OFF"));
             } else {
                 WisecraftSMP.instance.dataUtils.addPlayer(p);
-                //add player to players hash map and set their pvp state
                 WisecraftSMP.instance.players.put(p.getUniqueId(), WisecraftSMP.instance.dataUtils.GetPlayerPvPState(p));
             }
             if(!WisecraftSMP.instance.players.get(p.getUniqueId())) {
@@ -39,11 +37,9 @@ public class PlayerListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player p = event.getPlayer();
         if(!WisecraftSMP.instance.getConfig().getBoolean("SETTINGS.PERSISTENT_PVP_STATE")) {
-            //add player to players hash map and set their pvp state
             WisecraftSMP.instance.players.put(p.getUniqueId(), WisecraftSMP.instance.getConfig().getBoolean("SETTINGS.DEFAULT_PVP_OFF"));
         } else {
             WisecraftSMP.instance.dataUtils.addPlayer(p);
-            //add player to players hash map and set their pvp state
             WisecraftSMP.instance.players.put(p.getUniqueId(), WisecraftSMP.instance.dataUtils.GetPlayerPvPState(p));
         }
         if(!WisecraftSMP.instance.players.get(p.getUniqueId())) {
@@ -61,7 +57,7 @@ public class PlayerListener implements Listener {
         if(WisecraftSMP.instance.getConfig().getBoolean("SETTINGS.PERSISTENT_PVP_STATE")) {
             WisecraftSMP.instance.dataUtils.UpdatePlayerPvPState(p);
         }
-        WisecraftSMP.instance.players.remove(p.getUniqueId()); //remove player from players hash map
+        WisecraftSMP.instance.players.remove(p.getUniqueId());
     }
 
     @EventHandler

@@ -175,7 +175,7 @@ public class Angel {
 
                     angel.resetGrace(p.hasPermission("wisecraft.donator"));
                     angel.setGraceActive(false);
-                    p.sendMessage(ChatColor.AQUA + "Your graces has reset");
+                    p.sendMessage(ChatColor.AQUA + "Your graces have been reset");
                 }
 
             }.runTaskLater(plugin, 20*60*60); // 1 hour
