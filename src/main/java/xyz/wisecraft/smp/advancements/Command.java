@@ -1,10 +1,8 @@
 package xyz.wisecraft.smp.advancements;
 
-import net.luckperms.api.LuckPerms;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
-import xyz.wisecraft.core.WisecraftCoreApi;
 import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.advancements.threads.gibRoles;
 
@@ -13,15 +11,11 @@ import java.util.List;
 
 public class Command implements CommandExecutor, Tabcompletion {
 
-    WisecraftSMP plugin;
-    LuckPerms luck;
-    WisecraftCoreApi core;
+    private final WisecraftSMP plugin;
 
-public Command() {
+    public Command() {
     this.plugin = WisecraftSMP.instance;
-    this.luck = WisecraftSMP.luck;
-    this.core = WisecraftSMP.core;
-}
+    }
     @Override
     public boolean onCommand(CommandSender sender, @NotNull org.bukkit.command.Command cmd, @NotNull String label, @NotNull String[] args) {
 
