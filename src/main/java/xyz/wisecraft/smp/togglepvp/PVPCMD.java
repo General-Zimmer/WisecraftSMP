@@ -60,7 +60,7 @@ public class PVPCMD implements TabExecutor {
 					return true;
 				}
 				// Switch PVP State on target
-				Boolean otherPlayerPVPState = plugin.players.get(other.getUniqueId());
+				Boolean otherPlayerPVPState = plugin.PVPPlayers.get(other.getUniqueId());
 				if (otherPlayerPVPState) {
 					// Turn off
 					if (Util.setPlayerState(other, false, sender)) {

@@ -20,7 +20,7 @@ public class PlaceholderAPIHook extends PlaceholderExpansion {
 
 		//Placeholder: %WisecraftSMP_positive_rep%
 		if(identifier.equals("pvp_state")) {
-			return plugin.players.get(player.getUniqueId()) ? "&aOff" : "&cOn";
+			return plugin.PVPPlayers.get(player.getUniqueId()) ? "&aOff" : "&cOn";
 		}
 
 		return null;

@@ -19,7 +19,6 @@ import xyz.wisecraft.smp.togglepvp.utils.PVPUtil;
 import xyz.wisecraft.smp.togglepvp.utils.Util;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 //todo reorganize this mess
 public class PvPListener implements Listener {
@@ -46,10 +45,10 @@ public class PvPListener implements Listener {
 
 			}
 		} else if (e.getDamager() instanceof LightningStrike && e.getDamager().getMetadata("TRIDENT").size() >= 1 && e.getEntity() instanceof Player victim) {
-			Boolean isVictimPVPOff = WisecraftSMP.instance.players.get(victim.getUniqueId());
+			Boolean isVictimPVPOff = WisecraftSMP.instance.PVPPlayers.get(victim.getUniqueId());
 			if (isVictimPVPOff != null && isVictimPVPOff) e.setCancelled(true);
 		} else if (e.getDamager() instanceof Firework && e.getEntity() instanceof Player victim) {
-			Boolean isVictimPVPOff = WisecraftSMP.instance.players.get(victim.getUniqueId());
+			Boolean isVictimPVPOff = WisecraftSMP.instance.PVPPlayers.get(victim.getUniqueId());
 			if (isVictimPVPOff != null && isVictimPVPOff)
 				e.setCancelled(true);
 
@@ -73,8 +72,8 @@ public class PvPListener implements Listener {
 
 		if(e.getCombuster() instanceof Arrow arrow) {
 			if(arrow.getShooter() instanceof Player attacker && e.getEntity() instanceof Player victim) {
-				Boolean isAttackerPVPOff = WisecraftSMP.instance.players.get(attacker.getUniqueId());
-				Boolean isVictimPVPOff = WisecraftSMP.instance.players.get(victim.getUniqueId());
+				Boolean isAttackerPVPOff = WisecraftSMP.instance.PVPPlayers.get(attacker.getUniqueId());
+				Boolean isVictimPVPOff = WisecraftSMP.instance.PVPPlayers.get(victim.getUniqueId());
 
 				if (isAttackerPVPOff) {
 					e.setCancelled(true);
@@ -101,8 +100,8 @@ public class PvPListener implements Listener {
 					if (PVPUtil.isEffectsPositive(e.getPotion().getEffects())) return;
 
 					Player attacker = (Player) e.getPotion().getShooter();
-					Boolean isAttackerPVPOff = WisecraftSMP.instance.players.get(attacker.getUniqueId());
-					Boolean isVictimPVPOff = WisecraftSMP.instance.players.get(victim.getUniqueId());
+					Boolean isAttackerPVPOff = WisecraftSMP.instance.PVPPlayers.get(attacker.getUniqueId());
+					Boolean isVictimPVPOff = WisecraftSMP.instance.PVPPlayers.get(victim.getUniqueId());
 					if(attacker != victim) {
 						if(isAttackerPVPOff) {
 							for(LivingEntity livingEntity : affected){

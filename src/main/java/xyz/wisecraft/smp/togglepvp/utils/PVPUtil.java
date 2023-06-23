@@ -56,8 +56,8 @@ public class PVPUtil {
     public static boolean checkPVPStates(Player attacker, Player victim) {
         if(attacker == null || attacker.equals(victim)) return false;
 
-        Boolean isVictimPVPOff = WisecraftSMP.instance.players.get(victim.getUniqueId());
-        Boolean isAttackerPVPOff = WisecraftSMP.instance.players.get(attacker.getUniqueId());
+        Boolean isVictimPVPOff = WisecraftSMP.instance.PVPPlayers.get(victim.getUniqueId());
+        Boolean isAttackerPVPOff = WisecraftSMP.instance.PVPPlayers.get(attacker.getUniqueId());
         if(isAttackerPVPOff) {
             Chat.send(attacker, "PVP_DISABLED_OTHERS", victim.getName());
             return true;

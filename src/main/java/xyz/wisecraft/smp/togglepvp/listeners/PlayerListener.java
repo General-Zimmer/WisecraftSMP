@@ -17,12 +17,12 @@ public class PlayerListener implements Listener {
     public PlayerListener() {
         for(Player p : Bukkit.getOnlinePlayers()) {
             if(!WisecraftSMP.instance.getConfig().getBoolean("SETTINGS.PERSISTENT_PVP_STATE")) {
-                WisecraftSMP.instance.players.put(p.getUniqueId(), WisecraftSMP.instance.getConfig().getBoolean("SETTINGS.DEFAULT_PVP_OFF"));
+                WisecraftSMP.instance.PVPPlayers.put(p.getUniqueId(), WisecraftSMP.instance.getConfig().getBoolean("SETTINGS.DEFAULT_PVP_OFF"));
             } else {
-                WisecraftSMP.instance.dataUtils.addPlayer(p);
-                WisecraftSMP.instance.players.put(p.getUniqueId(), WisecraftSMP.instance.dataUtils.GetPlayerPvPState(p));
+                WisecraftSMP.instance.PVPDataUtils.addPlayer(p);
+                WisecraftSMP.instance.PVPPlayers.put(p.getUniqueId(), WisecraftSMP.instance.PVPDataUtils.GetPlayerPvPState(p));
             }
-            if(!WisecraftSMP.instance.players.get(p.getUniqueId())) {
+            if(!WisecraftSMP.instance.PVPPlayers.get(p.getUniqueId())) {
                 if(WisecraftSMP.instance.getConfig().getBoolean("SETTINGS.PARTICLES")) {
                     Util.particleEffect(p.getPlayer());
                 }
@@ -37,12 +37,12 @@ public class PlayerListener implements Listener {
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player p = event.getPlayer();
         if(!WisecraftSMP.instance.getConfig().getBoolean("SETTINGS.PERSISTENT_PVP_STATE")) {
-            WisecraftSMP.instance.players.put(p.getUniqueId(), WisecraftSMP.instance.getConfig().getBoolean("SETTINGS.DEFAULT_PVP_OFF"));
+            WisecraftSMP.instance.PVPPlayers.put(p.getUniqueId(), WisecraftSMP.instance.getConfig().getBoolean("SETTINGS.DEFAULT_PVP_OFF"));
         } else {
-            WisecraftSMP.instance.dataUtils.addPlayer(p);
-            WisecraftSMP.instance.players.put(p.getUniqueId(), WisecraftSMP.instance.dataUtils.GetPlayerPvPState(p));
+            WisecraftSMP.instance.PVPDataUtils.addPlayer(p);
+            WisecraftSMP.instance.PVPPlayers.put(p.getUniqueId(), WisecraftSMP.instance.PVPDataUtils.GetPlayerPvPState(p));
         }
-        if(!WisecraftSMP.instance.players.get(p.getUniqueId())) {
+        if(!WisecraftSMP.instance.PVPPlayers.get(p.getUniqueId())) {
             if(WisecraftSMP.instance.getConfig().getBoolean("SETTINGS.PARTICLES")) {
                 Util.particleEffect(p.getPlayer());
             }
@@ -55,9 +55,9 @@ public class PlayerListener implements Listener {
     public void onQuit(PlayerQuitEvent event) {
         Player p = event.getPlayer();
         if(WisecraftSMP.instance.getConfig().getBoolean("SETTINGS.PERSISTENT_PVP_STATE")) {
-            WisecraftSMP.instance.dataUtils.UpdatePlayerPvPState(p);
+            WisecraftSMP.instance.PVPDataUtils.UpdatePlayerPvPState(p);
         }
-        WisecraftSMP.instance.players.remove(p.getUniqueId());
+        WisecraftSMP.instance.PVPPlayers.remove(p.getUniqueId());
     }
 
     @EventHandler

@@ -22,13 +22,13 @@ public class PVPCMDUtil {
         if (other == null) {
             Chat.send(p, "NO_PLAYER", args[1]);
         } else {
-            Boolean current = plugin.players.get(other.getUniqueId());
+            Boolean current = plugin.PVPPlayers.get(other.getUniqueId());
             Chat.send(p, "PVP_STATUS_OTHERS", other.getName(), current);
         }
     }
 
     public static void zeroArg(Player p, String color) {
-        Boolean current = plugin.players.get(p.getUniqueId());
+        Boolean current = plugin.PVPPlayers.get(p.getUniqueId());
         if (current) {
             Util.setCooldownTime(p);
             if (Util.setPlayerState(p, false, p)) {
@@ -50,7 +50,7 @@ public class PVPCMDUtil {
     }
 
     public static void getHelp(Player p) {
-        Chat.send(p, "PVP_STATUS", null, plugin.players.get(p.getUniqueId()));
+        Chat.send(p, "PVP_STATUS", null, plugin.PVPPlayers.get(p.getUniqueId()));
         Chat.send(p, "HELP_HEADER");
         Chat.send(p, "HELP_GENERAL_USEAGE");
         if (p.hasPermission("pvptoggle.others"))
@@ -79,7 +79,7 @@ public class PVPCMDUtil {
                     plugin.reloadConfig();
                     return;
                 } else if (args[0].equals("toggle")) {
-                    Boolean current = plugin.players.get(other.getUniqueId());
+                    Boolean current = plugin.PVPPlayers.get(other.getUniqueId());
                     if (current) {
                         if (Util.setPlayerState(other, false, console)) {
                             Chat.send(other, "PVP_STATE_ENABLED");
@@ -97,7 +97,7 @@ public class PVPCMDUtil {
                     }
                 } else if (args[0].equalsIgnoreCase("on")) {
                     if (Util.setPlayerState(other, false, console)) {
-                        Boolean current = plugin.players.get(other.getUniqueId());
+                        Boolean current = plugin.PVPPlayers.get(other.getUniqueId());
                         Chat.send(other, "PVP_STATE_ENABLED");
                         if (current) {
                             if (plugin.getConfig().getBoolean("SETTINGS.PARTICLES")) {
@@ -117,7 +117,7 @@ public class PVPCMDUtil {
                     }
                 }
 
-                Boolean current = plugin.players.get(other.getUniqueId());
+                Boolean current = plugin.PVPPlayers.get(other.getUniqueId());
                 Chat.send(console, "PVP_STATE_CHANGED_OTHERS", other.getName(), current);
             }
 

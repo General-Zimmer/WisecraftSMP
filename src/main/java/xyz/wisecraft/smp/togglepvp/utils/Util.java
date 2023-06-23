@@ -25,13 +25,13 @@ public class Util {
 	 * @return PVP State, returns false if the result is null
 	 */
 	public static boolean getPlayerState(UUID uuid){
-		Boolean result = WisecraftSMP.instance.players.get(uuid);
+		Boolean result = WisecraftSMP.instance.PVPPlayers.get(uuid);
 		if(result==null) return false;
 		else return result;
 	}
 	
 	public static void setPlayerState(UUID uuid, boolean state){
-		WisecraftSMP.instance.players.put(uuid,state);
+		WisecraftSMP.instance.PVPPlayers.put(uuid,state);
 	}
 
 	/**
@@ -108,7 +108,7 @@ public class Util {
 
 			@Override
 			public void run() {			
-				if(!p.isOnline() || WisecraftSMP.instance.players.get(p.getUniqueId())) {
+				if(!p.isOnline() || WisecraftSMP.instance.PVPPlayers.get(p.getUniqueId())) {
 					this.cancel();
 				} else if(!p.isDead()) {
 					double angle = 0;

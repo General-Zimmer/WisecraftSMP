@@ -18,6 +18,8 @@ import java.util.Date;
 
 public class UtilAdv {
 
+
+    //todo move methods expected to be used once to UtilAdvRandom and rename this UtilAdvCommon
     private static AdvancementProgress gibAdv(NamespacedKey key, Player p) throws Exception {
         Advancement a = Bukkit.getAdvancement(key);
         if (a == null)

@@ -32,12 +32,14 @@ import java.util.UUID;
 public final class WisecraftSMP extends JavaPlugin {
 
     //todo make these fields private
-    public static WisecraftSMP instance = null;
+    public static WisecraftSMP instance;
     public static IEssentials ess = null;
     public static WisecraftCoreApi core = null;
     public static LuckPerms luck = null;
-    public static final HashMap<UUID, Angel> gearMap = new HashMap<>();
     public static String server_name;
+    // SavingGrace angels
+    public static final HashMap<UUID, Angel> gearMap = new HashMap<>();
+
 
     // PVPToggle stuff
 
@@ -46,10 +48,10 @@ public final class WisecraftSMP extends JavaPlugin {
     /**
      * //False is pvp on. True is pvp off
      */
-    public HashMap<UUID,Boolean> players = new HashMap<>();
+    public HashMap<UUID,Boolean> PVPPlayers = new HashMap<>();
     public HashMap<UUID, Date> cooldowns = new HashMap<>();
 
-    public PersistentData dataUtils;
+    public PersistentData PVPDataUtils;
 
     public WisecraftSMP() {
         instance = this;
@@ -78,29 +80,25 @@ public final class WisecraftSMP extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new Ibba(), this);
         if (setupTimber())
             this.getServer().getPluginManager().registerEvents(new timberListeners(), this);
-
+        // register events PVPToggle
+        Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PvPListener(), this);
 
         // Register commands
         WisecraftCMD wiseCMD = new WisecraftCMD();
         this.getCommand("wisecraft").setExecutor(wiseCMD);
         this.getCommand("wshop").setExecutor(wiseCMD);
         this.getCommand("autoroles").setExecutor(new Command());
+        this.getCommand("pvp").setExecutor(new PVPCMD());
 
         // Check for new citizens. This is async right after this step.
         new gibRoles().runTaskTimer(this, 18000, 18000);
 
         // PVPToggle data
         File PVPData = new File(getDataFolder(), "togglepvp");
-        dataUtils = new PersistentData(PVPData);
-
-        // register events PVPToggle
-        Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
-        Bukkit.getPluginManager().registerEvents(new PvPListener(), this);
-        // register command
-        this.getCommand("pvp").setExecutor(new PVPCMD());
+        PVPDataUtils = new PersistentData(PVPData);
 
         blockedWorlds = config.getStringList("SETTINGS.BLOCKED_WORLDS");
-
 
     }
 

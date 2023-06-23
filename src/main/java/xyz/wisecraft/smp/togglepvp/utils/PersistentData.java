@@ -36,7 +36,7 @@ public class PersistentData {
 		File file = new File(dir.getPath(), p.getUniqueId() + ".yml");
 		try {
 			FileConfiguration playerData = YamlConfiguration.loadConfiguration(file);
-			playerData.set("PvPState", WisecraftSMP.instance.players.get(p.getUniqueId()));
+			playerData.set("PvPState", WisecraftSMP.instance.PVPPlayers.get(p.getUniqueId()));
 			playerData.save(file);
 		} catch (Exception e) {
 			e.printStackTrace();

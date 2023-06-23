@@ -38,6 +38,7 @@ public class ExtraEvents implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
+
         if (!plugin.getGearmap().containsKey(p.getUniqueId()))
             gearMap.put(p.getUniqueId(), new Angel(p.hasPermission("wisecraft.donator")));
 
