@@ -20,7 +20,7 @@ import xyz.wisecraft.smp.togglepvp.utils.Util;
 
 import java.util.Collection;
 
-//todo reorganize this mess
+//todo re-reorganize this mess
 public class PvPListener implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
@@ -40,25 +40,25 @@ public class PvPListener implements Listener {
 			if(e.getEntity() instanceof Player victim) {
 				Player attacker = (Player) arrow.getShooter();
 
-				if (PVPUtil.checkPVPStates(attacker, victim))
-					e.setCancelled(true);
-
+				if (PVPUtil.checkPVPStates(attacker, victim)) e.setCancelled(true);
 			}
-		} else if (e.getDamager() instanceof LightningStrike && e.getDamager().getMetadata("TRIDENT").size() >= 1 && e.getEntity() instanceof Player victim) {
+		} else if (e.getDamager() instanceof LightningStrike &&
+				e.getDamager().getMetadata("TRIDENT").size() >= 1 &&
+				e.getEntity() instanceof Player victim) {
 			Boolean isVictimPVPOff = WisecraftSMP.instance.PVPPlayers.get(victim.getUniqueId());
+
 			if (isVictimPVPOff != null && isVictimPVPOff) e.setCancelled(true);
 		} else if (e.getDamager() instanceof Firework && e.getEntity() instanceof Player victim) {
 			Boolean isVictimPVPOff = WisecraftSMP.instance.PVPPlayers.get(victim.getUniqueId());
-			if (isVictimPVPOff != null && isVictimPVPOff)
-				e.setCancelled(true);
 
+			if (isVictimPVPOff != null && isVictimPVPOff) e.setCancelled(true);
 		}
 	}
 
 	@EventHandler(ignoreCancelled = true)
 	public void onTimber(TreeDamageEvent e) {
 		Player victim = e.getVictim();
-		Player attacker = UtilCommon.getWhoTimber(victim, 2.5);
+		Player attacker = UtilCommon.getWhoTimber(victim, WisecraftSMP.instance.getConfig().getInt("TIMBER_TIMEFRAME"));
 
 		if (PVPUtil.checkPVPStates(attacker, victim))
 			e.setCancelled(true);
