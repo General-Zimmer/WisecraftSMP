@@ -28,6 +28,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public final class WisecraftSMP extends JavaPlugin {
 
@@ -125,7 +127,7 @@ public final class WisecraftSMP extends JavaPlugin {
             core = provider.getProvider();
             return;
         }
-        Bukkit.getConsoleSender().sendMessage("Couldn't get " + name + " provider");
+        Logger.getLogger("wisecraft").log(Level.WARNING, "Couldn't get " + name + " provider");
     }
     private boolean setupTimber() {
         Plugin setupPlugin = getServer().getPluginManager().getPlugin("UltimateTimber");
@@ -141,7 +143,7 @@ public final class WisecraftSMP extends JavaPlugin {
             luck = provider.getProvider();
             return;
         }
-        Bukkit.getConsoleSender().sendMessage("Couldn't get " + name + " provider");
+        Logger.getLogger("wisecraft").log(Level.WARNING, "Couldn't get " + name + " provider");
     }
 
     private void setupPAPI() {
