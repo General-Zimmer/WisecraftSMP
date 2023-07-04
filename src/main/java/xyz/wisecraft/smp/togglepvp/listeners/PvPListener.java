@@ -56,16 +56,6 @@ public class PvPListener implements Listener {
 	}
 
 	@EventHandler(ignoreCancelled = true)
-	public void onTimber(TreeDamageEvent e) {
-		Player victim = e.getVictim();
-		Player attacker = UtilCommon.getWhoTimber(victim, WisecraftSMP.instance.getConfig().getInt("TIMBER_TIMEFRAME"));
-
-		if (PVPUtil.checkPVPStates(attacker, victim))
-			e.setCancelled(true);
-
-	}
-
-	@EventHandler(ignoreCancelled = true)
 	//fired when a player is shot with a flaming arrow
 	public void onFlameArrow(EntityCombustByEntityEvent e) {
 		if (WisecraftSMP.blockedWorlds.contains(e.getEntity().getWorld().getName())) return;

@@ -18,6 +18,7 @@ import xyz.wisecraft.smp.savinggrace.Angel;
 import xyz.wisecraft.smp.extra.WisecraftCMD;
 import xyz.wisecraft.smp.savinggrace.listeners.AngelListeners;
 import xyz.wisecraft.smp.togglepvp.PVPCMD;
+import xyz.wisecraft.smp.togglepvp.listeners.PVPTimberListener;
 import xyz.wisecraft.smp.togglepvp.listeners.PlayerListener;
 import xyz.wisecraft.smp.togglepvp.listeners.PvPListener;
 import xyz.wisecraft.smp.togglepvp.utils.PersistentData;
@@ -80,8 +81,11 @@ public final class WisecraftSMP extends JavaPlugin {
         this.getServer().getPluginManager().registerEvents(new AngelListeners(), this);
         this.getServer().getPluginManager().registerEvents(new QuestListeners(), this);
         this.getServer().getPluginManager().registerEvents(new Ibba(), this);
-        if (setupTimber())
+        if (setupTimber()) {
             this.getServer().getPluginManager().registerEvents(new timberListeners(), this);
+            this.getServer().getPluginManager().registerEvents(new PVPTimberListener(), this);
+        }
+
         // register events PVPToggle
         Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
         Bukkit.getPluginManager().registerEvents(new PvPListener(), this);

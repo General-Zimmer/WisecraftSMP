@@ -20,7 +20,7 @@ public class UtilCommon {
      *
      * @param victim Player that was hit by a tree
      * @param timeFrame The time from Timber was used until it probably finished its animation
-     * @return Finds who might have used Timber
+     * @return Who might have used Timber
      */
     public static Player getWhoTimber(Player victim, double timeFrame) {
 

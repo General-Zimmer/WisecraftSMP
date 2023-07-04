@@ -1,5 +1,5 @@
 name: WisecraftSMP
-version: '2.1-SNAPSHOT'
+version: '2.1'
 main: xyz.wisecraft.smp.WisecraftSMP
 api-version: 1.18
 depend: [Essentials, WisecraftCore, LuckPerms, PlaceholderAPI, NametagEdit]
