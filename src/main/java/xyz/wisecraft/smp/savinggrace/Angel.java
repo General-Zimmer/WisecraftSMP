@@ -27,16 +27,16 @@ public class Angel {
     private boolean hasDied = false;
     private final WisecraftSMP plugin;
 
-    public Angel(boolean hasPerm) {
+    public Angel(boolean hasDonator) {
         plugin = WisecraftSMP.instance;
-        this.resetGrace(hasPerm);
+        this.resetGrace(hasDonator);
     }
 
     public void giveGrace(PlayerRespawnEvent e) {
         PlayerInventory inv = e.getPlayer().getInventory();
         Player p = e.getPlayer();
         UUID UUID = p.getUniqueId();
-        this.hasDied = false;
+        this.setDied(false);
         // Check for remaining graces
         if (this.getGraces() <= 0) {return;}
 
@@ -59,12 +59,10 @@ public class Angel {
 
         this.safeDelete(plugin, UUID);
 
-
-
     }
 
     public void giveStarter(WisecraftSMP plugin, IEssentials ess, User user, Player p, HashMap<UUID, Angel> gearMap) throws Exception {
-        this.hasDied = false;
+        this.setDied(false);
         World tut = Bukkit.getWorld("tutorial");
         if (tut != null)
             //todo Need a tick delay otherwise they will teleport to spawn. Need to figure out why
@@ -138,6 +136,9 @@ public class Angel {
         }
         this.armor = changeArmor.toArray(new ItemStack[0]);
     }
+
+
+
     public void clear() {
         this.tools = null;
         this.armor = null;
@@ -159,6 +160,7 @@ public class Angel {
     public void decreaseGraces() {--this.graces;}
 
     //todo Make tools be placed into enderchest or into a shulker box in the enderchest (if full), otherwise drop saved items on the corpse.
+    //todo Make use of LocalDate instead of boolean for GraceActive, rename to LastGraceTime with null being no unaccounted grace
     public boolean safeDelete(WisecraftSMP plugin, UUID UUID) {
 
         if (!this.isGraceActive()) {
