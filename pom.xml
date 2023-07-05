@@ -64,7 +64,6 @@
                 <version>3.3.0</version>
                 <executions>
                     <execution>
-                        <!-- This id must match the -Prelease-profile id value or else sources will be "uploaded" twice, which causes Nexus to fail -->
                         <id>SMP</id>
                         <phase>deploy</phase>
                         <goals><goal>jar</goal></goals>
@@ -158,8 +157,6 @@
             <id>upstream</id>
             <url>https://ci.nametagedit.com/plugin/repository/everything/</url>
         </repository>
-
-
 
     </repositories>
 
