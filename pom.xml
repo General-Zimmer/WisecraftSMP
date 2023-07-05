@@ -64,7 +64,7 @@
                 <version>3.3.0</version>
                 <executions>
                     <execution>
-                        <id>SMP</id>
+                        <id>zimmer</id>
                         <phase>deploy</phase>
                         <goals><goal>jar</goal></goals>
                     </execution>
