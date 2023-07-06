@@ -4,6 +4,7 @@ import com.earth2me.essentials.Essentials;
 import net.ess3.api.IEssentials;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -14,6 +15,7 @@ import xyz.wisecraft.smp.advancements.listeners.Ibba;
 import xyz.wisecraft.smp.advancements.listeners.QuestListeners;
 import xyz.wisecraft.smp.advancements.listeners.timberListeners;
 import xyz.wisecraft.smp.advancements.threads.gibRoles;
+import xyz.wisecraft.smp.cropharvester.listener.HarvestListener;
 import xyz.wisecraft.smp.extra.WisecraftCMD;
 import xyz.wisecraft.smp.savinggrace.Angel;
 import xyz.wisecraft.smp.savinggrace.listeners.AngelListeners;
@@ -83,6 +85,7 @@ public final class WisecraftSMP extends JavaPlugin {
             this.getServer().getPluginManager().registerEvents(new timberListeners(), this);
             this.getServer().getPluginManager().registerEvents(new PVPTimberListener(), this);
         }
+        this.getServer().getPluginManager().registerEvents(new HarvestListener(), this);
 
         // register events PVPToggle
         Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
@@ -102,8 +105,16 @@ public final class WisecraftSMP extends JavaPlugin {
         File PVPData = new File(getDataFolder(), "togglepvp");
         PVPDataUtils = new PersistentData(PVPData);
 
-        blockedWorlds = config.getStringList("SETTINGS.BLOCKED_WORLDS");
+        blockedWorlds = this.getConfig().getStringList("SETTINGS.BLOCKED_WORLDS");
 
+        // Harvest lists for Harvest logic
+        List<String> tools = instance.getConfig().getStringList("FARM_SETTINGS");
+
+        for (String material: tools) {
+            String[] string = material.split(" ");
+            Material material1 = Material.getMaterial(string[1]);
+            Storage.addTool(material1, string[0]);
+        }
     }
 
     @Override

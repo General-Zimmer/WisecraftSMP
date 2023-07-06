@@ -40,3 +40,11 @@ MESSAGES:
   PVP_WORLD_CANNOT_CHANGE_SELF: "&cYou cannot change pvp state in this world."
   PVP_WORLD_CANNOT_CHANGE_OTHERS: "&cpvp states cannot be changed in that world."
   RELOAD: "&cConfig reloaded"
+
+FARM_SETTINGS:
+  - "0x0 WOOD_HOE"
+  - "0X0 STONE_HOE"
+  - "3x3 IRON_HOE"
+  - "0X0 GOLDEN_HOE"
+  - "3x3 DIAMOND_HOE"
+  - "5x5 NETHERITE_HOE"

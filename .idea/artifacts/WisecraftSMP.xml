@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="jar" name="WisecraftSMP">
-    <output-path>$USER_HOME$/WiseCraft/test_server/server/plugins</output-path>
+    <output-path>$USER_HOME$/Desktop/KochCraft/plugins</output-path>
     <root id="archive" name="WisecraftSMP.jar">
       <element id="module-output" name="WisecraftSMP" />
       <element id="library" level="project" name="Maven: io.papermc:paperlib:1.0.6" />
