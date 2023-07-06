@@ -14,8 +14,8 @@ import xyz.wisecraft.smp.advancements.listeners.Ibba;
 import xyz.wisecraft.smp.advancements.listeners.QuestListeners;
 import xyz.wisecraft.smp.advancements.listeners.timberListeners;
 import xyz.wisecraft.smp.advancements.threads.gibRoles;
-import xyz.wisecraft.smp.savinggrace.Angel;
 import xyz.wisecraft.smp.extra.WisecraftCMD;
+import xyz.wisecraft.smp.savinggrace.Angel;
 import xyz.wisecraft.smp.savinggrace.listeners.AngelListeners;
 import xyz.wisecraft.smp.togglepvp.PVPCMD;
 import xyz.wisecraft.smp.togglepvp.listeners.PVPTimberListener;
@@ -63,8 +63,6 @@ public final class WisecraftSMP extends JavaPlugin {
     @SuppressWarnings("ConstantConditions")
     @Override
     public void onEnable() {
-
-        this.config = getConfig();
 
         // This always first
         setupEssentials();

@@ -3,6 +3,7 @@ package xyz.wisecraft.smp.savinggrace;
 import com.earth2me.essentials.Kit;
 import com.earth2me.essentials.User;
 import net.ess3.api.IEssentials;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -55,7 +56,7 @@ public class Angel {
         // Last few things
         this.clear();
         this.decreaseGraces();
-        p.sendMessage(ChatColor.AQUA + "Your gear have been saved. You have " + this.getGraces() + " graces left!");
+        p.sendMessage(NamedTextColor.AQUA + "Your gear have been saved. You have " + this.getGraces() + " graces left!");
 
         this.safeDelete(plugin, UUID);
 
@@ -77,7 +78,7 @@ public class Angel {
         Kit kit = new Kit("starter", ess);
         kit.expandItems(user);
         gearMap.get(p.getUniqueId()).clear();
-        p.sendMessage(ChatColor.BLUE + "You didn't /sethome or place a bed! You have been granted some new items.");
+        p.sendMessage(NamedTextColor.BLUE + "You didn't /sethome or place a bed! You have been granted some new items.");
     }
 
     public void saveGear(List<ItemStack> drops, PlayerInventory inv) {
@@ -164,7 +165,8 @@ public class Angel {
     public boolean safeDelete(WisecraftSMP plugin, UUID UUID) {
 
         if (!this.isGraceActive()) {
-            new BukkitRunnable() {
+
+                    new BukkitRunnable() {
                 @Override
                 public void run() {
                     Player p = Bukkit.getPlayer(UUID);
@@ -177,10 +179,13 @@ public class Angel {
 
                     angel.resetGrace(p.hasPermission("wisecraft.donator"));
                     angel.setGraceActive(false);
-                    p.sendMessage(ChatColor.AQUA + "Your graces have been reset");
+                    Logger.getLogger("WisecraftSMP").log(Level.WARNING, "Grace timer stopped for: " + Bukkit.getPlayer(UUID));
+                    p.sendMessage(NamedTextColor.AQUA + "Your graces have been reset");
                 }
 
-            }.runTaskLater(plugin, 20*60*60); // 1 hour
+            // }.runTaskLater(plugin, 20*60*60); // 1 hour
+            }.runTaskLater(plugin, 20*30);
+            Logger.getLogger("WisecraftSMP").log(Level.WARNING, "Grace timer started for: " + Bukkit.getPlayer(UUID));
             this.setGraceActive(true);
             return true;
         }
