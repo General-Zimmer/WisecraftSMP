@@ -45,10 +45,7 @@ public final class WisecraftSMP extends JavaPlugin {
     // SavingGrace angels
     public static final HashMap<UUID, Angel> gearMap = new HashMap<>();
 
-
     // PVPToggle stuff
-
-    public FileConfiguration config;
     public static List<String> blockedWorlds;
     /**
      * //False is pvp on. True is pvp off

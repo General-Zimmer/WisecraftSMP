@@ -183,7 +183,7 @@ public class Angel {
                     p.sendMessage(NamedTextColor.AQUA + "Your graces have been reset");
                 }
 
-            // }.runTaskLater(plugin, 20*60*60); // 1 hour
+                        // }.runTaskLater(plugin, 20*60*60); // 1 hour
             }.runTaskLater(plugin, 20*30);
             Logger.getLogger("WisecraftSMP").log(Level.WARNING, "Grace timer started for: " + Bukkit.getPlayer(UUID));
             this.setGraceActive(true);

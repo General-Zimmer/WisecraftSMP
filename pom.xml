@@ -43,6 +43,18 @@
                     <execution>
                         <id>zimmer</id>
                         <phase>deploy</phase>
+
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals><goal>shade</goal></goals>
                         <configuration>
                             <relocations>
                                 <relocation>
@@ -54,6 +66,17 @@
                                     <shadedPattern>wisecraftsmp.annotations</shadedPattern>
                                 </relocation>
                             </relocations>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+
+                                    <excludes>
+                                        <exclude>META-INF/**</exclude>
+                                        <exclude>LICENSE</exclude>
+                                        <exclude>LICENSE.**</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
                         </configuration>
                     </execution>
                 </executions>
@@ -212,7 +235,7 @@
         <dependency>
             <groupId>xyz.wisecraft</groupId>
             <artifactId>WisecraftCore</artifactId>
-            <version>2.1.1</version>
+            <version>2.1.2</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
