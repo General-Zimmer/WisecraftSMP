@@ -21,7 +21,10 @@ import static xyz.wisecraft.smp.util.Methods.getToolTypes;
 
 public class Angel {
 
-    private boolean hasGraceResetTimer = false;
+    /**
+     *
+     */
+    private boolean lastGrace = false;
     private ItemStack[] armor = null;
     private List<ItemStack> tools = null;
     private int graces;
@@ -161,12 +164,11 @@ public class Angel {
     public void decreaseGraces() {--this.graces;}
 
     //todo Make tools be placed into enderchest or into a shulker box in the enderchest (if full), otherwise drop saved items on the corpse.
-    //todo Make use of LocalDate instead of boolean for GraceActive, rename to LastGraceTime with null being no unaccounted grace
-    public boolean safeDelete(WisecraftSMP plugin, UUID UUID) {
+    public void safeDelete(WisecraftSMP plugin, UUID UUID) {
 
         if (!this.isGraceActive()) {
 
-                    new BukkitRunnable() {
+            new BukkitRunnable() {
                 @Override
                 public void run() {
                     Player p = Bukkit.getPlayer(UUID);
@@ -179,22 +181,21 @@ public class Angel {
 
                     angel.resetGrace(p.hasPermission("wisecraft.donator"));
                     angel.setGraceActive(false);
-                    Logger.getLogger("WisecraftSMP").log(Level.WARNING, "Grace timer stopped for: " + Bukkit.getPlayer(UUID));
+                    Logger.getLogger("WisecraftSMP").log(Level.INFO, "Grace timer stopped for: " + Bukkit.getPlayer(UUID));
                     p.sendMessage(NamedTextColor.AQUA + "Your graces have been reset");
                 }
 
-                        // }.runTaskLater(plugin, 20*60*60); // 1 hour
-            }.runTaskLater(plugin, 20*30);
-            Logger.getLogger("WisecraftSMP").log(Level.WARNING, "Grace timer started for: " + Bukkit.getPlayer(UUID));
+
+            // }.runTaskLater(plugin, 20*30);
+            }.runTaskLater(plugin, 20*60*60); // 1 hour
+            Logger.getLogger("WisecraftSMP").log(Level.INFO, "Grace timer started for: " + Bukkit.getPlayer(UUID));
             this.setGraceActive(true);
-            return true;
         }
-        return false;
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public boolean isGraceActive() {return this.hasGraceResetTimer;}
-    public void setGraceActive(boolean bool) {this.hasGraceResetTimer = bool;}
+    public boolean isGraceActive() {return this.lastGrace;}
+    public void setGraceActive(boolean bool) {this.lastGrace = bool;}
 
     public boolean hasDied() {return this.hasDied;}
     public void setDied(boolean bool) {this.hasDied = bool;}

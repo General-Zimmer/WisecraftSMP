@@ -37,8 +37,11 @@ public class AngelListeners implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
-        if (!plugin.getGearmap().containsKey(p.getUniqueId()))
-            gearMap.put(p.getUniqueId(), new Angel(p.hasPermission("wisecraft.donator")));
+        if (!plugin.getGearmap().containsKey(p.getUniqueId())) {
+            Angel angel = new Angel(p.hasPermission("wisecraft.donator"));
+            gearMap.put(p.getUniqueId(), angel);
+        }
+
 
     }
 
@@ -53,7 +56,7 @@ public class AngelListeners implements Listener {
         // Prevent items from being destroyed after leaving
         if (angel.hasDied())
             angel.safeDelete(plugin, UUID);
-        else if (!angel.safeDelete(plugin, UUID))
+        else if (!angel.hasDied())
             plugin.getGearmap().remove(UUID);
 
     }
