@@ -21,10 +21,7 @@ import static xyz.wisecraft.smp.util.Methods.getToolTypes;
 
 public class Angel {
 
-    /**
-     *
-     */
-    private boolean lastGrace = false;
+    private boolean hasGraceResetTimer = false;
     private ItemStack[] armor = null;
     private List<ItemStack> tools = null;
     private int graces;
@@ -186,16 +183,16 @@ public class Angel {
                 }
 
 
-            // }.runTaskLater(plugin, 20*30);
-            }.runTaskLater(plugin, 20*60*60); // 1 hour
+            }.runTaskLater(plugin, 20*30);
+            // }.runTaskLater(plugin, 20*60*60); // 1 hour
             Logger.getLogger("WisecraftSMP").log(Level.INFO, "Grace timer started for: " + Bukkit.getPlayer(UUID));
             this.setGraceActive(true);
         }
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public boolean isGraceActive() {return this.lastGrace;}
-    public void setGraceActive(boolean bool) {this.lastGrace = bool;}
+    public boolean isGraceActive() {return this.hasGraceResetTimer;}
+    public void setGraceActive(boolean bool) {this.hasGraceResetTimer = bool;}
 
     public boolean hasDied() {return this.hasDied;}
     public void setDied(boolean bool) {this.hasDied = bool;}
