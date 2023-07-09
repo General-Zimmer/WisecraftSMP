@@ -4,14 +4,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.core.WisecraftCoreApi;
 import xyz.wisecraft.smp.WisecraftSMP;
-import xyz.wisecraft.smp.advancements.util.UtilAdv;
-import xyz.wisecraft.smp.util.Methods;
+import xyz.wisecraft.smp.features.advancements.util.UtilAdv;
+import xyz.wisecraft.smp.extra.util.Methods;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +20,7 @@ public class WisecraftCMD implements TabExecutor {
     private final WisecraftCoreApi core;
 
     public WisecraftCMD() {
-        this.core = WisecraftSMP.core;
+        this.core = WisecraftSMP.getCore();
     }
 
     @Override

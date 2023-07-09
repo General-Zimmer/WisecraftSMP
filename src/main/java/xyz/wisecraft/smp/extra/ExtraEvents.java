@@ -9,19 +9,19 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.wisecraft.smp.WisecraftSMP;
-import xyz.wisecraft.smp.savinggrace.Angel;
-import xyz.wisecraft.smp.util.Methods;
+import xyz.wisecraft.smp.features.savinggrace.Angel;
+import xyz.wisecraft.smp.extra.util.Methods;
+import xyz.wisecraft.smp.storage.OtherStorage;
 
 import java.util.HashMap;
 import java.util.UUID;
 
 public class ExtraEvents implements Listener {
-    private final HashMap<UUID, Angel> gearMap;
-    private final WisecraftSMP plugin;
+    private final WisecraftSMP plugin = WisecraftSMP.getInstance();
 
-    public ExtraEvents(HashMap<UUID, Angel> gearMap, WisecraftSMP plugin) {
-        this.gearMap = gearMap;
-        this.plugin = plugin;
+    private final HashMap<UUID, Angel> angels = OtherStorage.getAngels();
+
+    public ExtraEvents() {
     }
 
     @EventHandler
@@ -39,8 +39,8 @@ public class ExtraEvents implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
 
-        if (!plugin.getGearmap().containsKey(p.getUniqueId()))
-            gearMap.put(p.getUniqueId(), new Angel(p.hasPermission("wisecraft.donator")));
+        if (!angels.containsKey(p.getUniqueId()))
+            angels.put(p.getUniqueId(), new Angel(p.hasPermission("wisecraft.donator")));
 
 
         new BukkitRunnable() {

@@ -4,7 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import xyz.wisecraft.core.data.templates.Timers;
 import xyz.wisecraft.smp.WisecraftSMP;
-import xyz.wisecraft.smp.advancements.util.UtilAdv;
+import xyz.wisecraft.smp.features.advancements.util.UtilAdv;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -55,7 +55,7 @@ public class UtilCommon {
         HashMap<Double, Player> players = new HashMap<>();
         // Check who broke a tree recently
         for (Player attacker : Bukkit.getOnlinePlayers()) {
-            Timers attackerTimer = WisecraftSMP.core.getTimers().get(attacker.getUniqueId());
+            Timers attackerTimer = WisecraftSMP.getCore().getTimers().get(attacker.getUniqueId());
             double secSinceAttackerTimber = UtilAdv.calcCurrentSeconds(attackerTimer.getTree());
             UUID attackerUUID = attacker.getUniqueId();
 
