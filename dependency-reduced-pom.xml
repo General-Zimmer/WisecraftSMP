@@ -16,12 +16,6 @@
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.8.1</version>
-        <executions>
-          <execution>
-            <id>zimmer</id>
-            <phase>deploy</phase>
-          </execution>
-        </executions>
         <configuration>
           <source>${java.version}</source>
           <target>${java.version}</target>
