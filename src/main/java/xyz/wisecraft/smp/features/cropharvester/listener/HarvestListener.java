@@ -1,16 +1,13 @@
 package xyz.wisecraft.smp.features.cropharvester.listener;
 
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import xyz.wisecraft.smp.storage.OtherStorage;
 import xyz.wisecraft.smp.features.cropharvester.util.UtilRandom;
-
-import java.util.HashMap;
+import xyz.wisecraft.smp.storage.OtherStorage;
 
 public class HarvestListener implements Listener {
 
