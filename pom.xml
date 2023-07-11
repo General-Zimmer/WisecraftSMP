@@ -59,6 +59,10 @@
                                     <pattern>org.jetbrains</pattern>
                                     <shadedPattern>wisecraftsmp.annotations</shadedPattern>
                                 </relocation>
+                                <relocation>
+                                    <pattern>org.reflections</pattern>
+                                    <shadedPattern>wisecraftsmp.reflections</shadedPattern>
+                                </relocation>
                             </relocations>
                             <filters>
                                 <filter>
@@ -182,6 +186,12 @@
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
             <version>3.0.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.10.2</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

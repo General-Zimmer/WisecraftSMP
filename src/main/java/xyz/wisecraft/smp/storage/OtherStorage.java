@@ -1,7 +1,7 @@
 package xyz.wisecraft.smp.storage;
 
 import org.bukkit.Material;
-import xyz.wisecraft.smp.features.savinggrace.Angel;
+import xyz.wisecraft.smp.modules.savinggrace.Angel;
 
 import java.util.HashMap;
 import java.util.UUID;

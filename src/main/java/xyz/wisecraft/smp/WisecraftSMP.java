@@ -4,30 +4,18 @@ import com.earth2me.essentials.Essentials;
 import net.ess3.api.IEssentials;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.reflections.Reflections;
 import xyz.wisecraft.core.WisecraftCoreApi;
-import xyz.wisecraft.smp.features.advancements.Command;
-import xyz.wisecraft.smp.features.advancements.listeners.Ibba;
-import xyz.wisecraft.smp.features.advancements.listeners.QuestListeners;
-import xyz.wisecraft.smp.features.advancements.listeners.timberListeners;
-import xyz.wisecraft.smp.features.advancements.threads.gibRoles;
-import xyz.wisecraft.smp.features.cropharvester.listener.HarvestListener;
-import xyz.wisecraft.smp.extra.WisecraftCMD;
-import xyz.wisecraft.smp.features.savinggrace.listeners.AngelListeners;
+import xyz.wisecraft.smp.modulation.ModuleClass;
+import xyz.wisecraft.smp.modules.togglepvp.utils.PlaceholderAPIHook;
 import xyz.wisecraft.smp.storage.OtherStorage;
-import xyz.wisecraft.smp.storage.PVPStorage;
-import xyz.wisecraft.smp.features.togglepvp.PVPCMD;
-import xyz.wisecraft.smp.features.togglepvp.listeners.PVPTimberListener;
-import xyz.wisecraft.smp.features.togglepvp.listeners.PlayerListener;
-import xyz.wisecraft.smp.features.togglepvp.listeners.PvPListener;
-import xyz.wisecraft.smp.features.togglepvp.utils.PersistentData;
-import xyz.wisecraft.smp.features.togglepvp.utils.PlaceholderAPIHook;
 
-import java.io.File;
-import java.util.List;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,15 +26,23 @@ public final class WisecraftSMP extends JavaPlugin {
     private WisecraftCoreApi core;
     private LuckPerms luck;
 
+    private boolean isTimberEnabled = false;
+
     public WisecraftSMP() {
         instance = this;
     }
 
-    @SuppressWarnings("ConstantConditions")
+    private final ArrayList<ModuleClass> modules = new ArrayList<>();
+
+
     @Override
     public void onEnable() {
+        // todo add a sub main for every feature and add a config to disable and enable them.
+        // sub-main's needs to inherent from an interface that will have methods that sets themselves up with an Event.
 
-        // This always first
+        // todo implement a way for config variables to only be added if they're enabled. Don't remove config variables ever. The check will use bit addition.
+
+        // Dependencies always first
         setupEssentials();
         setupWisecraftCore();
         setupLuckPerms();
@@ -56,51 +52,27 @@ public final class WisecraftSMP extends JavaPlugin {
         this.saveDefaultConfig();
         OtherStorage.setServer_name(this.getConfig().getString("server_name"));
 
+        // Creating modules
+        Reflections reflections = new Reflections("xyz.wisecraft.smp.modules");
 
-        // Then these events
-        this.getServer().getPluginManager().registerEvents(new AngelListeners(), this);
-        this.getServer().getPluginManager().registerEvents(new QuestListeners(), this);
-        this.getServer().getPluginManager().registerEvents(new Ibba(), this);
-        if (setupTimber()) {
-            this.getServer().getPluginManager().registerEvents(new timberListeners(), this);
-            this.getServer().getPluginManager().registerEvents(new PVPTimberListener(), this);
-        }
-        this.getServer().getPluginManager().registerEvents(new HarvestListener(), this);
+        setupModules(reflections.getSubTypesOf(ModuleClass.class));
 
-        // register events PVPToggle
-        Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
-        Bukkit.getPluginManager().registerEvents(new PvPListener(), this);
+        // Enable modules
+        for (ModuleClass module : this.modules)
+            module.startModule();
 
-        // Register commands
-        WisecraftCMD wiseCMD = new WisecraftCMD();
-        this.getCommand("wisecraft").setExecutor(wiseCMD);
-        this.getCommand("wshop").setExecutor(wiseCMD);
-        this.getCommand("autoroles").setExecutor(new Command());
-        this.getCommand("pvp").setExecutor(new PVPCMD());
 
-        // Check for new citizens. This is async right after this step.
-        new gibRoles().runTaskTimer(this, 18000, 18000);
 
-        // PVPToggle data
-        File PVPData = new File(getDataFolder(), "togglepvp");
-        PVPStorage.setPVPDataUtils(new PersistentData(PVPData));
-
-        PVPStorage.setBlockedWorlds(this.getConfig().getStringList("SETTINGS.BLOCKED_WORLDS"));
-
-        // Harvest lists for Harvest logic
-        List<String> tools = instance.getConfig().getStringList("FARM_SETTINGS");
-
-        for (String material: tools) {
-            String[] string = material.split(" ");
-            Material material1 = Material.getMaterial(string[1]);
-            OtherStorage.addTool(material1, string[0]);
-        }
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
         // Me: We don't do that here
+
+        for (ModuleClass module : this.modules)
+            module.stopModule();
+
     }
 
 
@@ -125,7 +97,8 @@ public final class WisecraftSMP extends JavaPlugin {
     private boolean setupTimber() {
         Plugin setupPlugin = getServer().getPluginManager().getPlugin("UltimateTimber");
         if (setupPlugin == null) {return false;}
-        return setupPlugin.isEnabled();
+        isTimberEnabled = setupPlugin.isEnabled();
+        return isTimberEnabled;
     }
     private void setupLuckPerms() {
         String name = "LuckPerms";
@@ -145,6 +118,21 @@ public final class WisecraftSMP extends JavaPlugin {
         }
     }
 
+    private void setupModules(Set<Class<? extends ModuleClass>> modules) {
+
+        for (Class<? extends ModuleClass> module : modules) {
+            try {
+                this.modules.add(module.getConstructor().newInstance());
+
+            } catch (InstantiationException |
+                     IllegalAccessException |
+                     NoSuchMethodException |
+                     InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public static WisecraftSMP getInstance() {
         return instance;
     }
@@ -161,5 +149,7 @@ public final class WisecraftSMP extends JavaPlugin {
         return instance.luck;
     }
 
-
+    public boolean isTimberEnabled() {
+        return isTimberEnabled;
+    }
 }

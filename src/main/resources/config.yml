@@ -1,4 +1,7 @@
+# Don't touch this file unless you know what you're doing!
 configVersion: 1
+
+
 server_name: ${CFG_SERV_NAME}
 
 SETTINGS:
