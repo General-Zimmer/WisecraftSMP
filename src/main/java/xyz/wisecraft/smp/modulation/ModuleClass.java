@@ -9,7 +9,7 @@ public interface ModuleClass {
     int id = -1;
 
     /**
-     * This method is called when the module is enabled.
+     * This method is called when the module is starting.
      */
     default void startModule() {
         onEnable();
@@ -18,7 +18,7 @@ public interface ModuleClass {
     }
 
     /**
-     * This method is called when the module is disabled.
+     * This method is called when the module is shutting down.
      */
     default void stopModule() {
         onDisable();
