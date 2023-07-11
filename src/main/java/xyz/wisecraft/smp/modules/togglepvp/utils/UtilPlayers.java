@@ -19,6 +19,9 @@ import java.util.List;
 import java.util.UUID;
 
 
+/**
+ * Utility class for player related methods.
+ */
 public abstract class UtilPlayers {
 	private static final WisecraftSMP instance = WisecraftSMP.getInstance();
 	private static final FileConfiguration config = instance.getConfig();
@@ -29,18 +32,31 @@ public abstract class UtilPlayers {
 
 	/**
 	 * Get the state the player is in.
-	 * @return PVP State, returns false if the result is null
+	 * @param uuid The UUID of the player to check
+	 * @return True if the player is in PVP mode, false if they aren't
 	 */
 	public static boolean getPlayerState(UUID uuid){
 		Boolean result = pvpPlayers.get(uuid);
 		if(result==null) return false;
 		else return result;
 	}
-	
+
+	/**
+	 * Get the state the player is in.
+	 * @param uuid The UUID of the player to check
+	 * @param state The state to set the player to
+	 */
 	public static void setPlayerState(UUID uuid, boolean state){
 		pvpPlayers.put(uuid,state);
 	}
 
+	/**
+	 * Set the state PVP state of the player.
+	 * @param player The player to check
+	 * @param state The state to set the player to
+	 * @param caller The command sender that called the method
+	 * @return True if the state was changed, false if it wasn't
+	 */
 	public static boolean setPlayerState(Player player, boolean state, CommandSender caller) {
 		if (player == null) {
 			return false;
@@ -79,7 +95,11 @@ public abstract class UtilPlayers {
 
 		cooldowns.put(p.getUniqueId(), new Date());
 	}
-	
+
+	/**
+	 * Remove the cooldown time for the player.
+	 * @param p Player to remove cooldown time for
+	 */
 	public static void removeCooldownTime(Player p) {
 		cooldowns.remove(p.getUniqueId());
 	}

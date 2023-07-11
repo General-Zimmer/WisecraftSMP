@@ -11,6 +11,9 @@ import xyz.wisecraft.smp.modules.togglepvp.storage.PVPStorage;
 import java.util.HashMap;
 import java.util.UUID;
 
+/**
+ * Utility class for command related methods.
+ */
 public abstract class PVPCMDUtil {
     private static final WisecraftSMP plugin = WisecraftSMP.getInstance();
     private static final FileConfiguration config = plugin.getConfig();
@@ -19,6 +22,9 @@ public abstract class PVPCMDUtil {
 
     /**
      * I don't know exactly what this does. Your guess is as good as mine.
+     * @param sender The sender
+     * @param p The player
+     * @param args The arguments
      */
     public static void status(CommandSender sender, Player p, String[] args) {
         if (!sender.hasPermission("pvptoggle.others")) {

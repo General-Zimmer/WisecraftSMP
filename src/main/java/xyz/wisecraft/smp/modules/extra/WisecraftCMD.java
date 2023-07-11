@@ -15,10 +15,16 @@ import xyz.wisecraft.smp.modules.extra.util.UtilRandom;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * WisecraftCMD
+ */
 public class WisecraftCMD implements TabExecutor {
 
     private final WisecraftCoreApi core;
 
+    /**
+     * Constructor
+     */
     public WisecraftCMD() {
         this.core = WisecraftSMP.getCore();
     }

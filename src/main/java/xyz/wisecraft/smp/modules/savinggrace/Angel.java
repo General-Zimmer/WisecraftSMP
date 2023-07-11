@@ -20,6 +20,9 @@ import java.util.logging.Logger;
 
 import static xyz.wisecraft.smp.modules.extra.util.UtilRandom.getToolTypes;
 
+/**
+ * Class for the Angel object.
+ */
 public class Angel {
 
     private boolean hasGraceResetTimer = false;
@@ -31,6 +34,10 @@ public class Angel {
     private final IEssentials ess = WisecraftSMP.getEss();
     private final HashMap<UUID, Angel> angels = OtherStorage.getAngels();
 
+    /**
+     * Get the amount of graces the player has left
+     * @param hasDonator If the player has donator
+     */
     public Angel(boolean hasDonator) {
         plugin = WisecraftSMP.getInstance();
         this.resetGrace(hasDonator);
@@ -248,11 +255,29 @@ public class Angel {
         }
     }
 
+    /**
+     * Checks if a player has a grace timer active
+     * @return Whether or not a player has a grace timer active
+     */
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isGraceActive() {return this.hasGraceResetTimer;}
+
+    /**
+     * Sets whether or not a player has a grace timer active
+     * @param bool Whether or not a player has a grace timer active
+     */
     public void setGraceActive(boolean bool) {this.hasGraceResetTimer = bool;}
 
+    /**
+     * Checks if a player has died
+     * @return Whether or not a player has died
+     */
     public boolean hasDied() {return this.hasDied;}
+
+    /**
+     * Sets whether or not a player has died
+     * @param bool Whether or not a player has died
+     */
     public void setDied(boolean bool) {this.hasDied = bool;}
 
 }

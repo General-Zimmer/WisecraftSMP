@@ -2,10 +2,19 @@ package xyz.wisecraft.smp.modulation;
 
 import xyz.wisecraft.smp.WisecraftSMP;
 
+/**
+ * This interface is used to create modules.
+ */
 public interface ModuleClass {
 
+    /**
+     * The plugin instance.
+     */
     WisecraftSMP plugin = WisecraftSMP.getInstance();
 
+    /**
+     * The id of the module.
+     */
     int id = -1;
 
     /**

@@ -2,6 +2,9 @@ package xyz.wisecraft.smp.modules.savinggrace;
 
 import xyz.wisecraft.smp.modules.savinggrace.listeners.AngelListeners;
 
+/**
+ * Module class for SavingGrace
+ */
 public class SavingGraceModule implements xyz.wisecraft.smp.modulation.ModuleClass{
     @Override
     public void onEnable() {

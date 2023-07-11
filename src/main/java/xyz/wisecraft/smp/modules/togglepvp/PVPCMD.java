@@ -21,6 +21,9 @@ import java.util.List;
 import java.util.UUID;
 
 
+/**
+ * Command class for the /pvp command.
+ */
 public class PVPCMD implements TabExecutor {
 
 	private final WisecraftSMP instance = WisecraftSMP.getInstance();

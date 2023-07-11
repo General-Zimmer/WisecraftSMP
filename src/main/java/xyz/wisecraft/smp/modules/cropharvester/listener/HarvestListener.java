@@ -9,8 +9,15 @@ import org.bukkit.inventory.ItemStack;
 import xyz.wisecraft.smp.modules.cropharvester.util.UtilRandom;
 import xyz.wisecraft.smp.storage.OtherStorage;
 
+/**
+ * HarvestListener
+ */
 public class HarvestListener implements Listener {
 
+    /**
+     * Harvest crops
+     * @param e The event
+     */
     @EventHandler
     public void onInteract(PlayerInteractEvent e) {
         Block clickedBlock = e.getClickedBlock();

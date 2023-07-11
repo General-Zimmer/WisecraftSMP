@@ -7,8 +7,15 @@ import org.bukkit.event.Listener;
 import xyz.wisecraft.smp.modules.togglepvp.utils.PVPUtil;
 import xyz.wisecraft.smp.util.UtilCommon;
 
+/**
+ * PVPTimberListener
+ */
 public class PVPTimberListener implements Listener {
 
+    /**
+     * Cancel timber damage if the victim does not have pvp on
+     * @param e TreeFellEvent
+     */
     @EventHandler(ignoreCancelled = true)
     public void onTimber(TreeDamageEvent e) {
         Player victim = e.getVictim();

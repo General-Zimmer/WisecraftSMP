@@ -9,6 +9,9 @@ import xyz.wisecraft.smp.modules.advancements.threads.GibRoles;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Command for managing the auto roles.
+ */
 public class Command implements TabExecutor {
 
     private final WisecraftSMP plugin = WisecraftSMP.getInstance();

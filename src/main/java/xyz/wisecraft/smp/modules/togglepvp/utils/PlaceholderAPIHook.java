@@ -10,6 +10,9 @@ import xyz.wisecraft.smp.modules.togglepvp.storage.PVPStorage;
 import java.util.HashMap;
 import java.util.UUID;
 
+/**
+ * PlaceholderAPIHook
+ */
 public class PlaceholderAPIHook extends PlaceholderExpansion {
 
 	private final WisecraftSMP instance = WisecraftSMP.getInstance();

@@ -10,10 +10,17 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.UUID;
 
+/**
+ * Utility class for PVP related methods.
+ */
 public abstract class PVPUtil {
 
     private static final HashMap<UUID, Boolean> pvpPlayers = PVPStorage.getPVPPlayers();
 
+    /**
+     * Get all positive effects
+     * @return ArrayList of PotionEffectTypes
+     */
     public static ArrayList<PotionEffectType> getPositiveEffects() {
         ArrayList<PotionEffectType> effects = new ArrayList<>();
         effects.add(PotionEffectType.FIRE_RESISTANCE);
@@ -38,6 +45,11 @@ public abstract class PVPUtil {
         return effects;
     }
 
+    /**
+     * Checks if the effects are positive
+     * @param effects Collection of PotionEffects to check
+     * @return true if the effects are positive
+     */
     public static boolean isEffectsPositive(Collection<PotionEffect> effects) {
         for (PotionEffect PEffect : effects) {
             if (!PVPUtil.getPositiveEffects().contains(PEffect.getType()))
@@ -45,6 +57,12 @@ public abstract class PVPUtil {
         }
         return true;
     }
+
+    /**
+     * Checks if the effect is positive
+     * @param effect PotionEffectType to check
+     * @return true if the effect is positive
+     */
     public static boolean isEffectsPositive(PotionEffectType effect) {
         return PVPUtil.getPositiveEffects().contains(effect);
     }
@@ -52,6 +70,7 @@ public abstract class PVPUtil {
     /**
      * Checks if 2 players have pvp disabled, and reset cooldown time if they don't.
      * @param attacker Player who attacked @param victim
+     * @param victim Player who got attacked by attacker
      * @return returns true if either players have pvp disabled
      */
     public static boolean checkPVPStates(Player attacker, Player victim) {

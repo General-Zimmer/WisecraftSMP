@@ -6,6 +6,9 @@ import xyz.wisecraft.smp.storage.OtherStorage;
 
 import java.util.List;
 
+/**
+ * CropHarvesterModule
+ */
 public class CropHarvesterModule implements xyz.wisecraft.smp.modulation.ModuleClass {
     @Override
     public void onEnable() {

@@ -8,6 +8,9 @@ import xyz.wisecraft.smp.modules.togglepvp.storage.PVPStorage;
 
 import java.io.File;
 
+/**
+ * Module class for PVPToggle
+ */
 public class PvPToggleModule implements xyz.wisecraft.smp.modulation.ModuleClass {
     @Override
     public void onEnable() {

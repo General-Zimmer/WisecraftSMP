@@ -15,7 +15,9 @@ import xyz.wisecraft.smp.storage.OtherStorage;
 
 import java.util.Date;
 
-
+/**
+ * Advancement utilities
+ */
 public abstract class UtilAdv {
 
     private static final WisecraftSMP plugin = WisecraftSMP.getPlugin(WisecraftSMP.class);
@@ -89,7 +91,6 @@ public abstract class UtilAdv {
      * @param p Player to add role to
      * @param roleName Role to add
      */
-    @SuppressWarnings("ConstantConditions")
     public static void addRole(Player p, String roleName) {
         luck.getUserManager().modifyUser(p.getUniqueId(), user -> {
             InheritanceNode role = UtilAdv.createRole(roleName);
@@ -106,7 +107,6 @@ public abstract class UtilAdv {
      * @param p Player to remove role from
      * @param roleName Role to remove
      */
-    @SuppressWarnings("ConstantConditions")
     public static void removeRole(Player p, String roleName) {
         luck.getUserManager().modifyUser(p.getUniqueId(), user -> {
             InheritanceNode role = UtilAdv.createRole(roleName);

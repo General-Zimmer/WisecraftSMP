@@ -19,6 +19,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Listener class for player events.
+ */
 public class PlayerListener implements Listener {
 
     private final WisecraftSMP instance = WisecraftSMP.getInstance();
@@ -27,6 +30,9 @@ public class PlayerListener implements Listener {
     private final PersistentData PVPDataUtils = PVPStorage.getPVPDataUtils();
     private final List<String> blockedWorlds = PVPStorage.getBlockedWorlds();
 
+    /**
+     * Constructor for the PlayerListener class.
+     */
     public PlayerListener() {
         for(Player p : Bukkit.getOnlinePlayers()) {
             if(!config.getBoolean("SETTINGS.PERSISTENT_PVP_STATE")) {
@@ -46,6 +52,10 @@ public class PlayerListener implements Listener {
         }
     }
 
+    /**
+     * Saves the player's PVP state to the database when they leave.
+     * @param event The PlayerQuitEvent.
+     */
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player p = event.getPlayer();
@@ -64,6 +74,11 @@ public class PlayerListener implements Listener {
             }
         }
     }
+
+    /**
+     * Saves the player's PVP state to the database when they leave.
+     * @param event The PlayerQuitEvent.
+     */
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         Player p = event.getPlayer();
@@ -73,6 +88,10 @@ public class PlayerListener implements Listener {
         pvpPlayers.remove(p.getUniqueId());
     }
 
+    /**
+     * Handles the player changing worlds.
+     * @param event The PlayerChangedWorldEvent.
+     */
     @EventHandler
     public void onChangeWorld(PlayerChangedWorldEvent event) {
         Player player = event.getPlayer();

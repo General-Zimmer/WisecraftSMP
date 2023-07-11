@@ -2,6 +2,9 @@ package xyz.wisecraft.smp.modules.extra;
 
 import xyz.wisecraft.smp.modules.extra.events.ExtraEvents;
 
+/**
+ * This class is used to create modules.
+ */
 public class ExtraModule implements xyz.wisecraft.smp.modulation.ModuleClass {
     @Override
     public void onEnable() {

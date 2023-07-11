@@ -25,16 +25,26 @@ import xyz.wisecraft.smp.modules.advancements.util.UtilAdv;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Listeners for quests
+ */
 public class QuestListeners implements Listener {
 
 	private final WisecraftSMP plugin;
 	private final LuckPerms luck;
 
+	/**
+	 * Constructor
+	 */
 	public QuestListeners() {
 		this.plugin = WisecraftSMP.getInstance();
 		this.luck = WisecraftSMP.getLuck();
 	}
 
+	/**
+	 * Give player roles when they've done the advancement
+	 * @param e Event
+	 */
 	@EventHandler
 	public void roles(PlayerAdvancementDoneEvent e) {
 
@@ -55,6 +65,10 @@ public class QuestListeners implements Listener {
 			UtilAdv.addRole(p, "noble");
 	}
 
+	/**
+	 * Give player advancement for joining resource world
+	 * @param e Event
+	 */
 	@EventHandler
 	public void resourceworld(PlayerChangedWorldEvent e) {
 		Player p = e.getPlayer();
@@ -71,7 +85,10 @@ public class QuestListeners implements Listener {
 	}
 
 
-	@SuppressWarnings("ConstantConditions")
+	/**
+	 * Give player advancement for dying to a wall
+	 * @param e Event
+	 */
 	@EventHandler
 	public void Dying(PlayerDeathEvent e) {
 		Player p = e.getEntity().getPlayer();
@@ -84,6 +101,10 @@ public class QuestListeners implements Listener {
 
 	}
 
+	/**
+	 * Give player roles when they've done the advancement
+	 * @param e Event
+	 */
 	@EventHandler
 	public void onCraft(CraftItemEvent e) {
 
@@ -106,6 +127,10 @@ public class QuestListeners implements Listener {
 		}
 	}
 
+	/**
+	 * Give player advancement for leveling up
+	 * @param e Event
+	 */
 	@EventHandler
 	public void level(PlayerLevelChangeEvent e) {
 		Player p = e.getPlayer();
@@ -123,7 +148,10 @@ public class QuestListeners implements Listener {
 		}
 	}
 
-	@SuppressWarnings("ConstantConditions")
+	/**
+	 * Check if player has the advancement, if not remove the role
+	 * @param e Event
+	 */
 	@EventHandler
 	public void RoleAdvMissingCheck(PlayerJoinEvent e) {
 
@@ -169,6 +197,10 @@ public class QuestListeners implements Listener {
 
 	}
 
+	/**
+	 * Give player advancement for dying with many arrows in them
+	 * @param e Event
+	 */
 	@EventHandler
 	public void arrowHit(ArrowBodyCountChangeEvent e) {
 		Entity n = e.getEntity();
@@ -182,6 +214,10 @@ public class QuestListeners implements Listener {
 		}
 	}
 
+	/**
+	 * Give player advancement for dying with many arrows in them
+	 * @param e Event
+	 */
 	@EventHandler
 	public void ledgehog(PlayerDeathEvent e) {
 

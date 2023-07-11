@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Thread to give roles
+ */
 public class Roles extends BukkitRunnable {
 
     private final ConcurrentHashMap<UUID, Infop> infom;
@@ -21,6 +24,13 @@ public class Roles extends BukkitRunnable {
     private final ArrayList<Player> players;
     private final LuckPerms luck;
 
+    /**
+     * Constructor
+     * @param plugin The plugin
+     * @param infom The infom
+     * @param players The players
+     * @param luck The luck
+     */
     public Roles(WisecraftSMP plugin, ConcurrentHashMap<UUID, Infop> infom, ArrayList<Player> players, LuckPerms luck) {
         this.players = players;
         this.infom = infom;

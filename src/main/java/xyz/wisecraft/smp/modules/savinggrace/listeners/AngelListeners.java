@@ -20,12 +20,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Class for the AngelListeners object.
+ */
 public class AngelListeners implements Listener {
 
 
     private final IEssentials ess;
     private final HashMap<UUID, Angel> angels;
 
+    /**
+     * Constructor for the class.
+     */
     public AngelListeners() {
         this.ess = WisecraftSMP.getEss();
         this.angels = OtherStorage.getAngels();
@@ -33,6 +39,10 @@ public class AngelListeners implements Listener {
     }
 
 
+    /**
+     * Adds the player to the hashmap when they join.
+     * @param e The PlayerJoinEvent.
+     */
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
@@ -44,6 +54,10 @@ public class AngelListeners implements Listener {
 
     }
 
+    /**
+     * Removes the player from the hashmap when they leave.
+     * @param e The PlayerQuitEvent.
+     */
     @EventHandler
     public void onLeave(PlayerQuitEvent e) {
         Player p = e.getPlayer();
@@ -61,8 +75,12 @@ public class AngelListeners implements Listener {
     }
 
 
-
-    //The exception comes from kit expand
+    /**
+     * Gives the player their items back when they respawn.
+     * @param e The PlayerRespawnEvent.
+     * @throws Exception comes from kit expand
+     */
+    //The
     @EventHandler(priority = EventPriority.NORMAL)
     public void getItemsBack(PlayerRespawnEvent e) throws Exception {
         Player p = e.getPlayer();
@@ -80,6 +98,10 @@ public class AngelListeners implements Listener {
 
     }
 
+    /**
+     * Saves the player's gear when they die.
+     * @param e The PlayerDeathEvent.
+     */
     @EventHandler
     public void savingGrace(PlayerDeathEvent e) {
         Angel angel = this.angels.get(e.getEntity().getUniqueId());

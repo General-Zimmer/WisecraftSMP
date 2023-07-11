@@ -2,7 +2,6 @@ package xyz.wisecraft.smp.modules.advancements.listeners;
 
 import com.songoda.ultimatetimber.events.TreeFellEvent;
 import org.bukkit.NamespacedKey;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -19,6 +18,9 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 
+/**
+ * TimberListeners
+ */
 public class TimberListeners implements Listener {
 
     private final WisecraftSMP plugin = WisecraftSMP.getInstance();
@@ -29,7 +31,6 @@ public class TimberListeners implements Listener {
      * When a tree is felled, start a timer for the player
      * @param e TreeFellEvent
      */
-    @SuppressWarnings("ConstantConditions")
     @EventHandler(priority = EventPriority.LOWEST)
     public void Dying(PlayerDeathEvent e) {
         Player victim = e.getPlayer();

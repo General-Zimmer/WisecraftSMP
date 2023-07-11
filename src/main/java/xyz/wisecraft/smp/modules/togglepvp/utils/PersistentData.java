@@ -10,18 +10,28 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.UUID;
 
-
+/**
+ * Class for handling persistent data.
+ */
 public class PersistentData {
 	private final WisecraftSMP instance = WisecraftSMP.getInstance();
 	private final FileConfiguration config = instance.getConfig();
 	private final HashMap<UUID, Boolean> pvpPlayers = PVPStorage.getPVPPlayers();
 	private final File dir;
-	
+
+	/**
+	 * Constructor for the PersistentData class.
+	 * @param file The file.
+	 */
 	public PersistentData(File file) {
 		file.mkdir();
 		this.dir = file;
 	}
-	
+
+	/**
+	 * Adds the player to the database.
+	 * @param p The Player.
+	 */
 	public void addPlayer(Player p) {
 		File file = new File(dir.getPath(), p.getUniqueId() + ".yml");
 		
@@ -36,7 +46,11 @@ public class PersistentData {
 			}
 		}
 	}
-	
+
+	/**
+	 * Saves the player's PVP state to the database when they leave.
+	 * @param p The Player.
+	 */
 	public void UpdatePlayerPvPState(Player p) {
 		File file = new File(dir.getPath(), p.getUniqueId() + ".yml");
 		try {
@@ -47,7 +61,12 @@ public class PersistentData {
 			e.printStackTrace();
 		}
 	}
-	
+
+	/**
+	 * Gets the player's PVP state.
+	 * @param p The Player.
+	 * @return The player's PVP state.
+	 */
 	public boolean GetPlayerPvPState(Player p) {
 		FileConfiguration playerData = YamlConfiguration.loadConfiguration(new File(dir.getPath(), p.getUniqueId() + ".yml"));
 		return playerData.getBoolean("PvPState");

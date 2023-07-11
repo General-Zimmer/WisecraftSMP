@@ -19,6 +19,9 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Main class for WisecraftSMP
+ */
 public final class WisecraftSMP extends JavaPlugin {
 
     private static WisecraftSMP instance;
@@ -28,6 +31,9 @@ public final class WisecraftSMP extends JavaPlugin {
 
     private boolean isTimberEnabled = false;
 
+    /**
+     * Production Constructor for WisecraftSMP
+     */
     public WisecraftSMP() {
         instance = this;
     }
@@ -95,11 +101,10 @@ public final class WisecraftSMP extends JavaPlugin {
         }
         Logger.getLogger("wisecraft").log(Level.WARNING, "Couldn't get " + name + " provider");
     }
-    private boolean setupTimber() {
+    private void setupTimber() {
         Plugin setupPlugin = getServer().getPluginManager().getPlugin("UltimateTimber");
-        if (setupPlugin == null) {return false;}
+        if (setupPlugin == null) {return;}
         isTimberEnabled = setupPlugin.isEnabled();
-        return isTimberEnabled;
     }
     private void setupLuckPerms() {
         String name = "LuckPerms";
@@ -134,22 +139,42 @@ public final class WisecraftSMP extends JavaPlugin {
         }
     }
 
+    /**
+     * Returns the WisecraftSMP instance.
+     * @return WisecraftSMP instance.
+     */
     public static WisecraftSMP getInstance() {
         return instance;
     }
 
+    /**
+     * Returns the Essentials plugin instance.
+     * @return Essentials plugin instance.
+     */
     public static IEssentials getEss() {
         return instance.ess;
     }
 
+    /**
+     * Returns the WisecraftCoreApi instance.
+     * @return WisecraftCoreApi instance.
+     */
     public static WisecraftCoreApi getCore() {
         return instance.core;
     }
 
+    /**
+     * Returns the LuckPerms instance.
+     * @return LuckPerms instance.
+     */
     public static LuckPerms getLuck() {
         return instance.luck;
     }
 
+    /**
+     * Returns the modules list.
+     * @return modules list.
+     */
     public boolean isTimberEnabled() {
         return isTimberEnabled;
     }

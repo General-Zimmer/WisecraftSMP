@@ -22,12 +22,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * PvPListener
+ */
 public class PvPListener implements Listener {
 
 	private final WisecraftSMP instance = WisecraftSMP.getInstance();
 	private final HashMap<UUID, Boolean> pvpPlayers = PVPStorage.getPVPPlayers();
 	private final List<String> blockedWorlds = PVPStorage.getBlockedWorlds();
 
+	/**
+	 * Cancel damage if pvp isn't enabled on either players
+	 * @param e EntityDamageByEntityEvent
+	 */
 	@EventHandler(ignoreCancelled = true)
 	public void onHit(EntityDamageByEntityEvent e) {
 		if (blockedWorlds.contains(e.getEntity().getWorld().getName())) return;
@@ -60,6 +67,10 @@ public class PvPListener implements Listener {
 		}
 	}
 
+	/**
+	 * Fired when a player is hit by a arrow
+	 * @param e PlayerFishEvent
+	 */
 	@EventHandler(ignoreCancelled = true)
 	//fired when a player is shot with a flaming arrow
 	public void onFlameArrow(EntityCombustByEntityEvent e) {
@@ -82,8 +93,11 @@ public class PvPListener implements Listener {
 		}
 	}
 
+	/**
+	 * Fired when a player is hit by a splash potion
+	 * @param e PlayerFishEvent
+	 */
 	@EventHandler(ignoreCancelled = true)
-	//fired when a splash potion is thrown
 	public void onPotionSplash(PotionSplashEvent e) {
 		if (blockedWorlds.contains(e.getEntity().getWorld().getName())) return;
 
@@ -123,6 +137,10 @@ public class PvPListener implements Listener {
 		}
 	}
 
+	/**
+	 * Fired when a player is hit by a lingering potion cloud
+	 * @param e AreaEffectCloudApplyEvent
+	 */
 	@EventHandler(ignoreCancelled = true)
 	//fired when lingering potion cloud is active
 	public void onCloudEffects(AreaEffectCloudApplyEvent e) {
@@ -141,6 +159,10 @@ public class PvPListener implements Listener {
 		}
 	}
 
+	/**
+	 * Fired when a player is hit by a trident
+	 * @param e EntityDamageByEntityEvent
+	 */
 	@EventHandler(ignoreCancelled = true)
 	public void onPlayerFishing (PlayerFishEvent e) {
 		if (blockedWorlds.contains(e.getPlayer().getWorld().getName())) return;
@@ -157,7 +179,10 @@ public class PvPListener implements Listener {
 		}
 	}
 
-	//Tag lightning strike as from a trident
+	/**
+	 * Fired when a player is hit by a trident
+	 * @param e EntityDamageByEntityEvent
+	 */
 	@EventHandler(ignoreCancelled = true)
 	public void onLightningStrike(LightningStrikeEvent e){
 		if(e.getCause() == LightningStrikeEvent.Cause.TRIDENT){

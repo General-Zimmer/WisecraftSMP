@@ -12,11 +12,14 @@ import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Thread for giving roles to players.
+ */
 public class GibRoles extends BukkitRunnable {
 
-    WisecraftSMP plugin = WisecraftSMP.getInstance();
-    WisecraftCoreApi core = WisecraftSMP.getCore();
-    LuckPerms luck = WisecraftSMP.getLuck();
+    private final WisecraftSMP plugin = WisecraftSMP.getInstance();
+    private final WisecraftCoreApi core = WisecraftSMP.getCore();
+    private final LuckPerms luck = WisecraftSMP.getLuck();
 
     @Override
     public void run() {
