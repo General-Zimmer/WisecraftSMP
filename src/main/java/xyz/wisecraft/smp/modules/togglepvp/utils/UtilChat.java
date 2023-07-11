@@ -5,13 +5,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import xyz.wisecraft.smp.WisecraftSMP;
 
-public abstract class Chat {
+public abstract class UtilChat {
 
 	private static final WisecraftSMP instance = WisecraftSMP.getInstance();
 	private static final FileConfiguration config = instance.getConfig();
 
 	/**
-	 * sends message without a argument
+	 * sends message
+	 * @param sender The sender to send the message to
+	 * @param message The message to send
 	 */
 	public static void send(CommandSender sender, String message) {
 		String msg = config.getString("MESSAGES." + message);
@@ -22,6 +24,9 @@ public abstract class Chat {
 
 	/**
 	 * sends message with a argument
+	 * @param sender The sender to send the message to
+	 * @param message The message to send
+	 * @param argument The argument to replace <argument> with
 	 */
 	public static void send(CommandSender sender, String message, String argument) {
 		String msg = config.getString("MESSAGES." + message);
@@ -32,7 +37,11 @@ public abstract class Chat {
 	}
 
 	/**
-	 * sends message with a argument and pvp state
+	 * sends message with a argument and pvpstate
+	 * @param sender The sender to send the message to
+	 * @param message The message to send
+	 * @param argument The argument to replace <argument> with
+	 * @param pvpState The pvpstate to replace <pvpstate> with
 	 */
 	public static void send(CommandSender sender, String message, String argument, Boolean pvpState) {
 		String msg = config.getString("MESSAGES." + message);

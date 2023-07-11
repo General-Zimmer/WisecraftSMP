@@ -21,9 +21,6 @@ public class ExtraEvents implements Listener {
 
     private final HashMap<UUID, Angel> angels = OtherStorage.getAngels();
 
-    public ExtraEvents() {
-    }
-
     @EventHandler
     public void finishTutorial(PlayerCommandPreprocessEvent e) {
         String world = e.getPlayer().getWorld().getName();

@@ -10,9 +10,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.WisecraftSMP;
-import xyz.wisecraft.smp.modules.togglepvp.utils.Chat;
+import xyz.wisecraft.smp.modules.togglepvp.utils.UtilChat;
 import xyz.wisecraft.smp.modules.togglepvp.utils.PVPCMDUtil;
-import xyz.wisecraft.smp.modules.togglepvp.utils.Util;
+import xyz.wisecraft.smp.modules.togglepvp.utils.UtilPlayers;
 import xyz.wisecraft.smp.modules.togglepvp.storage.PVPStorage;
 
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ public class PVPCMD implements TabExecutor {
 
 
 		if (args.length == 0) {
-			if (Util.hasCooldown(p)) return true;
+			if (UtilPlayers.hasCooldown(p)) return true;
 
 			// zero arg case
 			PVPCMDUtil.zeroArg(p, color);
@@ -57,36 +57,36 @@ public class PVPCMD implements TabExecutor {
 			case "status" -> PVPCMDUtil.status(sender, p, args);
 			default -> {
 				if (!sender.hasPermission("pvptoggle.others.set")) {
-					Chat.send(p, "COMMAND_NO_PERMISSION");
+					UtilChat.send(p, "COMMAND_NO_PERMISSION");
 					return true;
 				}
 				// Check if command target exists
 				Player other = Bukkit.getPlayerExact(args[0]);
 				if (other == null) {
-					Chat.send(p, "NO_PLAYER", args[0]);
+					UtilChat.send(p, "NO_PLAYER", args[0]);
 					return true;
 				}
 				// Switch PVP State on target
 				Boolean otherPlayerPVPState = pvpPlayers.get(other.getUniqueId());
 				if (otherPlayerPVPState) {
 					// Turn off
-					if (Util.setPlayerState(other, false, sender)) {
-						Chat.send(other, "PVP_STATE_ENABLED");
+					if (UtilPlayers.setPlayerState(other, false, sender)) {
+						UtilChat.send(other, "PVP_STATE_ENABLED");
 						if (other != p)
-							Chat.send(p, "PVP_STATE_CHANGED_OTHERS", other.getName(), Util.getPlayerState(other.getUniqueId()));
+							UtilChat.send(p, "PVP_STATE_CHANGED_OTHERS", other.getName(), UtilPlayers.getPlayerState(other.getUniqueId()));
 
 						if (config.getBoolean("SETTINGS.PARTICLES"))
-							Util.particleEffect(other.getPlayer());
+							UtilPlayers.particleEffect(other.getPlayer());
 						if (config.getBoolean("SETTINGS.NAMETAG"))
-							Util.ChangeNametag(other.getPlayer(), color);
+							UtilPlayers.ChangeNametag(other.getPlayer(), color);
 					}
 				} else {
 					// Turn on
-					if (Util.setPlayerState(other, true, sender)) {
-						Chat.send(other, "PVP_STATE_DISABLED");
-						Chat.send(p, "PVP_STATE_CHANGED_OTHERS", other.getName(), Util.getPlayerState(other.getUniqueId()));
+					if (UtilPlayers.setPlayerState(other, true, sender)) {
+						UtilChat.send(other, "PVP_STATE_DISABLED");
+						UtilChat.send(p, "PVP_STATE_CHANGED_OTHERS", other.getName(), UtilPlayers.getPlayerState(other.getUniqueId()));
 						if (config.getBoolean("SETTINGS.NAMETAG"))
-							Util.ChangeNametag(other.getPlayer(), "reset");
+							UtilPlayers.ChangeNametag(other.getPlayer(), "reset");
 					}
 				}
 			}

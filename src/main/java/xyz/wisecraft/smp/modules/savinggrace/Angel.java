@@ -36,6 +36,10 @@ public class Angel {
         this.resetGrace(hasDonator);
     }
 
+    /**
+     * Give player their saved gear
+     * @param e PlayerRespawnEvent
+     */
     public void giveGrace(PlayerRespawnEvent e) {
         PlayerInventory inv = e.getPlayer().getInventory();
         Player p = e.getPlayer();
@@ -65,6 +69,13 @@ public class Angel {
 
     }
 
+
+    /**
+     * Give starter gear and teleport to tutorial
+     * @param user Essentials user
+     * @param p Player
+     * @throws Exception If the kit doesn't exist
+     */
     public void giveStarter(User user, Player p) throws Exception {
         this.setDied(false);
         World tut = Bukkit.getWorld("tutorial");
@@ -84,6 +95,11 @@ public class Angel {
         p.sendMessage(NamedTextColor.BLUE + "You didn't /sethome or place a bed! You have been granted some new items.");
     }
 
+    /**
+     * Method to easily save the gear of a player
+     * @param drops The drops of the player
+     * @param inv The inventory of the player
+     */
     public void saveGear(List<ItemStack> drops, PlayerInventory inv) {
         this.clear();
         this.toolSave(drops, inv);
@@ -91,7 +107,12 @@ public class Angel {
         this.setDied(true);
     }
 
-    public void toolSave(List<ItemStack> drops, PlayerInventory inv) {
+    /**
+     * Save the tools of the player
+     * @param drops The drops of the player
+     * @param inv The inventory of the player
+     */
+    private void toolSave(List<ItemStack> drops, PlayerInventory inv) {
         int saveAmount = 4; // amount of tools to save
         List<ItemStack> tools = new ArrayList<>(saveAmount);
         ItemStack air = new ItemStack(Material.AIR);
@@ -124,7 +145,12 @@ public class Angel {
         this.tools = tools;
     }
 
-    public void armorSave(List<ItemStack> drops, PlayerInventory inv) {
+    /**
+     * Save armor the player was wearing
+     * @param drops The drops of the player
+     * @param inv The inventory of the player
+     */
+    private void armorSave(List<ItemStack> drops, PlayerInventory inv) {
         //Armor save
         ItemStack[] armor = inv.getArmorContents();
         ArrayList<Material> containers = UtilRandom.getContainerTypes();
@@ -141,29 +167,57 @@ public class Angel {
         this.armor = changeArmor.toArray(new ItemStack[0]);
     }
 
-
-
+    /**
+     * Clears the saved gear
+     */
     public void clear() {
         this.tools = null;
         this.armor = null;
     }
 
+    /**
+     * Gets the armor that was saved
+     * @return The armor that was saved
+     */
     public ItemStack[] getArmor() {
         return this.armor;
     }
+
+    /**
+     * Get tools
+     * @return The tools that were saved
+     */
     public List<ItemStack> getTools() {
         return this.tools;
     }
+
+    /**
+     * Reset graces for a player
+     * @param hasPerm Whether or not the player has the donator permission
+     */
     public void resetGrace(boolean hasPerm) {
         if (hasPerm)
             this.graces = 2;
         else
             this.graces = 1;
     }
+
+    /**
+     * Gets graces
+     * @return The amount of graces a player has
+     */
     public int getGraces() {return this.graces;}
+
+    /**
+     * Decrease the amount of graces a player has
+     */
     public void decreaseGraces() {--this.graces;}
 
     //todo Make tools be placed into enderchest or into a shulker box in the enderchest (if full), otherwise drop saved items on the corpse.
+    /**
+     * Deletes a player's angel if they've left the server
+     * @param UUID The UUID of the player to delete
+     */
     public void safeDelete(UUID UUID) {
 
 

@@ -10,9 +10,9 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import xyz.wisecraft.smp.WisecraftSMP;
-import xyz.wisecraft.smp.modules.togglepvp.utils.Chat;
+import xyz.wisecraft.smp.modules.togglepvp.utils.UtilChat;
 import xyz.wisecraft.smp.modules.togglepvp.utils.PersistentData;
-import xyz.wisecraft.smp.modules.togglepvp.utils.Util;
+import xyz.wisecraft.smp.modules.togglepvp.utils.UtilPlayers;
 import xyz.wisecraft.smp.modules.togglepvp.storage.PVPStorage;
 
 import java.util.HashMap;
@@ -37,10 +37,10 @@ public class PlayerListener implements Listener {
             }
             if(!pvpPlayers.get(p.getUniqueId())) {
                 if(config.getBoolean("SETTINGS.PARTICLES")) {
-                    Util.particleEffect(p.getPlayer());
+                    UtilPlayers.particleEffect(p.getPlayer());
                 }
                 if(config.getBoolean("SETTINGS.NAMETAG")) {
-                    Util.ChangeNametag(p.getPlayer(), "&c");
+                    UtilPlayers.ChangeNametag(p.getPlayer(), "&c");
                 }
             }
         }
@@ -57,10 +57,10 @@ public class PlayerListener implements Listener {
         }
         if(!pvpPlayers.get(p.getUniqueId())) {
             if(config.getBoolean("SETTINGS.PARTICLES")) {
-                Util.particleEffect(p.getPlayer());
+                UtilPlayers.particleEffect(p.getPlayer());
             }
             if(config.getBoolean("SETTINGS.NAMETAG")) {
-                Util.ChangeNametag(p.getPlayer(), "&c");
+                UtilPlayers.ChangeNametag(p.getPlayer(), "&c");
             }
         }
     }
@@ -77,25 +77,25 @@ public class PlayerListener implements Listener {
     public void onChangeWorld(PlayerChangedWorldEvent event) {
         Player player = event.getPlayer();
         World world = player.getWorld();
-        boolean playerPvpEnabled = !Util.getPlayerState(player.getUniqueId());
+        boolean playerPvpEnabled = !UtilPlayers.getPlayerState(player.getUniqueId());
 
         // If PVP isn't enabled in the world but the player has it enabled, disable it.
         if (!world.getPVP() && playerPvpEnabled) {
-            Util.setPlayerState(player.getUniqueId(), true);
-            Chat.send(player, "PVP_WORLD_CHANGE_DISABLED");
+            UtilPlayers.setPlayerState(player.getUniqueId(), true);
+            UtilChat.send(player, "PVP_WORLD_CHANGE_DISABLED");
             if(config.getBoolean("SETTINGS.NAMETAG"))
-                Util.ChangeNametag(player, "reset");
+                UtilPlayers.ChangeNametag(player, "reset");
             return;
         }
 
         // If PVP is required (i.e. the world has PVP enabled, and it is in the blocked worlds) and the player has it disabled, enable it.
         if (player.getWorld().getPVP() && blockedWorlds.contains(world.getName()) && !playerPvpEnabled) {
-            Util.setPlayerState(player.getUniqueId(), false);
-            Chat.send(player, "PVP_WORLD_CHANGE_REQUIRED");
+            UtilPlayers.setPlayerState(player.getUniqueId(), false);
+            UtilChat.send(player, "PVP_WORLD_CHANGE_REQUIRED");
             if (config.getBoolean("SETTINGS.PARTICLES"))
-                Util.particleEffect(player);
+                UtilPlayers.particleEffect(player);
             if(config.getBoolean("SETTINGS.NAMETAG"))
-                Util.ChangeNametag(player, "&c");
+                UtilPlayers.ChangeNametag(player, "&c");
         }
     }
 }

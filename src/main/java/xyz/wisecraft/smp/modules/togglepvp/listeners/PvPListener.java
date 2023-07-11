@@ -12,9 +12,9 @@ import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.weather.LightningStrikeEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import xyz.wisecraft.smp.WisecraftSMP;
-import xyz.wisecraft.smp.modules.togglepvp.utils.Chat;
+import xyz.wisecraft.smp.modules.togglepvp.utils.UtilChat;
 import xyz.wisecraft.smp.modules.togglepvp.utils.PVPUtil;
-import xyz.wisecraft.smp.modules.togglepvp.utils.Util;
+import xyz.wisecraft.smp.modules.togglepvp.utils.UtilPlayers;
 import xyz.wisecraft.smp.modules.togglepvp.storage.PVPStorage;
 
 import java.util.Collection;
@@ -75,8 +75,8 @@ public class PvPListener implements Listener {
 				} else if (isVictimPVPOff != null && isVictimPVPOff) {
 					e.setCancelled(true);
 				} else {
-					Util.setCooldownTime(attacker);
-					Util.setCooldownTime(victim);
+					UtilPlayers.setCooldownTime(attacker);
+					UtilPlayers.setCooldownTime(victim);
 				}
 			}
 		}
@@ -104,7 +104,7 @@ public class PvPListener implements Listener {
 									e.setIntensity(livingEntity, 0);
 								}
 							}
-							Chat.send(attacker, "PVP_DISABLED");
+							UtilChat.send(attacker, "PVP_DISABLED");
 
 						} else if(isVictimPVPOff != null && isVictimPVPOff) {
 							for(LivingEntity ent : affected){
@@ -112,10 +112,10 @@ public class PvPListener implements Listener {
 									e.setIntensity(ent, 0);
 								}
 							}
-							Chat.send(attacker, "PVP_DISABLED_OTHERS", victim.getName());
+							UtilChat.send(attacker, "PVP_DISABLED_OTHERS", victim.getName());
 						} else {
-							Util.setCooldownTime(attacker);
-							Util.setCooldownTime(victim);
+							UtilPlayers.setCooldownTime(attacker);
+							UtilPlayers.setCooldownTime(victim);
 						}
 					}
 				}

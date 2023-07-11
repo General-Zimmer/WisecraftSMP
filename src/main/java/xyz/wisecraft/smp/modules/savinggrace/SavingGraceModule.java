@@ -5,6 +5,7 @@ import xyz.wisecraft.smp.modules.savinggrace.listeners.AngelListeners;
 public class SavingGraceModule implements xyz.wisecraft.smp.modulation.ModuleClass{
     @Override
     public void onEnable() {
+        // todo Take all online players and give them an Angel in case of a reload
     }
 
     @Override

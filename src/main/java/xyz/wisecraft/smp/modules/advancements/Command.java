@@ -1,8 +1,7 @@
 package xyz.wisecraft.smp.modules.advancements;
 
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
+import org.bukkit.command.TabExecutor;
 import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.modules.advancements.threads.GibRoles;
@@ -10,15 +9,15 @@ import xyz.wisecraft.smp.modules.advancements.threads.GibRoles;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Command implements CommandExecutor, TabCompleter {
+public class Command implements TabExecutor {
 
-    private final WisecraftSMP plugin;
+    private final WisecraftSMP plugin = WisecraftSMP.getInstance();
 
-    public Command() {
-    this.plugin = WisecraftSMP.getInstance();
-    }
     @Override
-    public boolean onCommand(CommandSender sender, @NotNull org.bukkit.command.Command cmd, @NotNull String label, @NotNull String[] args) {
+    public boolean onCommand(CommandSender sender,
+                             @NotNull org.bukkit.command.Command cmd,
+                             @NotNull String label,
+                             @NotNull String[] args) {
 
 
         if (sender.hasPermission("Wisecraftadv.manage") && cmd.getName().equalsIgnoreCase("autoroles")) {

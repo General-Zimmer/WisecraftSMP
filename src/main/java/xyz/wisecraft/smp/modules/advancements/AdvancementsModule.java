@@ -3,6 +3,9 @@ package xyz.wisecraft.smp.modules.advancements;
 import xyz.wisecraft.smp.modules.advancements.listeners.QuestListeners;
 import xyz.wisecraft.smp.modules.advancements.listeners.TimberListeners;
 
+/**
+ * This class is the module class for the Advancements module.
+ */
 public class AdvancementsModule implements xyz.wisecraft.smp.modulation.ModuleClass {
     @Override
     public void onEnable() {

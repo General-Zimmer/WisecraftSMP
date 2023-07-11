@@ -47,6 +47,7 @@ public final class WisecraftSMP extends JavaPlugin {
         setupWisecraftCore();
         setupLuckPerms();
         setupPAPI();
+        setupTimber();
 
         //Config stuff
         this.saveDefaultConfig();

@@ -13,15 +13,27 @@ import xyz.wisecraft.smp.WisecraftSMP;
 
 import java.util.ArrayList;
 
+/**
+ * A class for random utilities
+ */
 public class UtilRandom {
 
+
+    /**
+     * Prevents the player from using the command in the tutorial world and sends a message
+     * @param e the PlayerCommandPreprocessEvent
+     */
     public static void noFinishTut(PlayerCommandPreprocessEvent e) {
         e.setCancelled(true);
         e.getPlayer().sendMessage(ChatColor.RED + "Finish the tutorial first!");
         e.getPlayer().sendMessage(ChatColor.GOLD + "You can always return with /wisecraft tutorial");
     }
 
-
+    /**
+     * Teleports the player to the world
+     * @param world the world to teleport to
+     * @param sender the player to teleport
+     */
     public static void tpworld(World world, CommandSender sender) {
         WisecraftSMP plugin = WisecraftSMP.getInstance();
         IEssentials ess = WisecraftSMP.getEss();
@@ -42,6 +54,11 @@ public class UtilRandom {
 
     }
 
+    /**
+     * Sets the players back location to their current location
+     * @param ess the essentials plugin
+     * @param p the player to set the back location
+     */
     public static void setBack(IEssentials ess, Player p) {
         if (ess != null)
             ess.getUser(p).setLastLocation();
@@ -49,7 +66,10 @@ public class UtilRandom {
             Bukkit.getConsoleSender().sendMessage("Ess is null - wc SMP");
     }
 
-
+    /**
+     * Gets all the tool types
+     * @return an arraylist of all the tool types
+     */
     //This is reeeal ugly but kinda beautiful
     public static ArrayList<Material> getToolTypes() {
         ArrayList<Material> toolTypes = new ArrayList<>();
@@ -94,6 +114,10 @@ public class UtilRandom {
         return toolTypes;
     }
 
+    /**
+     * Gets all the container types
+     * @return an arraylist of all the container types
+     */
     public static ArrayList<Material> getContainerTypes() {
         ArrayList<Material> containers = new ArrayList<>();
         containers.add(Material.SHULKER_BOX);

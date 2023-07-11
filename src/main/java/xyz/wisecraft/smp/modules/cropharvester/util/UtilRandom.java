@@ -11,12 +11,29 @@ import org.bukkit.inventory.meta.Damageable;
 
 import java.util.Random;
 
+/**
+ * Utility class for random methods
+ */
 public abstract class UtilRandom {
 
+    /**
+     * Return Ageable from a block
+     * @param block Block to check
+     * @return Ageable if block is a crop
+     */
     private static Ageable getAgeAbleFromBlock(Block block) {
         return (Ageable) block.getBlockData();
     }
 
+    /**
+     * Type what this does and relevent information
+     * @param mainLocation Location of the block that was interacted with
+     * @param x X coordinate
+     * @param y Y coordinate
+     * @param z Z coordinate
+     * @param item Item used to break block naturally
+     * @param player Player to get mainhand item from
+     */
     public static void farmCropWithHoeIfMaxAgeOnLocation(Location mainLocation, int x, int y, int z, ItemStack item, Player player) {
 
         boolean blockWasBroken = false;
@@ -43,6 +60,13 @@ public abstract class UtilRandom {
         doDamageToItem(item, item.getEnchantmentLevel(Enchantment.DURABILITY), player);
     }
 
+    /**
+     * Type what this does and relevent information
+     * @param width Width of the area to farm
+     * @param block Block that was interacted with
+     * @param item Item used to break block naturally
+     * @param player Player to get mainhand item from
+     */
     public static void farmBlocksXByX(int width, Block block, ItemStack item, Player player) {
 
         Location mainLocation = block.getLocation();

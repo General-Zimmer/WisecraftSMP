@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.UUID;
 
 
-public abstract class Util {
+public abstract class UtilPlayers {
 	private static final WisecraftSMP instance = WisecraftSMP.getInstance();
 	private static final FileConfiguration config = instance.getConfig();
 	private static final HashMap<UUID, Boolean> pvpPlayers = PVPStorage.getPVPPlayers();
@@ -41,9 +41,6 @@ public abstract class Util {
 		pvpPlayers.put(uuid,state);
 	}
 
-	/**
-	 * Set player state while performing checks to make sure it's a valid switch.
-	 */
 	public static boolean setPlayerState(Player player, boolean state, CommandSender caller) {
 		if (player == null) {
 			return false;
@@ -53,18 +50,18 @@ public abstract class Util {
 		// You can't set the state to false (PVP enabled) if the world doesn't allow it
 		if (!world.getPVP() && !state) {
 			if (caller == player) {
-				Chat.send(caller, "PVP_WORLD_CANNOT_CHANGE_SELF");
+				UtilChat.send(caller, "PVP_WORLD_CANNOT_CHANGE_SELF");
 			} else {
-				Chat.send(caller, "PVP_WORLD_CANNOT_CHANGE_OTHERS");
+				UtilChat.send(caller, "PVP_WORLD_CANNOT_CHANGE_OTHERS");
 			}
 			return false;
 		}
 		// You can't set the state to true (PVP disabled) if the world requires it
 		if (world.getPVP() && blockedWorlds.contains(world.getName()) && state) {
 			if (caller == player) {
-				Chat.send(caller, "PVP_WORLD_CANNOT_CHANGE_SELF");
+				UtilChat.send(caller, "PVP_WORLD_CANNOT_CHANGE_SELF");
 			} else {
-				Chat.send(caller, "PVP_WORLD_CANNOT_CHANGE_OTHERS");
+				UtilChat.send(caller, "PVP_WORLD_CANNOT_CHANGE_OTHERS");
 			}
 			return false;
 		}
@@ -73,6 +70,10 @@ public abstract class Util {
 		return true;
 	}
 
+	/**
+	 * Set the cooldown time for the player.
+	 * @param p Player to set cooldown time for
+	 */
 	public static void setCooldownTime(Player p) {
 		if (p.hasPermission("pvptoggle.bypass")) return;
 
@@ -82,24 +83,34 @@ public abstract class Util {
 	public static void removeCooldownTime(Player p) {
 		cooldowns.remove(p.getUniqueId());
 	}
-	
+
+	/**
+	 * Check if the player has a cooldown.
+	 * @param p Player to check
+	 * @return True if the player has a cooldown, false if not
+	 */
 	public static boolean hasCooldown(Player p) {
 		if(cooldowns.containsKey(p.getUniqueId()) ) {
 			Date previousTime = cooldowns.get(p.getUniqueId());
 			Date currentTime = new Date();
 			int seconds = (int) (currentTime.getTime() - previousTime.getTime())/1000;
 			if(seconds > config.getInt("SETTINGS.COOLDOWN") || p.hasPermission("WisecraftSMP.bypass")) {
-				Util.removeCooldownTime(p);
+				UtilPlayers.removeCooldownTime(p);
 				return false;
 			} else {
-				Chat.send(p, "PVP_COOLDOWN", String.valueOf(config.getInt("SETTINGS.COOLDOWN") - seconds));
+				UtilChat.send(p, "PVP_COOLDOWN", String.valueOf(config.getInt("SETTINGS.COOLDOWN") - seconds));
 				return true;
 			}
 		} else {
 			return false;
 		}
 	}
-	
+
+	/**
+	 * Change the player's nametag color.
+	 * @param p Player to change nametag color of
+	 * @param color Color to change nametag to
+	 */
 	public static void ChangeNametag(Player p, String color) {
 		if(instance.getServer().getPluginManager().isPluginEnabled("NametagEdit")) {
 			if(color.equals("reset")) {
@@ -109,7 +120,11 @@ public abstract class Util {
 			}	
 		}
 	}
-	
+
+	/**
+	 * Spawn particles around the player.
+	 * @param p Player to spawn particles around
+	 */
 	public static void particleEffect(Player p) {
 		new BukkitRunnable() {
 

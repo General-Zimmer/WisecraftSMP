@@ -14,17 +14,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class GibRoles extends BukkitRunnable {
 
-    WisecraftSMP plugin;
-    WisecraftCoreApi core;
-    LuckPerms luck;
+    WisecraftSMP plugin = WisecraftSMP.getInstance();
+    WisecraftCoreApi core = WisecraftSMP.getCore();
+    LuckPerms luck = WisecraftSMP.getLuck();
 
-
-    public GibRoles() {
-        this.plugin = WisecraftSMP.getInstance();
-        this.core = WisecraftSMP.getCore();
-        this.luck = WisecraftSMP.getLuck();
-
-    }
     @Override
     public void run() {
         ArrayList<Player> players = new ArrayList<>(Bukkit.getOnlinePlayers());

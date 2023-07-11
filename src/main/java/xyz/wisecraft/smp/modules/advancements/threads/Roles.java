@@ -27,6 +27,7 @@ public class Roles extends BukkitRunnable {
         this.plugin = plugin;
         this.luck = luck;
     }
+    @Override
     public void run() {
 
         Node citizenN = UtilAdv.buildNode("citizen");
@@ -54,7 +55,11 @@ public class Roles extends BukkitRunnable {
         }
     }
 
-    public void gibCitizen(Player p) {
+    /**
+     * Gives the citizen role to the player
+     * @param p The player to give the role to
+     */
+    private void gibCitizen(Player p) {
         //Check if user meets requirements
         Infop data = infom.get(p.getUniqueId());
         if (data.getTime() >= 300 && data.getBlocksPlace() >= 2000 && data.getBlocksBroke() >= 4000) {
@@ -65,7 +70,11 @@ public class Roles extends BukkitRunnable {
         }
     }
 
-    public void gibNoble(Player p) {
+    /**
+     * Gives the noble role to the player
+     * @param p The player to give the role to
+     */
+    private void gibNoble(Player p) {
         //Check if user meets requirements
         Infop data = infom.get(p.getUniqueId());
         if (data.getTime() >= 1200 && data.getBlocksPlace() >= 10000 && data.getBlocksBroke() >= 15000) {

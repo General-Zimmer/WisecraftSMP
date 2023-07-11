@@ -18,13 +18,17 @@ import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+
 public class TimberListeners implements Listener {
 
     private final WisecraftSMP plugin = WisecraftSMP.getInstance();
     private final ConcurrentHashMap<UUID, Infop> infom = WisecraftSMP.getCore().getInfom();
     private final ConcurrentHashMap<UUID, Timers> timers = WisecraftSMP.getCore().getTimers();
 
-
+    /**
+     * When a tree is felled, start a timer for the player
+     * @param e TreeFellEvent
+     */
     @SuppressWarnings("ConstantConditions")
     @EventHandler(priority = EventPriority.LOWEST)
     public void Dying(PlayerDeathEvent e) {
@@ -53,6 +57,10 @@ public class TimberListeners implements Listener {
         }
     }
 
+    /**
+     * Add 1 to the tree counter and check for achievements
+     * @param e TreeFellEvent
+     */
     //Keep at the bottom, it's ugly asf
     @EventHandler
     public void treecounter(TreeFellEvent e) {
