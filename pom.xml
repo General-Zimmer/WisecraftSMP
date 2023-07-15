@@ -63,6 +63,10 @@
                                     <pattern>org.reflections</pattern>
                                     <shadedPattern>wisecraftsmp.reflections</shadedPattern>
                                 </relocation>
+                                <relocation>
+                                    <pattern>com.frengor</pattern>
+                                    <shadedPattern>wisecraftsmp.advancementapi</shadedPattern>
+                                </relocation>
                             </relocations>
                             <filters>
                                 <filter>
@@ -178,6 +182,10 @@
             <id>upstream</id>
             <url>https://ci.nametagedit.com/plugin/repository/everything/</url>
         </repository>
+        <repository>
+            <id>advancementAPI</id>
+            <url>https://nexus.frengor.com/repository/public/</url>
+        </repository>
 
     </repositories>
 
@@ -235,6 +243,12 @@
             <artifactId>UltimateTimber</artifactId>
             <version>2.4.0z-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.frengor</groupId>
+            <artifactId>ultimateadvancementapi-shadeable</artifactId>
+            <version>2.2.5</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>xyz.wisecraft</groupId>

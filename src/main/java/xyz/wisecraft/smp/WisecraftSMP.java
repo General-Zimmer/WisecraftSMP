@@ -68,8 +68,6 @@ public final class WisecraftSMP extends JavaPlugin {
         for (ModuleClass module : this.modules)
             module.startModule();
 
-
-
     }
 
     @Override
