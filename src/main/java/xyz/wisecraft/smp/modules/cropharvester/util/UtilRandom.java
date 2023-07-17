@@ -57,6 +57,10 @@ public abstract class UtilRandom {
             return;
         }
 
+        if (player.getGameMode() == org.bukkit.GameMode.CREATIVE) {
+            return;
+        }
+
         doDamageToItem(item, item.getEnchantmentLevel(Enchantment.DURABILITY), player);
     }
 
