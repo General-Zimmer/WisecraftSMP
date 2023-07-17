@@ -39,7 +39,7 @@ public final class WisecraftSMP extends JavaPlugin {
     private File moduleConfigFile;
     private FileConfiguration moduleConfig;
     private final String modulePath = "modules.";
-    private final boolean isModulesEnabledByDefault = moduleConfig.getBoolean("IsModulesEnabledByDefault", false);
+    private boolean isModulesEnabledByDefault;
 
 
     /**
@@ -71,6 +71,8 @@ public final class WisecraftSMP extends JavaPlugin {
         // Config stuff
         this.saveDefaultConfig();
         OtherStorage.setServer_name(this.getConfig().getString("server_name"));
+
+        moduleConfig.getBoolean("IsModulesEnabledByDefault", false);
 
         // Fetching modules
         Reflections reflections = new Reflections("xyz.wisecraft.smp.modules");
