@@ -4,6 +4,9 @@ import com.earth2me.essentials.Essentials;
 import net.ess3.api.IEssentials;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.MemorySection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -13,8 +16,12 @@ import xyz.wisecraft.smp.modulation.ModuleClass;
 import xyz.wisecraft.smp.modules.togglepvp.utils.PlaceholderAPIHook;
 import xyz.wisecraft.smp.storage.OtherStorage;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,8 +35,11 @@ public final class WisecraftSMP extends JavaPlugin {
     private IEssentials ess;
     private WisecraftCoreApi core;
     private LuckPerms luck;
-
     private boolean isTimberEnabled = false;
+    private File moduleConfigFile;
+    private FileConfiguration moduleConfig;
+    private final String modulePath = "modules.";
+
 
     /**
      * Production Constructor for WisecraftSMP
@@ -44,9 +54,9 @@ public final class WisecraftSMP extends JavaPlugin {
     @Override
     public void onEnable() {
         // todo add a sub main for every feature and add a config to disable and enable them.
-        // sub-main's needs to inherent from an interface that will have methods that sets themselves up with an Event.
 
-        // todo implement a way for config variables to only be added if they're enabled. Don't remove config variables ever. The check will use bit addition.
+        // todo implement a way for config variables to only be added if they're enabled. Don't remove config variables
+        //  ever. The check will use bit addition.
 
         // Dependencies always first
         setupEssentials();
@@ -55,18 +65,31 @@ public final class WisecraftSMP extends JavaPlugin {
         setupPAPI();
         setupTimber();
 
-        //Config stuff
+        createModuleConfig();
+
+        // Config stuff
         this.saveDefaultConfig();
         OtherStorage.setServer_name(this.getConfig().getString("server_name"));
 
-        // Creating modules
+        // Fetching modules
         Reflections reflections = new Reflections("xyz.wisecraft.smp.modules");
 
+        // Initialize modules
         setupModules(reflections.getSubTypesOf(ModuleClass.class));
 
-        // Enable modules
-        for (ModuleClass module : this.modules)
-            module.startModule();
+        // setup modules
+        if (moduleConfig.get(modulePath.split("\\.")[0]) != null) {
+            setupModuleConfig();
+        } else {
+            setupModulesFromConfig();
+        }
+
+
+        try {
+            moduleConfig.save(moduleConfigFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -135,6 +158,103 @@ public final class WisecraftSMP extends JavaPlugin {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void setupModulesFromConfig() {
+        MemorySection mem = (MemorySection) moduleConfig.get(getModulePath().split("\\.")[0]);
+        ArrayList<String> modulesInConfig = new ArrayList<>(mem.getKeys(false));
+
+
+        ArrayList<Long> IDs = new ArrayList<>();
+
+        modulesInConfig.forEach(module -> {
+            if (moduleConfig.get(getModulePath() + module + ".id") != null) {
+                IDs.add(moduleConfig.getLong(getModulePath() + module + ".id"));
+            }
+        });
+
+        ArrayList<Long> missingIDS = new ArrayList<>();
+
+        for (int i = 0; i < IDs.size(); i++) {
+            if (i != IDs.get(i)) {
+                missingIDS.add((long) i);
+            }
+
+        }
+
+        ArrayList<ModuleClass> modulesToBeAdded = new ArrayList<>();
+        modules.forEach(module -> {
+            if (!modulesInConfig.contains(module.getModuleName())) {
+                modulesToBeAdded.add(module);
+            }
+        });
+
+
+        HashMap<Long, ModuleClass> mapModulesToBeAdded = new HashMap<>();
+
+        for (int i = 0, j = 0; i < modulesToBeAdded.size(); i++) {
+
+            if (missingIDS.get(i) < missingIDS.size()) {
+                mapModulesToBeAdded.put(missingIDS.get(i), modulesToBeAdded.get(i));
+                continue;
+            }
+
+            mapModulesToBeAdded.put((long) modulesToBeAdded.size()+j, modulesToBeAdded.get(i));
+            j++;
+
+        }
+
+
+        for (Map.Entry<Long, ModuleClass> module : mapModulesToBeAdded.entrySet()) {
+            moduleConfig.set(modulePath + module + ".enabled", true);
+            moduleConfig.set(modulePath + module + ".id", module.getKey());
+        }
+
+        if (moduleConfig.getBoolean("Remove_Old_Module_Settings")) return;
+
+        // Remove modules not present in the code
+        ArrayList<String> modulesToBeRemoved = new ArrayList<>();
+        modules.forEach(module -> {
+            if (!modulesInConfig.contains(module.getModuleName())) {
+                modulesToBeRemoved.add(module.getModuleName());
+            }
+        });
+
+        for (String module : modulesToBeRemoved) {
+            moduleConfig.set(modulePath + module, null);
+        }
+
+        System.out.println("delete dis when test done");
+    }
+
+    private void setupModuleConfig() {
+        for (int i = 0; i < modules.size(); i++) {
+            String moduleName = modules.get(i).getModuleName();
+            moduleConfig.set(modulePath + moduleName + ".enabled", true);
+            moduleConfig.set(modulePath + moduleName + ".id", i);
+            modules.get(i).startModule();
+        }
+    }
+
+    public FileConfiguration getModuleConfig() {
+        return this.moduleConfig;
+    }
+
+    private void createModuleConfig() {
+        moduleConfigFile = new File(getDataFolder(), "modules.yml");
+        if (!moduleConfigFile.exists()) {
+            moduleConfigFile.getParentFile().mkdirs();
+            saveResource("modules.yml", false);
+        }
+        moduleConfig = YamlConfiguration.loadConfiguration(moduleConfigFile);
+    }
+
+    /**
+     * Returns the module path for config.
+     * @return module path for config.
+     */
+    public String getModulePath() {
+        return modulePath;
     }
 
     /**

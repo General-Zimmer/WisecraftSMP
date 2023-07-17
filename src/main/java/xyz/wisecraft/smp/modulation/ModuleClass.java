@@ -5,17 +5,12 @@ import xyz.wisecraft.smp.WisecraftSMP;
 /**
  * This interface is used to create modules.
  */
-public interface ModuleClass {
+public interface ModuleClass extends Comparable<ModuleClass> {
 
     /**
      * The plugin instance.
      */
     WisecraftSMP plugin = WisecraftSMP.getInstance();
-
-    /**
-     * The id of the module.
-     */
-    int id = -1;
 
     /**
      * This method is called when the module is starting.
@@ -52,4 +47,23 @@ public interface ModuleClass {
      * This method should register all the commands for the module.
      */
     default void registerCommands() {}
+
+    default long getModuleID() {
+        return plugin.getModuleConfig().getBoolean(plugin.getModulePath() + getModuleName() + ".enabled") ?
+                plugin.getModuleConfig().getLong(plugin.getModulePath() + getModuleName() + ".id") : -1;
+    }
+
+    default void setModuleID(long id) {
+        plugin.getModuleConfig().set(plugin.getModulePath() + getModuleName() + ".id", id);
+    }
+
+    default String getModuleName() {
+        return this.getClass().getSimpleName().split("Module")[0];
+    }
+
+    @Override
+    default int compareTo(ModuleClass module) {
+        return Long.compare(this.getModuleID(), module.getModuleID());
+    }
+
 }

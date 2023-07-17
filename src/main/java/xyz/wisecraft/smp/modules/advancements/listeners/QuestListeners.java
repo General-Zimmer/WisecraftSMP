@@ -222,7 +222,8 @@ public class QuestListeners implements Listener {
 	public void ledgehog(PlayerDeathEvent e) {
 
 		Player p = e.getEntity();
-		if (e.getDeathMessage().equalsIgnoreCase(p.getName() + " fell from a high place") & p.getArrowsInBody() >= 25) {
+		if (e.getDeathMessage().equalsIgnoreCase(p.getName() + " fell from a high place") &
+				p.getArrowsInBody() >= 25) {
 			NamespacedKey key = new NamespacedKey(plugin, "ledgehog");
 
 			UtilAdv.gibCri("ledgehog", key, p);
