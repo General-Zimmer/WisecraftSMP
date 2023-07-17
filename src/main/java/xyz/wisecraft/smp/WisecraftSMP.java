@@ -39,6 +39,7 @@ public final class WisecraftSMP extends JavaPlugin {
     private File moduleConfigFile;
     private FileConfiguration moduleConfig;
     private final String modulePath = "modules.";
+    private final boolean isModulesEnabledByDefault = moduleConfig.getBoolean("IsModulesEnabledByDefault", false);
 
 
     /**
@@ -165,16 +166,14 @@ public final class WisecraftSMP extends JavaPlugin {
         ArrayList<String> modulesInConfig = new ArrayList<>(mem.getKeys(false));
 
 
+        // Getting missing IDs
         ArrayList<Long> IDs = new ArrayList<>();
-
         modulesInConfig.forEach(module -> {
             if (moduleConfig.get(getModulePath() + module + ".id") != null) {
                 IDs.add(moduleConfig.getLong(getModulePath() + module + ".id"));
             }
         });
-
         ArrayList<Long> missingIDS = new ArrayList<>();
-
         for (int i = 0; i < IDs.size(); i++) {
             if (i != IDs.get(i)) {
                 missingIDS.add((long) i);
@@ -182,6 +181,7 @@ public final class WisecraftSMP extends JavaPlugin {
 
         }
 
+        // Getting missing modules
         ArrayList<ModuleClass> modulesToBeAdded = new ArrayList<>();
         modules.forEach(module -> {
             if (!modulesInConfig.contains(module.getModuleName())) {
@@ -190,8 +190,8 @@ public final class WisecraftSMP extends JavaPlugin {
         });
 
 
+        // Combining missing IDS and missing modules
         HashMap<Long, ModuleClass> mapModulesToBeAdded = new HashMap<>();
-
         for (int i = 0, j = 0; i < modulesToBeAdded.size(); i++) {
 
             if (missingIDS.get(i) < missingIDS.size()) {
@@ -203,13 +203,13 @@ public final class WisecraftSMP extends JavaPlugin {
             j++;
 
         }
-
-
+        // Adding modules to config
         for (Map.Entry<Long, ModuleClass> module : mapModulesToBeAdded.entrySet()) {
-            moduleConfig.set(modulePath + module + ".enabled", true);
+            moduleConfig.set(modulePath + module + ".enabled", isModulesEnabledByDefault);
             moduleConfig.set(modulePath + module + ".id", module.getKey());
         }
 
+        // Check if unused module configurations should be removed
         if (moduleConfig.getBoolean("Remove_Old_Module_Settings")) return;
 
         // Remove modules not present in the code
@@ -224,13 +224,12 @@ public final class WisecraftSMP extends JavaPlugin {
             moduleConfig.set(modulePath + module, null);
         }
 
-        System.out.println("delete dis when test done");
     }
 
     private void setupModuleConfig() {
         for (int i = 0; i < modules.size(); i++) {
             String moduleName = modules.get(i).getModuleName();
-            moduleConfig.set(modulePath + moduleName + ".enabled", true);
+            moduleConfig.set(modulePath + moduleName + ".enabled", isModulesEnabledByDefault);
             moduleConfig.set(modulePath + moduleName + ".id", i);
             modules.get(i).startModule();
         }
