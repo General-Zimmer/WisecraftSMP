@@ -93,7 +93,6 @@ public final class WisecraftSMP extends JavaPlugin {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
@@ -296,5 +295,9 @@ public final class WisecraftSMP extends JavaPlugin {
      */
     public boolean isTimberEnabled() {
         return isTimberEnabled;
+    }
+
+    public File getModuleConfigFile() {
+        return moduleConfigFile;
     }
 }

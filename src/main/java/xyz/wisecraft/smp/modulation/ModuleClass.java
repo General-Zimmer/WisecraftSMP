@@ -16,6 +16,9 @@ public interface ModuleClass extends Comparable<ModuleClass> {
      * This method is called when the module is starting.
      */
     default void startModule() {
+
+        if (!plugin.getModuleConfig().getBoolean(plugin.getModulePath() + getModuleName() + ".enabled")) return;
+
         onEnable();
         registerEvents();
         registerCommands();
@@ -51,10 +54,6 @@ public interface ModuleClass extends Comparable<ModuleClass> {
     default long getModuleID() {
         return plugin.getModuleConfig().getBoolean(plugin.getModulePath() + getModuleName() + ".enabled") ?
                 plugin.getModuleConfig().getLong(plugin.getModulePath() + getModuleName() + ".id") : -1;
-    }
-
-    default void setModuleID(long id) {
-        plugin.getModuleConfig().set(plugin.getModulePath() + getModuleName() + ".id", id);
     }
 
     default String getModuleName() {

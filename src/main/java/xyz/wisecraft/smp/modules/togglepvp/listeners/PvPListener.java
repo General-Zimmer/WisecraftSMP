@@ -31,6 +31,8 @@ public class PvPListener implements Listener {
 	private final HashMap<UUID, Boolean> pvpPlayers = PVPStorage.getPVPPlayers();
 	private final List<String> blockedWorlds = PVPStorage.getBlockedWorlds();
 
+	// todo prevent placing fire and lava near players
+
 	/**
 	 * Cancel damage if pvp isn't enabled on either players
 	 * @param e EntityDamageByEntityEvent
