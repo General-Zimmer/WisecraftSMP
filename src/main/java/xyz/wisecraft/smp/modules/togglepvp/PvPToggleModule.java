@@ -7,6 +7,7 @@ import xyz.wisecraft.smp.modules.togglepvp.utils.PersistentData;
 import xyz.wisecraft.smp.modules.togglepvp.storage.PVPStorage;
 
 import java.io.File;
+import java.util.Objects;
 
 /**
  * Module class for PVPToggle
@@ -35,6 +36,6 @@ public class PvPToggleModule implements xyz.wisecraft.smp.modulation.ModuleClass
     @Override
     public void registerCommands() {
 
-        plugin.getCommand("pvp").setExecutor(new PVPCMD());
+        Objects.requireNonNull(plugin.getCommand("pvp"), "command isn't registered").setExecutor(new PVPCMD());
     }
 }

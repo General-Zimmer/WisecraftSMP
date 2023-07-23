@@ -17,6 +17,8 @@ import xyz.wisecraft.smp.modules.advancements.listeners.QuestListeners;
 import xyz.wisecraft.smp.modules.advancements.listeners.TimberListeners;
 
 import java.io.File;
+import java.util.Objects;
+import java.util.logging.Logger;
 
 /**
  * This class is the module class for the Advancements module.
@@ -51,7 +53,8 @@ public class AdvancementsModule implements xyz.wisecraft.smp.modulation.ModuleCl
 
     @Override
     public void registerCommands() {
-        plugin.getCommand("autoroles").setExecutor(new Command());
+        Objects.requireNonNull(plugin.getCommand("autoroles"), "command autoroles isn't registered").setExecutor(new Command());
+
     }
 
     public void initializeTabs() {
