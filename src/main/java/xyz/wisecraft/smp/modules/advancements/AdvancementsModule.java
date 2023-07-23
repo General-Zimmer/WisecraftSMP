@@ -10,15 +10,15 @@ import com.fren_gor.ultimateAdvancementAPI.util.CoordAdapter;
 import org.bukkit.Material;
 import xyz.wisecraft.smp.modules.advancements.adv.AdvancementTabNamespaces;
 import xyz.wisecraft.smp.modules.advancements.adv.common_quests.*;
+import xyz.wisecraft.smp.modules.advancements.adv.legacy.*;
 import xyz.wisecraft.smp.modules.advancements.adv.tutorial_quests.*;
-import xyz.wisecraft.smp.modules.advancements.adv.legacy.Citizen;
-import xyz.wisecraft.smp.modules.advancements.adv.legacy.Nobility;
 import xyz.wisecraft.smp.modules.advancements.listeners.QuestListeners;
 import xyz.wisecraft.smp.modules.advancements.listeners.TimberListeners;
+import xyz.wisecraft.smp.modules.advancements.threads.GibRoles;
+import xyz.wisecraft.smp.storage.OtherStorage;
 
 import java.io.File;
 import java.util.Objects;
-import java.util.logging.Logger;
 
 /**
  * This class is the module class for the Advancements module.
@@ -44,6 +44,14 @@ public class AdvancementsModule implements xyz.wisecraft.smp.modulation.ModuleCl
 
         if (plugin.isTimberEnabled())
             plugin.getServer().getPluginManager().registerEvents(new TimberListeners(), plugin);
+
+        // Check for new citizens. This is async right after this step.
+        String servName = OtherStorage.getServer_name();
+        if (servName.equalsIgnoreCase("l-gp1")  || servName.equalsIgnoreCase("legacy")) {
+            new GibRoles().runTaskTimer(plugin, 18000, 18000);
+
+        }
+
     }
 
     @Override
@@ -89,7 +97,17 @@ public class AdvancementsModule implements xyz.wisecraft.smp.modulation.ModuleCl
         common_quests.registerAdvancements(intro_common ,lumberjack ,experiencedlumb ,expertlumb ,juggerjack ,flying_accident ,hedgehog ,ledgehog ,hugexp ,massivexp ,omega_xp );
         RootAdvancement intro_legacy = new RootAdvancement(legacy, "intro_legacy", new AdvancementDisplay(Material.WRITTEN_BOOK, "Legacy advancements!", AdvancementFrameType.TASK, true, false, 0f, 0f , "This tab has legacy advancements"),"textures/block/shulker_box.png",1);
         Citizen citizen = new Citizen(intro_legacy);
+        Cit_time cit_time = new Cit_time(citizen);
+        Cit_block_place cit_block_place = new Cit_block_place(citizen);
+        Cit_block_break cit_block_break = new Cit_block_break(citizen);
+        Cit_Dia_pick citDia_pick = new Cit_Dia_pick(citizen);
+        citizen.registerTasks(cit_time,cit_block_place,cit_block_break, citDia_pick);
         Nobility nobility = new Nobility(citizen);
+        Nob_time nob_time = new Nob_time(nobility);
+        Nob_block_place nob_block_place = new Nob_block_place(nobility);
+        Nob_block_break nob_block_break = new Nob_block_break(nobility);
+        Nob_Elytra nobElytra = new Nob_Elytra(nobility);
+        nobility.registerTasks(nob_time,nob_block_place,nob_block_break, nobElytra);
         legacy.registerAdvancements(intro_legacy ,citizen ,nobility );
     }
 

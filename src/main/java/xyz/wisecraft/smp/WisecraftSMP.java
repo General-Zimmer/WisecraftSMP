@@ -74,6 +74,7 @@ public final class WisecraftSMP extends JavaPlugin {
         setupPAPI();
         setupTimber();
 
+        // todo
         createModuleConfig();
 
         // Config stuff
