@@ -33,7 +33,12 @@ public class CropHarvesterModule extends ModuleClass {
         HarvestStorage.init(this);
 
         // Harvest lists for Harvest logic
-        List<String> tools = plugin.getConfig().getStringList("FARM_SETTINGS");
+        List<String> tools = plugin.getConfig().getStringList("FARM_SETTINGS.TOOLS");
+
+        // If FARM_BY_HAND ENABLED, ADD air material to the tools that can farm list
+        if (plugin.getConfig().getBoolean("FARM_SETTINGS.FARM_BY_HAND")) {
+            OtherStorage.addTool(Material.AIR, "0");
+        }
 
         for (String material: tools) {
             String[] string = material.split(" ");
