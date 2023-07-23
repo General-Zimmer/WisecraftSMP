@@ -1,6 +1,7 @@
 package xyz.wisecraft.smp;
 
 import com.earth2me.essentials.Essentials;
+import com.fren_gor.ultimateAdvancementAPI.AdvancementMain;
 import net.ess3.api.IEssentials;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
@@ -36,6 +37,7 @@ public final class WisecraftSMP extends JavaPlugin {
     private WisecraftCoreApi core;
     private LuckPerms luck;
     private boolean isTimberEnabled = false;
+    private AdvancementMain advapi;
     private File moduleConfigFile;
     private FileConfiguration moduleConfig;
     private final String modulePath = "modules.";
@@ -51,7 +53,13 @@ public final class WisecraftSMP extends JavaPlugin {
 
     private final ArrayList<ModuleClass> modules = new ArrayList<>();
 
+    @Override
+    public void onLoad() {
+        advapi = new AdvancementMain(this);
+        advapi.load();
 
+        // Rest of your code
+    }
     @Override
     public void onEnable() {
         // todo add a sub main for every feature and add a config to disable and enable them.
@@ -247,6 +255,10 @@ public final class WisecraftSMP extends JavaPlugin {
             saveResource("modules.yml", false);
         }
         moduleConfig = YamlConfiguration.loadConfiguration(moduleConfigFile);
+    }
+
+    public AdvancementMain getAdv() {
+        return advapi;
     }
 
     /**
