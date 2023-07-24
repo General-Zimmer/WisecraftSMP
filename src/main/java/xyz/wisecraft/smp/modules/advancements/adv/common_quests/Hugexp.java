@@ -7,9 +7,9 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameT
 import com.fren_gor.ultimateAdvancementAPI.util.AdvancementKey;
 import com.fren_gor.ultimateAdvancementAPI.visibilities.VanillaVisibility;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerLevelChangeEvent;
 import xyz.wisecraft.smp.modules.advancements.adv.AdvancementTabNamespaces;
+import xyz.wisecraft.smp.modules.advancements.util.UtilAdv;
 
 public class Hugexp extends BaseAdvancement implements VanillaVisibility {
 
@@ -20,14 +20,7 @@ public class Hugexp extends BaseAdvancement implements VanillaVisibility {
     super(KEY.getKey(), new AdvancementDisplay(Material.EXPERIENCE_BOTTLE, "Huuge xp", AdvancementFrameType.CHALLENGE, true, true, x, y , "level 100 achieved!"), parent, 100);
 
     registerEvent(PlayerLevelChangeEvent.class, e -> {
-      Player p = e.getPlayer();
-      int lvl = e.getNewLevel();
-
-      int prog = this.getProgression(p);
-      if (lvl > prog) {
-        this.setProgression(p, lvl);
-      }
-
+      UtilAdv.advLvl(this, e);
     });
   }
 }

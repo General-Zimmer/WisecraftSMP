@@ -3,15 +3,14 @@ package xyz.wisecraft.smp.modules.savinggrace;
 import com.earth2me.essentials.Kit;
 import com.earth2me.essentials.User;
 import net.ess3.api.IEssentials;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
-import xyz.wisecraft.smp.modules.extra.util.UtilRandom;
 import xyz.wisecraft.smp.WisecraftSMP;
+import xyz.wisecraft.smp.modules.extra.util.UtilRandom;
 import xyz.wisecraft.smp.storage.OtherStorage;
 
 import java.util.*;
@@ -70,7 +69,7 @@ public class Angel {
         // Last few things
         this.clear();
         this.decreaseGraces();
-        p.sendMessage(NamedTextColor.AQUA + "Your gear have been saved. You have " + this.getGraces() + " graces left!");
+        p.sendMessage(ChatColor.AQUA + "Your gear have been saved. You have " + this.getGraces() + " graces left!");
 
         this.safeDelete(UUID);
 
@@ -99,7 +98,7 @@ public class Angel {
         Kit kit = new Kit("starter", ess);
         kit.expandItems(user);
         angels.get(p.getUniqueId()).clear();
-        p.sendMessage(NamedTextColor.BLUE + "You didn't /sethome or place a bed! You have been granted some new items.");
+        p.sendMessage(ChatColor.BLUE + "You didn't /sethome or place a bed! You have been granted some new items.");
     }
 
     /**
@@ -244,7 +243,7 @@ public class Angel {
                     angel.resetGrace(player.hasPermission("wisecraft.donator"));
                     angel.setGraceActive(false);
                     Logger.getLogger("WisecraftSMP").log(Level.INFO, "Grace timer stopped for: " + Bukkit.getPlayer(UUID));
-                    player.sendMessage(NamedTextColor.AQUA + "Your graces have been reset");
+                    player.sendMessage(ChatColor.AQUA + "Your graces have been reset");
                 }
 
 

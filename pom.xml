@@ -53,19 +53,19 @@
                             <relocations>
                                 <relocation>
                                     <pattern>org.bstats</pattern>
-                                    <shadedPattern>wisecraftsmp.bstats</shadedPattern>
+                                    <shadedPattern>wisecraftsmp.libs.bstats</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.jetbrains</pattern>
-                                    <shadedPattern>wisecraftsmp.annotations</shadedPattern>
+                                    <shadedPattern>wisecraftsmp.libs.annotations</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.reflections</pattern>
-                                    <shadedPattern>wisecraftsmp.reflections</shadedPattern>
+                                    <shadedPattern>wisecraftsmp.libs.reflections</shadedPattern>
                                 </relocation>
                                 <relocation>
-                                    <pattern>com.frengor</pattern>
-                                    <shadedPattern>wisecraftsmp.advancementapi</shadedPattern>
+                                    <pattern>com.fren_gor.ultimateAdvancementAPI</pattern>
+                                    <shadedPattern>wisecraftsmp.libs.ultimateAdvancementAPI</shadedPattern>
                                 </relocation>
                             </relocations>
                             <filters>
@@ -255,6 +255,12 @@
             <artifactId>WisecraftCore</artifactId>
             <version>2.1.2</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.seeseemelk</groupId>
+            <artifactId>MockBukkit-v1.20</artifactId>
+            <version>3.9.0</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

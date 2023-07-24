@@ -30,7 +30,7 @@ import java.util.logging.Logger;
 /**
  * Main class for WisecraftSMP
  */
-public final class WisecraftSMP extends JavaPlugin {
+public class WisecraftSMP extends JavaPlugin {
 
     private static WisecraftSMP instance;
     private IEssentials ess;
@@ -57,8 +57,6 @@ public final class WisecraftSMP extends JavaPlugin {
     public void onLoad() {
         advapi = new AdvancementMain(this);
         advapi.load();
-
-        // Rest of your code
     }
     @Override
     public void onEnable() {

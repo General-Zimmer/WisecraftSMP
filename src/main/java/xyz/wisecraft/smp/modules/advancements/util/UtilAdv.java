@@ -1,5 +1,6 @@
 package xyz.wisecraft.smp.modules.advancements.util;
 
+import com.fren_gor.ultimateAdvancementAPI.advancement.BaseAdvancement;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.node.Node;
@@ -9,6 +10,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.advancement.AdvancementProgress;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerLevelChangeEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.storage.OtherStorage;
@@ -123,6 +125,18 @@ public abstract class UtilAdv {
      */
     public static Node buildNode(String group) {
         return Node.builder("group." + group).withContext("server", OtherStorage.getServer_name()).build();
+    }
+
+    public static void advLvl(BaseAdvancement adv, PlayerLevelChangeEvent e) {
+        Player p = e.getPlayer();
+        int lvl = e.getNewLevel();
+
+        int prog = adv.getProgression(p);
+        if (lvl > prog && lvl <= adv.getMaxProgression()) {
+            adv.setProgression(p, lvl);
+        } else if (lvl > adv.getMaxProgression()) {
+            adv.setProgression(p, adv.getMaxProgression());
+        }
     }
 
 }

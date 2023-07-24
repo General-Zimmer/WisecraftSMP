@@ -57,6 +57,6 @@ public class ExtraEvents implements Listener {
                 if (!p.hasPlayedBefore() && Bukkit.getWorld("tutorial") != null)
                     Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "mvtp " + p.getName() + " tutorial");
             }
-        }.runTaskLater(plugin, 1);
+        }.runTaskLater(plugin, 4);
     }
 }
