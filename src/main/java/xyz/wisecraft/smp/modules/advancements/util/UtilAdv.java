@@ -148,8 +148,8 @@ public abstract class UtilAdv {
 
         int treesTimbered = WisecraftSMP.getCore().getInfom().get(UUID).getTimber();
 
-        if (treesTimbered >= adv.getMaxProgression()) {
-            adv.incrementProgression(p);
+        if (treesTimbered > adv.getProgression(p)) {
+            adv.setProgression(p, treesTimbered);
         }
     }
 

@@ -51,12 +51,12 @@ public class AdvancementsModule implements xyz.wisecraft.smp.modulation.ModuleCl
     public void registerEvents() {
         /*
         plugin.getServer().getPluginManager().registerEvents(new QuestListeners(), plugin);
-
+         */
         if (plugin.isTimberEnabled())
             plugin.getServer().getPluginManager().registerEvents(new TimberListeners(), plugin);
 
 
-         */
+
         // Check for new citizens. This is async right after this step.
         String servName = OtherStorage.getServer_name();
         if (servName.equalsIgnoreCase("l-gp1")  || servName.equalsIgnoreCase("legacy")) {
