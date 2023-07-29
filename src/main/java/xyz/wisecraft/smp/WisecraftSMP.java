@@ -9,10 +9,8 @@ import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.plugin.java.JavaPluginLoader;
 import org.reflections.Reflections;
 import xyz.wisecraft.core.WisecraftCoreApi;
 import xyz.wisecraft.smp.modulation.ModuleClass;
@@ -51,16 +49,25 @@ public class WisecraftSMP extends JavaPlugin {
      */
     public WisecraftSMP() {
         super();
-        testing = false;
+        isTesting = false;
         instance = this;
     }
-    private final Boolean testing;
+    /**
+     * test Constructor for WisecraftSMP
+     */
+    public WisecraftSMP(boolean isTesting) {
+        super();
+        this.isTesting = isTesting;
+        instance = this;
+    }
+
+    private final Boolean isTesting;
 
     private final ArrayList<ModuleClass> modules = new ArrayList<>();
 
     @Override
     public void onLoad() {
-        if (testing) return;
+        if (isTesting) return;
         advapi = new AdvancementMain(this);
         advapi.load();
     }
@@ -134,7 +141,7 @@ public class WisecraftSMP extends JavaPlugin {
             core = provider.getProvider();
             return;
         }
-        Logger.getLogger("wisecraft").log(Level.WARNING, "Couldn't get " + name + " provider");
+        Bukkit.getLogger().log(Level.WARNING, "Couldn't get " + name + " provider");
     }
     private void setupTimber() {
         Plugin setupPlugin = getServer().getPluginManager().getPlugin("UltimateTimber");
@@ -317,7 +324,7 @@ public class WisecraftSMP extends JavaPlugin {
         return moduleConfigFile;
     }
 
-    public Boolean getTesting() {
-        return testing;
+    public Boolean getIsTesting() {
+        return isTesting;
     }
 }

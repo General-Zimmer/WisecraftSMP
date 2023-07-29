@@ -17,7 +17,7 @@ public class WisecraftSMPTests {
     @Test
     @DisplayName("Verify that config files were loaded")
     void testConfigs() {
-        Assertions.assertEquals(plugin.getTesting(), true);
+        Assertions.assertEquals(plugin.getIsTesting(), true);
         Assertions.assertNotNull(plugin.getModuleConfig());
         Assertions.assertNotNull(plugin.getConfig());
     }
