@@ -1,24 +1,24 @@
-# Don't touch this file unless you know what you're doing!
+# Don't touch this setting!
 configVersion: 1
-
 
 server_name: ${CFG_SERV_NAME}
 
 SETTINGS:
   #Do you want the plugin to remember a player's last PVP state when the login
-  PERSISTENT_PVP_STATE: false
+  PERSISTENT_PVP_STATE: true
   #How much time a player must wait to use /pvp (if pvp is on) in seconds after running the command or being in pvp
-  COOLDOWN: 60
+  COOLDOWN: 120
   #True makes pvp off by default. False makes pvp on by default.
   DEFAULT_PVP_OFF: true
   #Show PVP on particle effects
-  PARTICLES: true
+  PARTICLES: false
   #SHOW PVP on red nametag
-  NAMETAG: false
+  NAMETAG: true
   # Give the timeframe in seconds of how long after a tree has been timbered for dectection of attacker
   TIMBER_TIMEFRAME: 2.5
   # Worlds to disable PvP toggling in (i.e. will always use the world's settings)
   BLOCKED_WORLDS: []
+
 #<pvpstate> goes in place of a player's current pvp state
 #<argument> goes in place of a player's name or other arguement
 MESSAGES:
