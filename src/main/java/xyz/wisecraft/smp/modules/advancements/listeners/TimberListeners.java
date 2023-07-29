@@ -1,6 +1,6 @@
 package xyz.wisecraft.smp.modules.advancements.listeners;
 
-import com.songoda.ultimatetimber.events.TreeFellEvent;
+import com.craftaro.ultimatetimber.events.TreeFellEvent;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

@@ -9,8 +9,10 @@ import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.java.JavaPluginLoader;
 import org.reflections.Reflections;
 import xyz.wisecraft.core.WisecraftCoreApi;
 import xyz.wisecraft.smp.modulation.ModuleClass;
@@ -48,19 +50,22 @@ public class WisecraftSMP extends JavaPlugin {
      * Production Constructor for WisecraftSMP
      */
     public WisecraftSMP() {
+        super();
+        testing = false;
         instance = this;
     }
+    private final Boolean testing;
 
     private final ArrayList<ModuleClass> modules = new ArrayList<>();
 
     @Override
     public void onLoad() {
+        if (testing) return;
         advapi = new AdvancementMain(this);
         advapi.load();
     }
     @Override
     public void onEnable() {
-        // todo add a sub main for every feature and add a config to disable and enable them.
 
         // todo implement a way for config variables to only be added if they're enabled. Don't remove config variables
         //  ever. The check will use bit addition.
@@ -72,7 +77,7 @@ public class WisecraftSMP extends JavaPlugin {
         setupPAPI();
         setupTimber();
 
-        // todo
+        // todo remember what this to do should have been
         createModuleConfig();
 
         // Config stuff
@@ -310,5 +315,9 @@ public class WisecraftSMP extends JavaPlugin {
 
     public File getModuleConfigFile() {
         return moduleConfigFile;
+    }
+
+    public Boolean getTesting() {
+        return testing;
     }
 }

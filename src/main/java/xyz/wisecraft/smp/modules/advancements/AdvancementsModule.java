@@ -7,7 +7,6 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDispla
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
 import com.fren_gor.ultimateAdvancementAPI.util.AdvancementKey;
 import com.fren_gor.ultimateAdvancementAPI.util.CoordAdapter;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import xyz.wisecraft.smp.modules.advancements.adv.AdvancementTabNamespaces;
 import xyz.wisecraft.smp.modules.advancements.adv.common_quests.*;
@@ -50,11 +49,14 @@ public class AdvancementsModule implements xyz.wisecraft.smp.modulation.ModuleCl
 
     @Override
     public void registerEvents() {
+        /*
         plugin.getServer().getPluginManager().registerEvents(new QuestListeners(), plugin);
 
         if (plugin.isTimberEnabled())
             plugin.getServer().getPluginManager().registerEvents(new TimberListeners(), plugin);
 
+
+         */
         // Check for new citizens. This is async right after this step.
         String servName = OtherStorage.getServer_name();
         if (servName.equalsIgnoreCase("l-gp1")  || servName.equalsIgnoreCase("legacy")) {

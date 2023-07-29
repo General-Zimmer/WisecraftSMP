@@ -1,5 +1,6 @@
 package xyz.wisecraft.smp.modules.advancements.util;
 
+import com.craftaro.ultimatetimber.events.TreeFellEvent;
 import com.fren_gor.ultimateAdvancementAPI.advancement.BaseAdvancement;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.group.Group;
@@ -16,6 +17,7 @@ import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.storage.OtherStorage;
 
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * Advancement utilities
@@ -136,6 +138,18 @@ public abstract class UtilAdv {
             adv.setProgression(p, lvl);
         } else if (lvl > adv.getMaxProgression()) {
             adv.setProgression(p, adv.getMaxProgression());
+        }
+    }
+
+    public static void checkTimber(TreeFellEvent e, BaseAdvancement adv) {
+        Player p = e.getPlayer();
+        UUID UUID = p.getUniqueId();
+
+
+        int treesTimbered = WisecraftSMP.getCore().getInfom().get(UUID).getTimber();
+
+        if (treesTimbered >= adv.getMaxProgression()) {
+            adv.incrementProgression(p);
         }
     }
 

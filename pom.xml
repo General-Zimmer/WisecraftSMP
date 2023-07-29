@@ -50,6 +50,7 @@
                         <phase>package</phase>
                         <goals><goal>shade</goal></goals>
                         <configuration>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
                             <relocations>
                                 <relocation>
                                     <pattern>org.bstats</pattern>
@@ -179,7 +180,7 @@
             <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
         <repository>
-            <id>upstream</id>
+            <id>nametagedit</id>
             <url>https://ci.nametagedit.com/plugin/repository/everything/</url>
         </repository>
         <repository>
@@ -239,9 +240,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.songoda</groupId>
+            <groupId>com.craftaro</groupId>
             <artifactId>UltimateTimber</artifactId>
-            <version>2.4.0z-SNAPSHOT</version>
+            <version>3.0.0z-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -254,6 +255,12 @@
             <groupId>xyz.wisecraft</groupId>
             <artifactId>WisecraftCore</artifactId>
             <version>2.1.2</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github._2008Choco</groupId>
+            <artifactId>veinminer-bukkit</artifactId>
+            <version>69.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

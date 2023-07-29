@@ -1,6 +1,6 @@
 package xyz.wisecraft.smp.modules.togglepvp.listeners;
 
-import com.songoda.ultimatetimber.events.TreeDamageEvent;
+import com.craftaro.ultimatetimber.events.TreeDamageEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

@@ -1,6 +1,6 @@
 package xyz.wisecraft.smp.modules.extra;
 
-import xyz.wisecraft.smp.modules.extra.events.ExtraEvents;
+import xyz.wisecraft.smp.modules.extra.listeners.ExtraListener;
 
 import java.util.Objects;
 
@@ -15,7 +15,7 @@ public class ExtraModule implements xyz.wisecraft.smp.modulation.ModuleClass {
 
     @Override
     public void registerEvents() {
-        plugin.getServer().getPluginManager().registerEvents(new ExtraEvents(), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new ExtraListener(), plugin);
     }
 
     @Override
