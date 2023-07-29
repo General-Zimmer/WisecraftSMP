@@ -1,10 +1,12 @@
 package xyz.wisecraft.smp.modules.togglepvp;
 
+import org.bukkit.Bukkit;
 import xyz.wisecraft.smp.modules.togglepvp.listeners.PVPTimberListener;
 import xyz.wisecraft.smp.modules.togglepvp.listeners.PlayerListener;
 import xyz.wisecraft.smp.modules.togglepvp.listeners.PvPListener;
 import xyz.wisecraft.smp.modules.togglepvp.utils.PersistentData;
 import xyz.wisecraft.smp.modules.togglepvp.storage.PVPStorage;
+import xyz.wisecraft.smp.modules.togglepvp.utils.PlaceholderAPIHook;
 
 import java.io.File;
 import java.util.Objects;
@@ -15,6 +17,7 @@ import java.util.Objects;
 public class PvPToggleModule implements xyz.wisecraft.smp.modulation.ModuleClass {
     @Override
     public void onEnable() {
+        setupPAPI();
 
         // PVPToggle data
         File PVPData = new File(plugin.getDataFolder(), "togglepvp");
@@ -37,5 +40,11 @@ public class PvPToggleModule implements xyz.wisecraft.smp.modulation.ModuleClass
     public void registerCommands() {
 
         Objects.requireNonNull(plugin.getCommand("pvp"), "command isn't registered").setExecutor(new PVPCMD());
+    }
+
+    private void setupPAPI() {
+        if(plugin.isPAPIEnabled()) {
+            new PlaceholderAPIHook().register();
+        }
     }
 }

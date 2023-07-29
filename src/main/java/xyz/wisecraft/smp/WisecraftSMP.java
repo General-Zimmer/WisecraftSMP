@@ -36,6 +36,7 @@ public class WisecraftSMP extends JavaPlugin {
     private IEssentials ess;
     private WisecraftCoreApi core;
     private LuckPerms luck;
+    private boolean isPAPIEnabled = false;
     private boolean isTimberEnabled = false;
     private AdvancementMain advapi;
     private File moduleConfigFile;
@@ -157,12 +158,13 @@ public class WisecraftSMP extends JavaPlugin {
             luck = provider.getProvider();
             return;
         }
-        Logger.getLogger("wisecraft").log(Level.WARNING, "Couldn't get " + name + " provider");
+        Bukkit.getLogger().log(Level.WARNING, "Couldn't get " + name + " provider");
     }
 
     private void setupPAPI() {
-        if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            new PlaceholderAPIHook().register();
+        Plugin setupPlugin = getServer().getPluginManager().getPlugin("PlaceholderAPI");
+        if(setupPlugin != null) {
+            isPAPIEnabled = setupPlugin.isEnabled();
         }
     }
 
@@ -326,5 +328,9 @@ public class WisecraftSMP extends JavaPlugin {
 
     public Boolean getIsTesting() {
         return isTesting;
+    }
+
+    public boolean isPAPIEnabled() {
+        return isPAPIEnabled;
     }
 }
