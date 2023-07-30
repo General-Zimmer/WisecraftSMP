@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -88,6 +89,176 @@ public abstract class UtilRandom {
             }
         }
     }
+
+    public static void farmOptimalFarmingBlocks(int width, int height, Block startBlock, ItemStack item, Player player) {
+        boolean[] checkLocations = new boolean[4];
+        ArrayList<Location> locationsToBeFarmed = new ArrayList<>();
+        // int max = width * height;
+        int count = 0;
+        Location mainLocation = startBlock.getLocation();
+
+        Location checkLocation = mainLocation;
+
+        int y = 1;
+        boolean farmingAreaFound = false;
+
+        locationsToBeFarmed = findOptimalFarmingBlocks(mainLocation, width, height);
+
+
+
+            // player.sendMessage("Count final: " + count);
+            // player.sendMessage("" + locationsToBeFarmed.size());
+            player.sendMessage("New Farming run");
+            player.sendMessage("Locationstobefarmed: " + locationsToBeFarmed.size());
+            for (Location location: locationsToBeFarmed) {
+                farmCropWithHoeIfMaxAgeOnLocation(location, 0, 0, 0, item, player);
+                player.sendMessage("X: " + location.getX() + "  Z: " + location.getZ());
+            }
+        }
+
+
+/*
+
+            if (!checkLocations[1]) { // Right check ... Z decreases
+                for (int i = -1; i >= width * (-1); i--) {
+                    checkLocation = mainLocation.add(0, 0, i);
+                    Block currentBlock = checkLocation.getBlock();
+
+                    if (currentBlock.getBlockData() instanceof Ageable) {
+                        locationsToBeFarmed.add(checkLocation);
+                        count++;
+                    }
+                }
+            }
+            player.sendMessage("Count: " + count);
+            count = 0;
+
+             */
+
+        /*
+           // Right check ... X increases
+                for (int i = 0; i < width; i++) {
+                    checkLocation = new Location(mainLocation.getWorld(),
+                            (mainLocation.getX() + i), mainLocation.getY(), mainLocation.getZ());
+                    Block currentBlock = checkLocation.getBlock();
+                    if (currentBlock.getBlockData() instanceof Ageable) {
+                        locationsToBeFarmed.add(checkLocation);
+                        count++;
+                    }
+                }
+
+
+            player.sendMessage("Count: " + count);
+            if (count < 4) {
+                count = 0;
+            } else {
+                checkLocations[0] = true;
+            }
+            if (count == 0) { // Left check ... X decreases
+            for (int i = 0; i > width * (-1); i--) {
+                checkLocation = new Location(mainLocation.getWorld(),
+                        (mainLocation.getX() + i), mainLocation.getY(), mainLocation.getZ());
+                Block currentBlock = checkLocation.getBlock();
+                if (currentBlock.getBlockData() instanceof Ageable) {
+                    locationsToBeFarmed.add(checkLocation);
+                    count++;
+                }
+            }
+                if (count < 4) {
+                    count = 0;
+                } else {
+                    checkLocations[1] = true;
+                }
+            }
+             */
+
+    private static ArrayList<Location> findOptimalFarmingBlocks(Location mainLocation, int width, int height) {
+            Location checkLocation = mainLocation;
+            ArrayList<Location> finalFarmingList = new ArrayList<>();
+            int totalBlocksToBeFarmed = width * height;
+            int totalCount = 0;
+
+            for (int z = (height * (-1)) + 1; z < height && totalCount < totalBlocksToBeFarmed; z++) {
+            int xCount = 0;
+            for (int x = (width * (-1)) + 1; x < width && (totalCount < totalBlocksToBeFarmed|| xCount < width); x++) {
+                checkLocation = new Location(mainLocation.getWorld(),
+                        (mainLocation.getX() + x), mainLocation.getY(), mainLocation.getZ() + z);
+                Block currentBlock = checkLocation.getBlock();
+                if (currentBlock.getBlockData() instanceof Ageable) {
+                    if (getAgeAbleFromBlock(currentBlock).getAge() == getAgeAbleFromBlock(currentBlock).getMaximumAge()) {
+                        finalFarmingList.add(checkLocation);
+                        totalCount++;
+                        xCount++;
+                    }
+                }
+            }
+        }
+        return finalFarmingList;
+    }
+    private static ArrayList<Location> checkFarmingBlocksInRow(Location mainLocation, int width, int height, int direction) {
+        Location checkLocation = mainLocation;
+        ArrayList<Location> locationsToBeFarmed = new ArrayList<>();
+        int count = 0;
+        int directionFactorI = 0;
+        int directionFactorMax = 0;
+
+        switch (direction) {
+            case 1: // Right
+                directionFactorMax = width;
+                break;
+            case 2: // Left
+                directionFactorI = (width * (-1)) + 1;
+                break;
+            case 3: // Up
+                directionFactorI = (height * (-1)) + 1;
+            break;
+            case 4:// Down
+                directionFactorMax = height;
+                break;
+        }
+
+        if (direction == 1 || direction == 2) {
+            for (int z = -1; z > (height * (-1)); z--) {
+
+                for (int x = 0; x < width; x++) {
+                    checkLocation = new Location(mainLocation.getWorld(),
+                            (mainLocation.getX() + x), mainLocation.getY(), mainLocation.getZ() + z);
+                    Block currentBlock = checkLocation.getBlock();
+                    if (currentBlock.getBlockData() instanceof Ageable) {
+                        locationsToBeFarmed.add(checkLocation);
+                        count++;
+                    }
+                }
+            }
+            /*
+            for (int i = directionFactorI; i <= directionFactorMax; i++) {
+                checkLocation = new Location(mainLocation.getWorld(),
+                        (mainLocation.getX() + i), mainLocation.getY(), mainLocation.getZ());
+                Block currentBlock = checkLocation.getBlock();
+                if (currentBlock.getBlockData() instanceof Ageable) {
+                    locationsToBeFarmed.add(checkLocation);
+                    count++;
+                }
+            }
+
+             */
+        }
+        if (direction == 3 || direction == 4) {
+            for (int i = directionFactorI; i <= directionFactorMax; i++) {
+                checkLocation = new Location(mainLocation.getWorld(),
+                        (mainLocation.getX()), mainLocation.getY(), mainLocation.getZ() + i);
+                Block currentBlock = checkLocation.getBlock();
+                if (currentBlock.getBlockData() instanceof Ageable) {
+                    locationsToBeFarmed.add(checkLocation);
+                    count++;
+                }
+            }
+        }
+
+        return count > 3 ? locationsToBeFarmed : null;
+    }
+
+
 
 
     // TODO - Make the break Item sound play once a tool is broken
