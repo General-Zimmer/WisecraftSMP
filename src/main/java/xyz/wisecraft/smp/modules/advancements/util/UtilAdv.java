@@ -148,9 +148,25 @@ public abstract class UtilAdv {
 
         int treesTimbered = WisecraftSMP.getCore().getInfom().get(UUID).getTimber();
 
-        if (treesTimbered > adv.getProgression(p)) {
+        if (treesTimbered >= adv.getMaxProgression()) {
+            adv.setProgression(p, adv.getMaxProgression());
+        } else if (treesTimbered > adv.getProgression(p)) {
             adv.setProgression(p, treesTimbered);
         }
+    }
+
+    public static void fixRole_AdvMismatch(Player p, com.fren_gor.ultimateAdvancementAPI.advancement.Advancement adv, String role) {
+
+        Node node = UtilAdv.buildNode(role);
+
+        boolean isAdvGranted = adv.isGranted(p);
+        boolean hasRole = luck.getPlayerAdapter(Player.class).getUser(p).getNodes().contains(node);
+
+        //Citzen check
+        if (!isAdvGranted && hasRole)
+            UtilAdv.removeRole(p, role);
+        else if (isAdvGranted && !hasRole)
+            adv.revoke(p);
     }
 
 }

@@ -1,17 +1,14 @@
 package xyz.wisecraft.smp.modules.advancements.listeners;
 
+import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
 import net.luckperms.api.LuckPerms;
-import net.luckperms.api.node.Node;
-import org.bukkit.Bukkit;
-import org.bukkit.NamespacedKey;
-import org.bukkit.advancement.Advancement;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 import xyz.wisecraft.smp.WisecraftSMP;
+import xyz.wisecraft.smp.modules.advancements.adv.legacy.Citizen;
+import xyz.wisecraft.smp.modules.advancements.adv.legacy.Nobility;
 import xyz.wisecraft.smp.modules.advancements.util.UtilAdv;
 
 public class LegacyRoles implements Listener {
@@ -27,77 +24,24 @@ public class LegacyRoles implements Listener {
         this.luck = WisecraftSMP.getLuck();
     }
 
-    /**
-     * Give player roles when they've done the advancement
-     * @param e Event
-     */
-    @EventHandler
-    public void roles(PlayerAdvancementDoneEvent e) {
-
-        Advancement adv = e.getAdvancement();
-        Player p = e.getPlayer();
-
-        //todo replace these checks with a method
-        NamespacedKey keyCit = new NamespacedKey(plugin, "citizen");
-        Advancement advCitizen = Bukkit.getAdvancement(keyCit);
-        //Citzen check
-        if (adv.equals(advCitizen))
-            UtilAdv.addRole(p, "citizen");
-
-        NamespacedKey keyNob = new NamespacedKey(plugin, "nobility");
-        Advancement advNoble = Bukkit.getAdvancement(keyNob);
-        //Noble check
-        if (adv.equals(advNoble))
-            UtilAdv.addRole(p, "noble");
-    }
 
 
     /**
-     * Check if player has the advancement, if not remove the role
+     * Check if player is missing either adv or role and remove the other if one is missing.
      * @param e Event
      */
     @EventHandler
-    public void RoleAdvMissingCheck(PlayerJoinEvent e) {
+    public void Role_AdvMissingCheck(PlayerJoinEvent e) {
 
         Player p = e.getPlayer();
 
-        NamespacedKey keyCit = new NamespacedKey(plugin, "citizen");
-        Advancement advCitizen = Bukkit.getAdvancement(keyCit);
-        NamespacedKey keyNob = new NamespacedKey(plugin, "nobility");
-        Advancement advNoble = Bukkit.getAdvancement(keyNob);
+        Advancement advCitizen = plugin.getAdv().getAdvancement(Citizen.KEY);
+        Advancement advNoble = plugin.getAdv().getAdvancement(Nobility.KEY);
 
-        Node citizenN = UtilAdv.buildNode("citizen");
-        Node nobleN = UtilAdv.buildNode("noble");
+        if (advCitizen != null)
+            UtilAdv.fixRole_AdvMismatch(p, advCitizen, "citizen");
 
-        boolean advC = p.getAdvancementProgress(advCitizen).isDone();
-        boolean roleC = luck.getPlayerAdapter(Player.class).getUser(p).getNodes().contains(citizenN);
-
-        //Citzen check
-        if (!advC && roleC)
-            UtilAdv.removeRole(p, "citizen");
-        else if (advC && !roleC)
-            //sync with main
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    p.getAdvancementProgress(advCitizen).revokeCriteria("citizen");
-                }
-            }.runTask(plugin);
-
-
-        //Noble check
-        if (!p.getAdvancementProgress(advNoble).isDone() &&
-                luck.getPlayerAdapter(Player.class).getUser(p).getNodes().contains(nobleN))
-            UtilAdv.removeRole(p, "noble");
-        else if (p.getAdvancementProgress(advNoble).isDone() &&
-                !luck.getPlayerAdapter(Player.class).getUser(p).getNodes().contains(nobleN))
-            //sync with main
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    p.getAdvancementProgress(advNoble).revokeCriteria("noble");
-                }
-            }.runTask(plugin);
-
+        if (advNoble != null)
+            UtilAdv.fixRole_AdvMismatch(p, advNoble, "noble");
     }
 }
