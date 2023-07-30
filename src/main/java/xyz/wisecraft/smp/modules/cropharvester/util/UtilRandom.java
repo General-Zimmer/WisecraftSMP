@@ -1,5 +1,10 @@
 package xyz.wisecraft.smp.modules.cropharvester.util;
 
+import com.palmergames.bukkit.towny.object.TownyPermission;
+import com.palmergames.bukkit.towny.utils.PlayerCacheUtil;
+import com.sk89q.worldguard.bukkit.ProtectionQuery;
+import com.songoda.ultimatetimber.core.hooks.protection.GriefPreventionProtection;
+import com.songoda.ultimatetimber.core.hooks.protection.Protection;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -8,6 +13,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
+import xyz.wisecraft.smp.WisecraftSMP;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -17,6 +23,7 @@ import java.util.Random;
  */
 public abstract class UtilRandom {
 
+    private static final WisecraftSMP plugin = WisecraftSMP.getInstance();
     /**
      * Return Ageable from a block
      * @param block Block to check
@@ -38,6 +45,8 @@ public abstract class UtilRandom {
     public static void farmCropWithHoeIfMaxAgeOnLocation(Location mainLocation, int x, int y, int z, ItemStack item, Player player) {
 
         boolean blockWasBroken = false;
+        GriefPreventionProtection gpp = new GriefPreventionProtection(plugin);
+
         Location checkLocation = new Location(mainLocation.getWorld(),
                 (mainLocation.getX() + x), mainLocation.getY() + y, mainLocation.getZ() + z);
 
@@ -47,8 +56,12 @@ public abstract class UtilRandom {
         }
 
         Material blockMaterial = currentBlock.getBlockData().getMaterial();
+        ProtectionQuery pq = new ProtectionQuery();
 
-        if (getAgeAbleFromBlock(currentBlock).getAge() == getAgeAbleFromBlock(currentBlock).getMaximumAge()) {
+        boolean townyCanDestroy = PlayerCacheUtil.getCachePermission(player, currentBlock.getLocation(), currentBlock.getType(), TownyPermission.ActionType.DESTROY);
+
+        if (getAgeAbleFromBlock(currentBlock).getAge() == getAgeAbleFromBlock(currentBlock).getMaximumAge()
+                && gpp.canBreak(player, checkLocation) && pq.testBlockBreak(player, currentBlock) && townyCanDestroy) {
             currentBlock.breakNaturally(item);
             currentBlock.setType(blockMaterial);
             blockWasBroken = true;

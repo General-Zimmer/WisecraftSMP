@@ -18,9 +18,6 @@ import xyz.wisecraft.smp.storage.OtherStorage;
  */
 public class HarvestListener implements Listener {
 
-
-    // Implemented because GriefProtection needs and Instance of plugin
-    private final WisecraftSMP plugin = WisecraftSMP.getInstance();
     /**
      * Harvest crops
      * @param e The event
@@ -40,9 +37,8 @@ public class HarvestListener implements Listener {
 
         Location location = clickedBlock.getLocation();
 
-        GriefPreventionProtection gpp = new GriefPreventionProtection(plugin);
-        if (OtherStorage.getTools().containsKey(itemInHand.getType()) && BlockAge == ageable.getMaximumAge()
-                && gpp.canBreak(player, location)) {
+
+        if (OtherStorage.getTools().containsKey(itemInHand.getType()) && BlockAge == ageable.getMaximumAge()) {
 
             int size = Integer.parseInt(OtherStorage.getTools().get(itemInHand.getType()).substring(0,1));
             UtilRandom.farmBlocksXByX(size, clickedBlock, itemInHand,e.getPlayer());
