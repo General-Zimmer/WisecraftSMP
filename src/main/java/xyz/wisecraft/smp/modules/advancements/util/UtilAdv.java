@@ -1,5 +1,7 @@
 package xyz.wisecraft.smp.modules.advancements.util;
 
+import com.craftaro.ultimatetimber.events.TreeFellEvent;
+import com.fren_gor.ultimateAdvancementAPI.advancement.BaseAdvancement;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.node.Node;
@@ -9,11 +11,13 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.advancement.AdvancementProgress;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerLevelChangeEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.storage.OtherStorage;
 
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * Advancement utilities
@@ -123,6 +127,46 @@ public abstract class UtilAdv {
      */
     public static Node buildNode(String group) {
         return Node.builder("group." + group).withContext("server", OtherStorage.getServer_name()).build();
+    }
+
+    public static void advLvl(BaseAdvancement adv, PlayerLevelChangeEvent e) {
+        Player p = e.getPlayer();
+        int lvl = e.getNewLevel();
+
+        int prog = adv.getProgression(p);
+        if (lvl > prog && lvl <= adv.getMaxProgression()) {
+            adv.setProgression(p, lvl);
+        } else if (lvl > adv.getMaxProgression()) {
+            adv.setProgression(p, adv.getMaxProgression());
+        }
+    }
+
+    public static void checkTimber(TreeFellEvent e, BaseAdvancement adv) {
+        Player p = e.getPlayer();
+        UUID UUID = p.getUniqueId();
+
+
+        int treesTimbered = WisecraftSMP.getCore().getInfom().get(UUID).getTimber();
+
+        if (treesTimbered >= adv.getMaxProgression()) {
+            adv.setProgression(p, adv.getMaxProgression());
+        } else if (treesTimbered > adv.getProgression(p)) {
+            adv.setProgression(p, treesTimbered);
+        }
+    }
+
+    public static void fixRole_AdvMismatch(Player p, com.fren_gor.ultimateAdvancementAPI.advancement.Advancement adv, String role) {
+
+        Node node = UtilAdv.buildNode(role);
+
+        boolean isAdvGranted = adv.isGranted(p);
+        boolean hasRole = luck.getPlayerAdapter(Player.class).getUser(p).getNodes().contains(node);
+
+        //Citzen check
+        if (!isAdvGranted && hasRole)
+            UtilAdv.removeRole(p, role);
+        else if (isAdvGranted && !hasRole)
+            adv.revoke(p);
     }
 
 }

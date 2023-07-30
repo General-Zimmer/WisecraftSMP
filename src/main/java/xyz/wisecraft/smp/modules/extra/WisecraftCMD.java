@@ -36,7 +36,6 @@ public class WisecraftCMD implements TabExecutor {
         Player p = ((Player) sender).getPlayer();
         if (p == null) return true;
 
-
         if (cmd.getName().equals("wshop")) {
             UtilRandom.tpworld(Bukkit.getWorld("shop"), p);
             return true;
