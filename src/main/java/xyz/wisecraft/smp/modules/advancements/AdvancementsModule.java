@@ -13,7 +13,6 @@ import xyz.wisecraft.smp.modules.advancements.adv.common_quests.*;
 import xyz.wisecraft.smp.modules.advancements.adv.legacy.*;
 import xyz.wisecraft.smp.modules.advancements.adv.tutorial_quests.*;
 import xyz.wisecraft.smp.modules.advancements.listeners.LegacyRoles;
-import xyz.wisecraft.smp.modules.advancements.listeners.QuestListeners;
 import xyz.wisecraft.smp.modules.advancements.listeners.TimberListeners;
 import xyz.wisecraft.smp.modules.advancements.threads.GibRoles;
 import xyz.wisecraft.smp.storage.OtherStorage;
@@ -42,8 +41,8 @@ public class AdvancementsModule implements xyz.wisecraft.smp.modulation.ModuleCl
         tutorial_quests.automaticallyGrantRootAdvancement();
         common_quests.automaticallyShowToPlayers();
         common_quests.automaticallyGrantRootAdvancement();
-        legacy.automaticallyShowToPlayers();
-        legacy.automaticallyGrantRootAdvancement();
+
+
 
     }
 
@@ -62,6 +61,8 @@ public class AdvancementsModule implements xyz.wisecraft.smp.modulation.ModuleCl
         if (servName.equalsIgnoreCase("l-gp1")  || servName.equalsIgnoreCase("legacy")) {
             new GibRoles().runTaskTimer(plugin, 18000, 18000);
             plugin.getServer().getPluginManager().registerEvents(new LegacyRoles(), plugin);
+            legacy.automaticallyShowToPlayers();
+            legacy.automaticallyGrantRootAdvancement();
         }
 
     }
