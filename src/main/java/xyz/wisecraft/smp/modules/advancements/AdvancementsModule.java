@@ -34,7 +34,7 @@ public class AdvancementsModule implements xyz.wisecraft.smp.modulation.ModuleCl
     @Override
     public void onEnable() {
 
-        plugin.getAdv().enableSQLite(new File(plugin.getDataFolder() + "advancements.db"));
+        plugin.getAdv().enableSQLite(new File(plugin.getDataFolder(), "advancements.db"));
         api = UltimateAdvancementAPI.getInstance(plugin);
         initializeTabs();
 
