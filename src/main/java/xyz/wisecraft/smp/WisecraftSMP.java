@@ -14,7 +14,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.reflections.Reflections;
 import xyz.wisecraft.core.WisecraftCoreApi;
 import xyz.wisecraft.smp.modulation.ModuleClass;
-import xyz.wisecraft.smp.modules.togglepvp.utils.PlaceholderAPIHook;
 import xyz.wisecraft.smp.storage.OtherStorage;
 
 import java.io.File;
@@ -25,7 +24,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Main class for WisecraftSMP
