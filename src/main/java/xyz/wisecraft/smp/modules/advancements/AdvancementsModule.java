@@ -109,19 +109,23 @@ public class AdvancementsModule implements xyz.wisecraft.smp.modulation.ModuleCl
         Omega_xp omega_xp = new Omega_xp(massivexp,adaptercommon_quests.getX(Omega_xp.KEY), adaptercommon_quests.getY(Omega_xp.KEY));
         common_quests.registerAdvancements(intro_common ,lumberjack ,experiencedlumb ,expertlumb ,juggerjack ,flying_accident ,hedgehog ,ledgehog ,hugexp ,massivexp ,omega_xp );
         RootAdvancement intro_legacy = new RootAdvancement(legacy, "intro_legacy", new AdvancementDisplay(Material.WRITTEN_BOOK, "Legacy advancements!", AdvancementFrameType.TASK, false, false, 0f, 0f , "This tab has legacy advancements"),"textures/block/shulker_box.png",1);
-        Citizen citizen = new Citizen(intro_legacy);
-        Cit_time cit_time = new Cit_time(citizen);
-        Cit_block_place cit_block_place = new Cit_block_place(citizen);
-        Cit_block_break cit_block_break = new Cit_block_break(citizen);
-        Cit_Dia_pick citDia_pick = new Cit_Dia_pick(citizen);
-        citizen.registerTasks(cit_time,cit_block_place,cit_block_break, citDia_pick);
-        Nobility nobility = new Nobility(citizen);
-        Nob_time nob_time = new Nob_time(nobility);
-        Nob_block_place nob_block_place = new Nob_block_place(nobility);
-        Nob_block_break nob_block_break = new Nob_block_break(nobility);
-        Nob_Elytra nobElytra = new Nob_Elytra(nobility);
-        nobility.registerTasks(nob_time,nob_block_place,nob_block_break, nobElytra);
-        legacy.registerAdvancements(intro_legacy ,citizen ,nobility );
+        String servName = OtherStorage.getServer_name();
+        if (servName.equalsIgnoreCase("l-gp1")  || servName.equalsIgnoreCase("legacy")) {
+            Citizen citizen = new Citizen(intro_legacy);
+            Cit_time cit_time = new Cit_time(citizen);
+            Cit_block_place cit_block_place = new Cit_block_place(citizen);
+            Cit_block_break cit_block_break = new Cit_block_break(citizen);
+            Cit_Dia_pick citDia_pick = new Cit_Dia_pick(citizen);
+            citizen.registerTasks(cit_time,cit_block_place,cit_block_break, citDia_pick);
+            Nobility nobility = new Nobility(citizen);
+            Nob_time nob_time = new Nob_time(nobility);
+            Nob_block_place nob_block_place = new Nob_block_place(nobility);
+            Nob_block_break nob_block_break = new Nob_block_break(nobility);
+            Nob_Elytra nobElytra = new Nob_Elytra(nobility);
+            nobility.registerTasks(nob_time,nob_block_place,nob_block_break, nobElytra);
+            legacy.registerAdvancements(intro_legacy ,citizen ,nobility );
+        }
+
     }
 
 }
