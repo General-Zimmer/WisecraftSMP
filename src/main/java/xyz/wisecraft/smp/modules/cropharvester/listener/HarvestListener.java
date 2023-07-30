@@ -26,7 +26,6 @@ public class HarvestListener implements Listener {
     public void onInteract(PlayerInteractEvent e) {
         Block clickedBlock = e.getClickedBlock();
         ItemStack itemInHand = e.getPlayer().getInventory().getItemInMainHand();
-        Player player = e.getPlayer();
 
 
         if (clickedBlock == null) return;
@@ -34,8 +33,6 @@ public class HarvestListener implements Listener {
         if ( !(clickedBlock.getBlockData() instanceof Ageable ageable)) return;
 
         int BlockAge = ageable.getAge();
-
-        Location location = clickedBlock.getLocation();
 
 
         if (OtherStorage.getTools().containsKey(itemInHand.getType()) && BlockAge == ageable.getMaximumAge()) {
