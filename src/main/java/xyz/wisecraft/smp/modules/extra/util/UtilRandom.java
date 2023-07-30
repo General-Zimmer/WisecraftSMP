@@ -18,17 +18,6 @@ import java.util.ArrayList;
  */
 public class UtilRandom {
 
-
-    /**
-     * Prevents the player from using the command in the tutorial world and sends a message
-     * @param e the PlayerCommandPreprocessEvent
-     */
-    public static void noFinishTut(PlayerCommandPreprocessEvent e) {
-        e.setCancelled(true);
-        e.getPlayer().sendMessage(ChatColor.RED + "Finish the tutorial first!");
-        e.getPlayer().sendMessage(ChatColor.GOLD + "You can always return with /wisecraft tutorial");
-    }
-
     /**
      * Teleports the player to the world
      * @param world the world to teleport to

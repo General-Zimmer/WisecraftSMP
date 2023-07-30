@@ -79,10 +79,10 @@ public abstract class PVPUtil {
         Boolean isVictimPVPOff = pvpPlayers.get(victim.getUniqueId());
         Boolean isAttackerPVPOff = pvpPlayers.get(attacker.getUniqueId());
         if(isAttackerPVPOff) {
-            UtilChat.send(attacker, "PVP_DISABLED_OTHERS", victim.getName());
+            UtilChat.send(attacker, "PVP_DISABLED");
             return true;
         } else if (isVictimPVPOff != null && isVictimPVPOff) {
-            UtilChat.send(attacker, "PVP_DISABLED");
+            UtilChat.send(attacker, "PVP_DISABLED_OTHERS", victim.getName());
             return true;
         } else {
             UtilPlayers.setCooldownTime(attacker);

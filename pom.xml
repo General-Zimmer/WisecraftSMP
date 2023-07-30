@@ -50,22 +50,23 @@
                         <phase>package</phase>
                         <goals><goal>shade</goal></goals>
                         <configuration>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
                             <relocations>
                                 <relocation>
                                     <pattern>org.bstats</pattern>
-                                    <shadedPattern>wisecraftsmp.bstats</shadedPattern>
+                                    <shadedPattern>wisecraftsmp.libs.bstats</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.jetbrains</pattern>
-                                    <shadedPattern>wisecraftsmp.annotations</shadedPattern>
+                                    <shadedPattern>wisecraftsmp.libs.annotations</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>org.reflections</pattern>
-                                    <shadedPattern>wisecraftsmp.reflections</shadedPattern>
+                                    <shadedPattern>wisecraftsmp.libs.reflections</shadedPattern>
                                 </relocation>
                                 <relocation>
-                                    <pattern>com.frengor</pattern>
-                                    <shadedPattern>wisecraftsmp.advancementapi</shadedPattern>
+                                    <pattern>com.fren_gor.ultimateAdvancementAPI</pattern>
+                                    <shadedPattern>wisecraftsmp.libs.ultimateAdvancementAPI</shadedPattern>
                                 </relocation>
                             </relocations>
                             <filters>
@@ -155,10 +156,6 @@
             <url>https://nexus.wisecraft.xyz/repository/maven-public/</url>
         </repository>
         <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-        <repository>
             <id>papermc-repo</id>
             <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
@@ -179,13 +176,14 @@
             <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
         <repository>
-            <id>upstream</id>
+            <id>nametagedit</id>
             <url>https://ci.nametagedit.com/plugin/repository/everything/</url>
         </repository>
         <repository>
             <id>advancementAPI</id>
             <url>https://nexus.frengor.com/repository/public/</url>
         </repository>
+
 
     </repositories>
 
@@ -239,9 +237,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.songoda</groupId>
+            <groupId>com.craftaro</groupId>
             <artifactId>UltimateTimber</artifactId>
-            <version>2.4.0z-SNAPSHOT</version>
+            <version>3.0.0-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -255,6 +253,18 @@
             <artifactId>WisecraftCore</artifactId>
             <version>2.1.2</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github._2008Choco</groupId>
+            <artifactId>veinminer-bukkit</artifactId>
+            <version>69.0-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.seeseemelk</groupId>
+            <artifactId>MockBukkit-v1.20</artifactId>
+            <version>3.9.0</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

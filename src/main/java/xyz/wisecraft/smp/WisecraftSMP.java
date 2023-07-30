@@ -1,6 +1,7 @@
 package xyz.wisecraft.smp;
 
 import com.earth2me.essentials.Essentials;
+import com.fren_gor.ultimateAdvancementAPI.AdvancementMain;
 import net.ess3.api.IEssentials;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
@@ -29,13 +30,15 @@ import java.util.logging.Logger;
 /**
  * Main class for WisecraftSMP
  */
-public final class WisecraftSMP extends JavaPlugin {
+public class WisecraftSMP extends JavaPlugin {
 
     private static WisecraftSMP instance;
     private IEssentials ess;
     private WisecraftCoreApi core;
     private LuckPerms luck;
+    private boolean isPAPIEnabled = false;
     private boolean isTimberEnabled = false;
+    private AdvancementMain advapi;
     private File moduleConfigFile;
     private FileConfiguration moduleConfig;
     private final String modulePath = "modules.";
@@ -46,15 +49,31 @@ public final class WisecraftSMP extends JavaPlugin {
      * Production Constructor for WisecraftSMP
      */
     public WisecraftSMP() {
+        super();
+        isTesting = false;
+        instance = this;
+    }
+    /**
+     * test Constructor for WisecraftSMP
+     */
+    public WisecraftSMP(boolean isTesting) {
+        super();
+        this.isTesting = isTesting;
         instance = this;
     }
 
+    private final Boolean isTesting;
+
     private final ArrayList<ModuleClass> modules = new ArrayList<>();
 
-
+    @Override
+    public void onLoad() {
+        if (isTesting) return;
+        advapi = new AdvancementMain(this);
+        advapi.load();
+    }
     @Override
     public void onEnable() {
-        // todo add a sub main for every feature and add a config to disable and enable them.
 
         // todo implement a way for config variables to only be added if they're enabled. Don't remove config variables
         //  ever. The check will use bit addition.
@@ -66,6 +85,7 @@ public final class WisecraftSMP extends JavaPlugin {
         setupPAPI();
         setupTimber();
 
+        // todo remember what this to do should have been
         createModuleConfig();
 
         // Config stuff
@@ -122,7 +142,7 @@ public final class WisecraftSMP extends JavaPlugin {
             core = provider.getProvider();
             return;
         }
-        Logger.getLogger("wisecraft").log(Level.WARNING, "Couldn't get " + name + " provider");
+        Bukkit.getLogger().log(Level.WARNING, "Couldn't get " + name + " provider");
     }
     private void setupTimber() {
         Plugin setupPlugin = getServer().getPluginManager().getPlugin("UltimateTimber");
@@ -138,12 +158,13 @@ public final class WisecraftSMP extends JavaPlugin {
             luck = provider.getProvider();
             return;
         }
-        Logger.getLogger("wisecraft").log(Level.WARNING, "Couldn't get " + name + " provider");
+        Bukkit.getLogger().log(Level.WARNING, "Couldn't get " + name + " provider");
     }
 
     private void setupPAPI() {
-        if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            new PlaceholderAPIHook().register();
+        Plugin setupPlugin = getServer().getPluginManager().getPlugin("PlaceholderAPI");
+        if(setupPlugin != null) {
+            isPAPIEnabled = setupPlugin.isEnabled();
         }
     }
 
@@ -249,6 +270,10 @@ public final class WisecraftSMP extends JavaPlugin {
         moduleConfig = YamlConfiguration.loadConfiguration(moduleConfigFile);
     }
 
+    public AdvancementMain getAdv() {
+        return advapi;
+    }
+
     /**
      * Returns the module path for config.
      * @return module path for config.
@@ -299,5 +324,13 @@ public final class WisecraftSMP extends JavaPlugin {
 
     public File getModuleConfigFile() {
         return moduleConfigFile;
+    }
+
+    public Boolean getIsTesting() {
+        return isTesting;
+    }
+
+    public boolean isPAPIEnabled() {
+        return isPAPIEnabled;
     }
 }

@@ -4,6 +4,7 @@ main: xyz.wisecraft.smp.WisecraftSMP
 api-version: 1.18
 # todo make as many of these softdepend
 depend: [Essentials, WisecraftCore, LuckPerms, PlaceholderAPI, NametagEdit]
+softdepend: [Multiverse-Core, UltimateTimber]
 authors: [General_Zimmer]
 commands:
   wisecraft:

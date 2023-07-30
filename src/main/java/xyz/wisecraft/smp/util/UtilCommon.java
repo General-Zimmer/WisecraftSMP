@@ -26,7 +26,7 @@ public class UtilCommon {
      */
     public static Player getWhoTimber(Player victim) {
 
-        double timeFrame = WisecraftSMP.getInstance().getConfig().getInt("TIMBER_TIMEFRAME");
+        double timeFrame = WisecraftSMP.getInstance().getConfig().getDouble("SETTINGS.TIMBER_TIMEFRAME");
 
         UUID victimUUID = victim.getUniqueId();
         HashMap<Double, Player> players = whoBrokeTree(victimUUID, timeFrame);
