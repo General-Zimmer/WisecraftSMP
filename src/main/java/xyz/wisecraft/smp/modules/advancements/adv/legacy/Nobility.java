@@ -7,7 +7,10 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.tasks.MultiTasksAdvanceme
 import org.bukkit.Material;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
 import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.modules.advancements.adv.AdvancementTabNamespaces;
+import xyz.wisecraft.smp.modules.advancements.util.UtilAdv;
 
 public class Nobility extends MultiTasksAdvancement implements VanillaVisibility {
 
@@ -15,6 +18,16 @@ public class Nobility extends MultiTasksAdvancement implements VanillaVisibility
 
 
   public Nobility(Advancement parent) {
-    super(KEY.getKey(), new AdvancementDisplay(Material.SOUL_LANTERN, "Nobility", AdvancementFrameType.TASK, true, true, 2f, 1f , "You've been promoted to Noble!"), parent, 26201);
+    super(KEY.getKey(), new AdvancementDisplay(Material.SOUL_LANTERN, "Nobility", AdvancementFrameType.TASK, true, true, 2f, 1f , """
+            To get Citizen:\s
+            Break 15000 blocks
+            place 10000 blocks
+            play for 1200 minutes
+            Hold a elytra"""), parent, 26201);
+  }
+
+  @Override
+  public void giveReward(@NotNull Player player) {
+    UtilAdv.addRole(player, "noble");
   }
 }
