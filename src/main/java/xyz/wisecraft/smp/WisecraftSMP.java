@@ -39,7 +39,7 @@ public class WisecraftSMP extends JavaPlugin {
     private AdvancementMain advapi;
     private File moduleConfigFile;
     private FileConfiguration moduleConfig;
-    private final String modulePath = "modules.";
+    private final String modulePath = "modules";
     private boolean isModulesEnabledByDefault;
 
 

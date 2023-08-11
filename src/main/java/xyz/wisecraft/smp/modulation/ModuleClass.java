@@ -17,7 +17,7 @@ public interface ModuleClass extends Comparable<ModuleClass> {
      */
     default void startModule() {
 
-        if (!plugin.getModuleConfig().getBoolean(plugin.getModulePath() + getModuleName() + ".enabled")) return;
+        if (!isModuleEnabled()) return;
 
         onEnable();
         registerEvents();
@@ -51,15 +51,44 @@ public interface ModuleClass extends Comparable<ModuleClass> {
      */
     default void registerCommands() {}
 
+    /**
+     * Gets the module ID. Will return -1 if the id does not exist.
+     * @return The module ID.
+     */
     default long getModuleID() {
-        return plugin.getModuleConfig().getBoolean(plugin.getModulePath() + getModuleName() + ".enabled") ?
-                plugin.getModuleConfig().getLong(plugin.getModulePath() + getModuleName() + ".id") : -1;
+        return plugin.getModuleConfig().getLong(getModuleSettingPath(ModuleSettings.ID), -1);
     }
 
+    /**
+     * Gets the module name. All ModuleClass implementations should be named as [name]Module.
+     * @return The module name.
+     */
     default String getModuleName() {
         return this.getClass().getSimpleName().split("Module")[0];
     }
 
+    /**
+     * Gets the module enabled status.
+     * @return The module enabled status.
+     */
+    private boolean isModuleEnabled() {
+        return plugin.getModuleConfig().getBoolean(getModuleSettingPath(ModuleSettings.ENABLED));
+    }
+
+    /**
+     * Gets the module setting path.
+     * @param setting The setting to get the path for.
+     * @return The module setting path.
+     */
+    private String getModuleSettingPath(ModuleSettings setting) {
+        return plugin.getModulePath() + "." + getModuleName() + "." + setting.toString();
+    }
+
+    /**
+     * Compares the module ID of this module to another module.
+     * @param module The module to compare to.
+     * @return The comparison.
+     */
     @Override
     default int compareTo(ModuleClass module) {
         return Long.compare(this.getModuleID(), module.getModuleID());
