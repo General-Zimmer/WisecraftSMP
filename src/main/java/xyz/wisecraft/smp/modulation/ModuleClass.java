@@ -87,7 +87,7 @@ public interface ModuleClass extends Comparable<ModuleClass> {
     /**
      * Compares the module ID of this module to another module.
      * @param module The module to compare to.
-     * @return The comparison.
+     * @return 0 if they're equal, -1 if the other module is higher, and 1 if this method is higher.
      */
     @Override
     default int compareTo(ModuleClass module) {
