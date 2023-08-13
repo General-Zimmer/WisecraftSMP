@@ -1,10 +1,9 @@
 package xyz.wisecraft.smp.modules.cropharvester.util;
 
+import com.craftaro.ultimatetimber.core.hooks.protection.GriefPreventionProtection;
 import com.palmergames.bukkit.towny.object.TownyPermission;
 import com.palmergames.bukkit.towny.utils.PlayerCacheUtil;
 import com.sk89q.worldguard.bukkit.ProtectionQuery;
-import com.songoda.ultimatetimber.core.hooks.protection.GriefPreventionProtection;
-import com.songoda.ultimatetimber.core.hooks.protection.Protection;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -43,6 +42,9 @@ public abstract class UtilRandom {
      * @param player Player to get mainhand item from
      */
     public static void farmCropWithHoeIfMaxAgeOnLocation(Location mainLocation, int x, int y, int z, ItemStack item, Player player) {
+        boolean gpEnabled = plugin.isGriefPreventionEnabled();
+        boolean tgEnabled = plugin.isWorldGuardEnabled();
+        boolean twEnabled = plugin.isTownyEnabled();
 
         boolean blockWasBroken = false;
         GriefPreventionProtection gpp = new GriefPreventionProtection(plugin);
@@ -59,9 +61,31 @@ public abstract class UtilRandom {
         ProtectionQuery pq = new ProtectionQuery();
 
         boolean townyCanDestroy = PlayerCacheUtil.getCachePermission(player, currentBlock.getLocation(), currentBlock.getType(), TownyPermission.ActionType.DESTROY);
+        boolean blockIsMaxAge = getAgeAbleFromBlock(currentBlock).getAge() == getAgeAbleFromBlock(currentBlock).getMaximumAge();
 
-        if (getAgeAbleFromBlock(currentBlock).getAge() == getAgeAbleFromBlock(currentBlock).getMaximumAge()
-                && gpp.canBreak(player, checkLocation) && pq.testBlockBreak(player, currentBlock) && townyCanDestroy) {
+        ArrayList<Boolean> farmChecksArrayList = new ArrayList<>();
+        if (gpEnabled) {
+            farmChecksArrayList.add(gpp.canBreak(player, checkLocation));
+        }
+        if (tgEnabled) {
+            farmChecksArrayList.add(pq.testBlockBreak(player, currentBlock));
+        }
+        if (twEnabled) {
+            farmChecksArrayList.add(townyCanDestroy);
+        }
+        farmChecksArrayList.add(blockIsMaxAge);
+
+        boolean canDestroyBlock = true;
+        int i = 0;
+        while (canDestroyBlock && i < farmChecksArrayList.size()) {
+            if (!farmChecksArrayList.get(i)) {
+                canDestroyBlock = false;
+            }
+            i++;
+        }
+
+
+        if (canDestroyBlock) {
             currentBlock.breakNaturally(item);
             currentBlock.setType(blockMaterial);
             blockWasBroken = true;

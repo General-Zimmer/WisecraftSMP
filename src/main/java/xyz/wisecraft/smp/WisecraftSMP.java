@@ -38,6 +38,9 @@ public class WisecraftSMP extends JavaPlugin {
     private LuckPerms luck;
     private boolean isPAPIEnabled = false;
     private boolean isTimberEnabled = false;
+    private boolean isGriefPreventionEnabled = false;
+    private boolean isWorldGuardEnabled = false;
+    private boolean isTownyEnabled = false;
     private AdvancementMain advapi;
     private File moduleConfigFile;
     private FileConfiguration moduleConfig;
@@ -149,6 +152,24 @@ public class WisecraftSMP extends JavaPlugin {
         if (setupPlugin == null) {return;}
         isTimberEnabled = setupPlugin.isEnabled();
     }
+    private void setupGriefPrevention() {
+        Plugin setupPlugin = getServer().getPluginManager().getPlugin("GriefPrevention");
+        if (setupPlugin == null) {return;}
+        isGriefPreventionEnabled = setupPlugin.isEnabled();
+    }
+    private void setupTowny() {
+        Plugin setupPlugin = getServer().getPluginManager().getPlugin("Towny");
+        if (setupPlugin == null) {return;}
+        isTownyEnabled = setupPlugin.isEnabled();
+    }
+
+    private void setupWorldGuard() {
+        Plugin setupPlugin = getServer().getPluginManager().getPlugin("WorldGuard");
+        if (setupPlugin == null) {return;}
+        isWorldGuardEnabled = setupPlugin.isEnabled();
+    }
+
+
     private void setupLuckPerms() {
         String name = "LuckPerms";
 
@@ -332,5 +353,17 @@ public class WisecraftSMP extends JavaPlugin {
 
     public boolean isPAPIEnabled() {
         return isPAPIEnabled;
+    }
+
+    public boolean isGriefPreventionEnabled() {
+        return isGriefPreventionEnabled;
+    }
+
+    public boolean isWorldGuardEnabled() {
+        return isWorldGuardEnabled;
+    }
+
+    public boolean isTownyEnabled() {
+        return isTownyEnabled;
     }
 }
