@@ -249,6 +249,7 @@ public class WisecraftSMP extends JavaPlugin {
     private void setupModuleConfig() {
         for (int i = 0; i < modules.size(); i++) {
             String moduleName = modules.get(i).getModuleName();
+            // todo use the new methods for this
             moduleConfig.set(modulePath + moduleName + ".enabled", isModulesEnabledByDefault);
             moduleConfig.set(modulePath + moduleName + ".id", i);
             modules.get(i).startModule();
