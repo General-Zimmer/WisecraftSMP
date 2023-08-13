@@ -14,6 +14,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.reflections.Reflections;
 import xyz.wisecraft.core.WisecraftCoreApi;
 import xyz.wisecraft.smp.modulation.ModuleClass;
+import xyz.wisecraft.smp.modulation.storage.ModuleSettings;
+import xyz.wisecraft.smp.modulation.UtilModule;
 import xyz.wisecraft.smp.storage.OtherStorage;
 
 import java.io.File;
@@ -98,13 +100,6 @@ public class WisecraftSMP extends JavaPlugin {
         // Initialize modules
         setupModules(reflections.getSubTypesOf(ModuleClass.class));
 
-        // setup modules
-        if (moduleConfig.get(modulePath.split("\\.")[0]) != null) {
-            setupModuleConfig();
-        } else {
-            setupModulesFromConfig();
-        }
-
 
         try {
             moduleConfig.save(moduleConfigFile);
@@ -168,15 +163,24 @@ public class WisecraftSMP extends JavaPlugin {
 
     private void setupModules(Set<Class<? extends ModuleClass>> modules) {
 
-        for (Class<? extends ModuleClass> module : modules) {
+        for (Class<? extends ModuleClass> moduleClass : modules) {
             try {
-                this.modules.add(module.getConstructor().newInstance());
+                ModuleClass module = moduleClass.getConstructor().newInstance();
+                if (module != null)
+                    this.modules.add(module);
 
             } catch (InstantiationException |
                      IllegalAccessException |
                      NoSuchMethodException |
                      InvocationTargetException e) {
                 e.printStackTrace();
+            }
+
+            // setup modules
+            if (moduleConfig.get(modulePath.split("\\.")[0]) != null) {
+                setupModuleConfig();
+            } else {
+                setupModulesFromConfig();
             }
         }
     }
@@ -225,8 +229,8 @@ public class WisecraftSMP extends JavaPlugin {
         }
         // Adding modules to config
         for (Map.Entry<Long, ModuleClass> module : mapModulesToBeAdded.entrySet()) {
-            moduleConfig.set(modulePath + module + ".enabled", isModulesEnabledByDefault);
-            moduleConfig.set(modulePath + module + ".id", module.getKey());
+            moduleConfig.set(UtilModule.getSetting(module.getValue(), ModuleSettings.ENABLED), isModulesEnabledByDefault);
+            moduleConfig.set(UtilModule.getSetting(module.getValue(), ModuleSettings.ID), module.getKey());
         }
 
         // Check if unused module configurations should be removed
@@ -248,11 +252,11 @@ public class WisecraftSMP extends JavaPlugin {
 
     private void setupModuleConfig() {
         for (int i = 0; i < modules.size(); i++) {
-            String moduleName = modules.get(i).getModuleName();
-            // todo use the new methods for this
-            moduleConfig.set(modulePath + moduleName + ".enabled", isModulesEnabledByDefault);
-            moduleConfig.set(modulePath + moduleName + ".id", i);
-            modules.get(i).startModule();
+            ModuleClass module = modules.get(i);
+
+            moduleConfig.set(UtilModule.getSetting(module, ModuleSettings.ENABLED), isModulesEnabledByDefault);
+            moduleConfig.set(UtilModule.getSetting(module, ModuleSettings.ID), i);
+            module.startModule();
         }
     }
 
