@@ -91,7 +91,6 @@ public class WisecraftSMP extends JavaPlugin {
             // If module has no dependencies add it to the sorted modules
             if (moduleDepends == null) {
                 sortedModules.add(currentModule);
-                unsortedModules.remove(currentModule);
                 continue;
             }
 
@@ -100,7 +99,6 @@ public class WisecraftSMP extends JavaPlugin {
                 for (ModuleClass dependModule : unsortedModules) {
                     if (dependModule.getClass().equals(moduleDepend) && dependModule.getModuleDepends() == null) {
                         sortedModules.add(dependModule);
-                        unsortedModules.remove(dependModule);
                     } else {
                         throw new RuntimeException("Module: " + currentModule.getModuleName() +
                                 " has one or more level 2+ dependencies. This is not supported yet.");
