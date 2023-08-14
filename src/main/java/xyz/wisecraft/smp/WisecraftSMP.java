@@ -112,7 +112,7 @@ public class WisecraftSMP extends JavaPlugin {
         }
 
         for (ModuleClass module : sortedModules)
-            module.stopModule();
+            module.startModule();
         
         try {
             moduleConfig.save(moduleConfigFile);
