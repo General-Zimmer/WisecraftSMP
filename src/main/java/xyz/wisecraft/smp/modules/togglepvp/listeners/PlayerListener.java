@@ -24,8 +24,8 @@ import java.util.UUID;
  */
 public class PlayerListener implements Listener {
 
-    private final WisecraftSMP instance = WisecraftSMP.getInstance();
-    private final FileConfiguration config = instance.getConfig();
+    private final WisecraftSMP plugin = WisecraftSMP.getInstance();
+    private final FileConfiguration config = plugin.getConfig();
     private final HashMap<UUID, Boolean> pvpPlayers = PVPStorage.getPVPPlayers();
     private final PersistentData PVPDataUtils = PVPStorage.getPVPDataUtils();
     private final List<String> blockedWorlds = PVPStorage.getBlockedWorlds();

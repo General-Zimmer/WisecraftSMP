@@ -4,6 +4,7 @@ import com.craftaro.ultimatetimber.UltimateTimber;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import org.bukkit.Bukkit;
+import xyz.wisecraft.core.WisecraftCoreApi;
 import xyz.wisecraft.smp.modules.togglepvp.listeners.PVPTimberListener;
 import xyz.wisecraft.smp.modules.togglepvp.listeners.PlayerListener;
 import xyz.wisecraft.smp.modules.togglepvp.listeners.PvPListener;
@@ -19,18 +20,14 @@ import java.util.Objects;
  */
 public class PvPToggleModule implements xyz.wisecraft.smp.modulation.ModuleClass {
 
-    private boolean isTimberEnabled = false;
-    private boolean isPAPIEnabled = false;
+    private final boolean isTimberEnabled = setupDependency("UltimateTimber", UltimateTimber.class) != null;
+    private final boolean isPAPIEnabled = setupDependency("PlaceholderAPI", PlaceholderAPIPlugin.class) != null;
+    private final WisecraftCoreApi core = setupDependency(WisecraftCoreApi.class);
+
     @Override
     public void onEnable() {
         setupPAPI();
 
-        if (setupDependency("UltimateTimber", UltimateTimber.class) != null) {
-            isTimberEnabled = true;
-        }
-        if (setupDependency("PlaceholderAPI", PlaceholderAPIPlugin.class) != null) {
-            isPAPIEnabled = true;
-        }
 
         // PVPToggle data
         File PVPData = new File(plugin.getDataFolder(), "togglepvp");
@@ -44,8 +41,8 @@ public class PvPToggleModule implements xyz.wisecraft.smp.modulation.ModuleClass
     public void registerEvents() {
         plugin.getServer().getPluginManager().registerEvents(new PlayerListener(), plugin);
         plugin.getServer().getPluginManager().registerEvents(new PvPListener(), plugin);
-        if (isTimberEnabled) {
-            plugin.getServer().getPluginManager().registerEvents(new PVPTimberListener(), plugin);
+        if (isTimberEnabled && core != null) {
+            plugin.getServer().getPluginManager().registerEvents(new PVPTimberListener(core), plugin);
         }
     }
 

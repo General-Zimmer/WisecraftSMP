@@ -10,6 +10,7 @@ import com.fren_gor.ultimateAdvancementAPI.util.AdvancementKey;
 import com.fren_gor.ultimateAdvancementAPI.util.CoordAdapter;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Material;
+import wtf.choco.veinminer.VeinMinerPlugin;
 import xyz.wisecraft.core.WisecraftCore;
 import xyz.wisecraft.core.WisecraftCoreApi;
 import xyz.wisecraft.smp.modules.advancements.adv.AdvancementTabNamespaces;
@@ -29,13 +30,20 @@ import java.util.Objects;
  */
 public class AdvancementsModule implements xyz.wisecraft.smp.modulation.ModuleClass {
 
+    private static AdvancementsModule module = null;
     private UltimateAdvancementAPI api;
     private AdvancementTab tutorial_quests;
     private AdvancementTab common_quests;
     private AdvancementTab legacy;
-    private boolean isTimberEnabled = false;
-    private LuckPerms luck;
-    private WisecraftCoreApi core;
+    private final boolean isTimberEnabled = setupDependency("UltimateTimber", UltimateTimber.class) != null;
+    private final LuckPerms luck = setupDependency(LuckPerms.class);
+    private final WisecraftCoreApi core = setupDependency(WisecraftCoreApi.class);
+    private final boolean isVeinMinerEnabled = setupDependency("VeinMiner", VeinMinerPlugin.class) != null;
+
+
+    public AdvancementsModule() {
+        module = this;
+    }
 
     @Override
     public void onEnable() {
@@ -43,18 +51,6 @@ public class AdvancementsModule implements xyz.wisecraft.smp.modulation.ModuleCl
         plugin.getAdv().enableSQLite(new File(plugin.getServer().getWorldContainer().getAbsolutePath() + "/world", "advancements.db"));
         api = UltimateAdvancementAPI.getInstance(plugin);
         initializeTabs();
-
-        if (setupDependency("UltimateTimber", UltimateTimber.class) != null) {
-            isTimberEnabled = true;
-        }
-        LuckPerms luckDepend = setupDependency(LuckPerms.class);
-        if (luckDepend != null) {
-            luck = luckDepend;
-        }
-        WisecraftCoreApi coreDepend = setupDependency(WisecraftCoreApi.class);
-        if (luckDepend != null) {
-            core = coreDepend;
-        }
 
         tutorial_quests.automaticallyShowToPlayers();
         tutorial_quests.automaticallyGrantRootAdvancement();
@@ -67,15 +63,17 @@ public class AdvancementsModule implements xyz.wisecraft.smp.modulation.ModuleCl
 
     @Override
     public void registerEvents() {
-        if (isTimberEnabled)
+        if (isTimberEnabled && core != null)
             plugin.getServer().getPluginManager().registerEvents(new TimberListeners(core), plugin);
 
 
+        if (luck == null)
+            return;
 
         // Check for new citizens. This is async right after this step.
         String servName = OtherStorage.getServer_name();
         if (servName.equalsIgnoreCase("l-gp1")  || servName.equalsIgnoreCase("legacy")) {
-            new GibRoles().runTaskTimer(plugin, 18000, 18000);
+            new GibRoles(core, luck).runTaskTimer(plugin, 18000, 18000);
             plugin.getServer().getPluginManager().registerEvents(new LegacyRoles(luck), plugin);
             legacy.automaticallyShowToPlayers();
             legacy.automaticallyGrantRootAdvancement();
@@ -90,7 +88,7 @@ public class AdvancementsModule implements xyz.wisecraft.smp.modulation.ModuleCl
 
     @Override
     public void registerCommands() {
-        Objects.requireNonNull(plugin.getCommand("autoroles"), "command autoroles isn't registered").setExecutor(new Command());
+        Objects.requireNonNull(plugin.getCommand("autoroles"), "command autoroles isn't registered").setExecutor(new Command(core, luck));
 
     }
 
@@ -144,4 +142,25 @@ public class AdvancementsModule implements xyz.wisecraft.smp.modulation.ModuleCl
 
     }
 
+
+
+    public static AdvancementsModule getModule() {
+        return module;
+    }
+
+    public boolean isTimberEnabled() {
+        return isTimberEnabled;
+    }
+
+    public LuckPerms getLuck() {
+        return luck;
+    }
+
+    public WisecraftCoreApi getCore() {
+        return core;
+    }
+
+    public boolean isVeinMinerEnabled() {
+        return isVeinMinerEnabled;
+    }
 }

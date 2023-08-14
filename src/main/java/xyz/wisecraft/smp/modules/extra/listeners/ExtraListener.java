@@ -23,8 +23,6 @@ import java.util.UUID;
 public class ExtraListener implements Listener {
     private final WisecraftSMP plugin = WisecraftSMP.getInstance();
 
-    private final HashMap<UUID, Angel> angels = OtherStorage.getAngels();
-
     /**
      * Prevents players from finishing the tutorial.
      * @param e The PlayerCommandPreprocessEvent.

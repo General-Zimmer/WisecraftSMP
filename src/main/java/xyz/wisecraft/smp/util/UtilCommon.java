@@ -9,6 +9,7 @@ import xyz.wisecraft.smp.modules.advancements.util.UtilAdv;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * UtilCommon
@@ -24,12 +25,12 @@ public class UtilCommon {
      * @param victim Player that was hit by a tree
      * @return Who might have used Timber
      */
-    public static Player getWhoTimber(Player victim) {
+    public static Player getWhoTimber(Player victim, ConcurrentHashMap<UUID, Timers> timers) {
 
         double timeFrame = WisecraftSMP.getInstance().getConfig().getDouble("SETTINGS.TIMBER_TIMEFRAME");
 
         UUID victimUUID = victim.getUniqueId();
-        HashMap<Double, Player> players = whoBrokeTree(victimUUID, timeFrame);
+        HashMap<Double, Player> players = whoBrokeTree(victimUUID, timeFrame, timers);
         if (players == null) return null;
 
         // Are they near the player who takes damage?
@@ -55,11 +56,11 @@ public class UtilCommon {
         return attackers.get(biggest);
     }
 
-    private static HashMap<Double, Player> whoBrokeTree(UUID victimUUID, double timeFrame) {
+    private static HashMap<Double, Player> whoBrokeTree(UUID victimUUID, double timeFrame, ConcurrentHashMap<UUID, Timers> timers) {
         HashMap<Double, Player> players = new HashMap<>();
         // Check who broke a tree recently
         for (Player attacker : Bukkit.getOnlinePlayers()) {
-            Timers attackerTimer = WisecraftSMP.getCore().getTimers().get(attacker.getUniqueId());
+            Timers attackerTimer = timers.get(attacker.getUniqueId());
             double secSinceAttackerTimber = UtilAdv.calcCurrentSeconds(attackerTimer.getTree());
             UUID attackerUUID = attacker.getUniqueId();
 

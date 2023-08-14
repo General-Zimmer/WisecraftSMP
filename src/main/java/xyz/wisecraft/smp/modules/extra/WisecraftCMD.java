@@ -1,5 +1,6 @@
 package xyz.wisecraft.smp.modules.extra;
 
+import net.ess3.api.IEssentials;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -8,7 +9,6 @@ import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.core.WisecraftCoreApi;
-import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.modules.advancements.util.UtilAdv;
 import xyz.wisecraft.smp.modules.extra.util.UtilRandom;
 
@@ -21,12 +21,14 @@ import java.util.List;
 public class WisecraftCMD implements TabExecutor {
 
     private final WisecraftCoreApi core;
+    private final IEssentials ess;
 
     /**
      * Constructor
      */
-    public WisecraftCMD() {
-        this.core = WisecraftSMP.getCore();
+    public WisecraftCMD(WisecraftCoreApi core, IEssentials ess) {
+        this.core = core;
+        this.ess = ess;
     }
 
     @Override
@@ -37,7 +39,7 @@ public class WisecraftCMD implements TabExecutor {
         if (p == null) return true;
 
         if (cmd.getName().equals("wshop")) {
-            UtilRandom.tpworld(Bukkit.getWorld("shop"), p);
+            UtilRandom.tpworld(ess, Bukkit.getWorld("shop"), p);
             return true;
         }
 
@@ -50,7 +52,7 @@ public class WisecraftCMD implements TabExecutor {
 
             switch (args[0]) {
                 case "shop", "tutorial" -> {
-                    UtilRandom.tpworld(Bukkit.getWorld(args[0]), p);
+                    UtilRandom.tpworld(ess, Bukkit.getWorld(args[0]), p);
                     return true;
                 }
                 case "save" -> {
@@ -65,9 +67,13 @@ public class WisecraftCMD implements TabExecutor {
                     if (p.hasPermission("wisecraft.manage"))
                         core.loadPlayerdata();
                 }
-                case "time" -> p.sendMessage(Double.toString(UtilAdv.calcCurrentSeconds(
-                        core.getTimers().get(
-                                p.getUniqueId()).getTree())));
+                case "time" -> {
+                    if (core == null) return true;
+
+                    p.sendMessage(Double.toString(UtilAdv.calcCurrentSeconds(
+                            core.getTimers().get(
+                                    p.getUniqueId()).getTree())));
+                }
 
             }
         }

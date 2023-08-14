@@ -4,6 +4,8 @@ import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.modulation.storage.ModulationStorage;
 import xyz.wisecraft.smp.modulation.storage.ModuleSettings;
 
+import java.util.ArrayList;
+
 /**
  * This interface is used to create modules.
  */
@@ -17,13 +19,14 @@ public interface ModuleClass extends Comparable<ModuleClass> {
     /**
      * This method is called when the module is starting.
      */
-    default void startModule() {
+    default boolean startModule() {
 
-        if (!isModuleEnabled()) return;
+        if (!isModuleEnabled() && !hasAllHardDependencies()) return false;
 
         onEnable();
         registerEvents();
         registerCommands();
+        return true;
     }
 
     /**
@@ -79,6 +82,30 @@ public interface ModuleClass extends Comparable<ModuleClass> {
         if (dependency != null) return dependency;
 
         return UtilModuleCommon.setupDependency(clazz);
+    }
+
+    /**
+     * Checks if the module has all the hard dependencies.
+     * @return true if the module has all the hard dependencies.
+     */
+    default boolean hasAllHardDependencies() {
+        return true;
+    }
+
+    /**
+     * Gets the module dependencies of other modules. This method should be overridden if the module has dependencies.
+     * @return The module dependencies.
+     */
+    default ArrayList<Class<? extends ModuleClass>> getModuleDepends() {
+        return null;
+    }
+
+    default ModuleClass getModule(Class<?> clazz) {
+        for (ModuleClass module : plugin.getModules()) {
+            if (module.getClass().equals(clazz))
+                return module;
+        }
+        return null;
     }
 
 

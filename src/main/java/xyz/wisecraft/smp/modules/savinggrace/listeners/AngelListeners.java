@@ -47,7 +47,7 @@ public class AngelListeners implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
         if (!angels.containsKey(p.getUniqueId())) {
-            Angel angel = new Angel(ess, p.hasPermission("wisecraft.donator"));
+            Angel angel = new Angel(p.hasPermission("wisecraft.donator"));
             angels.put(p.getUniqueId(), angel);
         }
 
@@ -87,12 +87,16 @@ public class AngelListeners implements Listener {
         UUID UUID = p.getUniqueId();
         Angel angel = angels.get(UUID);
 
+        boolean hasHome = false;
+
+        if (ess != null)
+            hasHome = ess.getUser(e.getPlayer()).hasHome();
+
         //Does dis person have home?
-        User user = ess.getUser(e.getPlayer());
-        if (user.hasHome() || e.isBedSpawn() || e.isAnchorSpawn()) {
+        if (hasHome || e.isBedSpawn() || e.isAnchorSpawn()) {
             angel.giveGrace(e);
         } else {
-            angels.get(e.getPlayer().getUniqueId()).giveStarter(user, e.getPlayer());
+            angels.get(e.getPlayer().getUniqueId()).giveStarter(ess, e.getPlayer());
         }
 
 

@@ -18,8 +18,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public class GibRoles extends BukkitRunnable {
 
     private final WisecraftSMP plugin = WisecraftSMP.getInstance();
-    private final WisecraftCoreApi core = WisecraftSMP.getCore();
-    private final LuckPerms luck = WisecraftSMP.getLuck();
+    private final WisecraftCoreApi core;
+    private final LuckPerms luck;
+
+    public GibRoles(WisecraftCoreApi core, LuckPerms luck) {
+        this.core = core;
+        this.luck = luck;
+    }
 
     @Override
     public void run() {

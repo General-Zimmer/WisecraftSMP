@@ -7,8 +7,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import xyz.wisecraft.core.WisecraftCoreApi;
 import xyz.wisecraft.core.data.templates.Timers;
-import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.modules.togglepvp.utils.PVPUtil;
 import xyz.wisecraft.smp.util.UtilCommon;
 
@@ -21,7 +21,11 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class PVPTimberListener implements Listener {
 
-    private final ConcurrentHashMap<UUID, Timers> timers = WisecraftSMP.getCore().getTimers();
+    private final ConcurrentHashMap<UUID, Timers> timers;
+    public PVPTimberListener(WisecraftCoreApi core) {
+        this.timers = core.getTimers();
+    }
+
 
     /**
      * Cancel timber damage if the victim does not have pvp on
@@ -30,7 +34,7 @@ public class PVPTimberListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onTimberDamage(TreeDamageEvent e) {
         Player victim = e.getVictim();
-        Player attacker = UtilCommon.getWhoTimber(victim);
+        Player attacker = UtilCommon.getWhoTimber(victim, timers);
 
         if (PVPUtil.checkPVPStates(attacker, victim))
             e.setCancelled(true);
@@ -62,7 +66,7 @@ public class PVPTimberListener implements Listener {
 
         if (!e.getDeathMessage().equalsIgnoreCase(victim.getName() + " died")) return;
 
-        Player attacker = UtilCommon.getWhoTimber(victim);
+        Player attacker = UtilCommon.getWhoTimber(victim, timers);
 
         if (victim.equals(attacker)) {
             e.setDeathMessage(victim.getName() + " was crushed under their timber");

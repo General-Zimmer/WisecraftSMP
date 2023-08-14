@@ -1,22 +1,14 @@
 package xyz.wisecraft.smp;
 
-import com.earth2me.essentials.Essentials;
 import com.fren_gor.ultimateAdvancementAPI.AdvancementMain;
-import net.ess3.api.IEssentials;
-import net.luckperms.api.LuckPerms;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.reflections.Reflections;
-import xyz.wisecraft.core.WisecraftCoreApi;
 import xyz.wisecraft.smp.modulation.ModuleClass;
-import xyz.wisecraft.smp.modulation.storage.ModulationStorage;
-import xyz.wisecraft.smp.modulation.storage.ModuleSettings;
 import xyz.wisecraft.smp.modulation.UtilModuleCommon;
+import xyz.wisecraft.smp.modulation.storage.ModuleSettings;
 import xyz.wisecraft.smp.storage.OtherStorage;
 
 import java.io.File;
@@ -95,6 +87,36 @@ public class WisecraftSMP extends JavaPlugin {
             setupModulesFromConfig();
         }
 
+        ArrayList<ModuleClass> unsortedModules = getModules();
+        ArrayList<ModuleClass> sortedModules = new ArrayList<>();
+        for (ModuleClass currentModule : unsortedModules) {
+            ArrayList<Class<? extends ModuleClass>> moduleDepends = currentModule.getModuleDepends();
+            // If module has no dependencies add it to the sorted modules
+            if (moduleDepends == null) {
+                sortedModules.add(currentModule);
+                unsortedModules.remove(currentModule);
+                continue;
+            }
+
+            // todo implement a way for modules to have deeper dependencies
+            for (Class<? extends ModuleClass> moduleDepend : moduleDepends) {
+                for (ModuleClass dependModule : unsortedModules) {
+                    if (dependModule.getClass().equals(moduleDepend) && dependModule.getModuleDepends() == null) {
+                        sortedModules.add(dependModule);
+                        unsortedModules.remove(dependModule);
+                    } else {
+                        throw new RuntimeException("Module " + currentModule.getModuleName() +
+                                " has one or more level 2+ dependencies. This is not supported yet.");
+                    }
+                }
+
+            }
+
+        }
+
+        for (ModuleClass module : sortedModules)
+            module.stopModule();
+        
         try {
             moduleConfig.save(moduleConfigFile);
         } catch (IOException e) {
@@ -180,13 +202,13 @@ public class WisecraftSMP extends JavaPlugin {
         }
 
         // Check if unused module configurations should be removed
-        if (moduleConfig.getBoolean("Remove_Old_Module_Settings")) return;
+        if (!moduleConfig.getBoolean("Remove_Old_Module_Settings")) return;
 
         // Remove modules not present in the code
-        ArrayList<String> modulesToBeRemoved = new ArrayList<>();
+        ArrayList<String> modulesToBeRemoved = new ArrayList<>(modulesInConfig);
         modules.forEach(module -> {
-            if (!modulesInConfig.contains(module.getModuleName())) {
-                modulesToBeRemoved.add(module.getModuleName());
+            if (modulesInConfig.contains(module.getModuleName())) {
+                modulesToBeRemoved.remove(module.getModuleName());
             }
         });
 
@@ -202,7 +224,6 @@ public class WisecraftSMP extends JavaPlugin {
 
             moduleConfig.set(UtilModuleCommon.getSetting(module, ModuleSettings.ENABLED), isModulesEnabledByDefault);
             moduleConfig.set(UtilModuleCommon.getSetting(module, ModuleSettings.ID), i);
-            module.startModule();
         }
     }
 
@@ -212,8 +233,7 @@ public class WisecraftSMP extends JavaPlugin {
 
     private void createModuleConfig() {
         moduleConfigFile = new File(getDataFolder(), "modules.yml");
-        if (!moduleConfigFile.exists()) {
-            moduleConfigFile.getParentFile().mkdirs();
+        if (!moduleConfigFile.exists() && moduleConfigFile.getParentFile().mkdirs()) {
             saveResource("modules.yml", false);
         }
         moduleConfig = YamlConfiguration.loadConfiguration(moduleConfigFile);
@@ -239,12 +259,11 @@ public class WisecraftSMP extends JavaPlugin {
         return instance;
     }
 
-    public File getModuleConfigFile() {
-        return moduleConfigFile;
-    }
-
     public Boolean getIsTesting() {
         return isTesting;
     }
 
+    public ArrayList<ModuleClass> getModules() {
+        return new ArrayList<>(modules);
+    }
 }

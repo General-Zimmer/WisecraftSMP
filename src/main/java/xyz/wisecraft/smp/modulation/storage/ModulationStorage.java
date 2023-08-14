@@ -11,15 +11,11 @@ public class ModulationStorage {
         dependencies.put(pluginName, dependency);
     }
 
-    public static HashMap<String, Object> getDependencies() {
-        return new HashMap<>(dependencies);
-    }
-
     /**
      * Gets a dependency.
      * @param pluginName The name of the dependency.
      * @param clazz The class of the dependency.
-     * @return The dependency.
+     * @return The dependency or null if it does not exist.
      * @param <T> The type of the dependency.
      */
     public static <T> T getDependency(String pluginName, Class<T> clazz) {
