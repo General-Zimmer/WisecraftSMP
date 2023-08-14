@@ -165,13 +165,13 @@ public class WisecraftSMP extends JavaPlugin {
         // Getting missing IDs
         ArrayList<Long> IDs = new ArrayList<>();
         modulesInConfig.forEach(module -> {
-            if (moduleConfig.get(UtilModuleCommon.getSetting(module, ModuleSettings.ID)) != null) {
+            if (!(moduleConfig.getLong(UtilModuleCommon.getSetting(module, ModuleSettings.ID), -1) == -1)) {
                 IDs.add(moduleConfig.getLong(UtilModuleCommon.getSetting(module, ModuleSettings.ID)));
             }
         });
         ArrayList<Long> missingIDS = new ArrayList<>();
-        for (int i = 0; i < IDs.size(); i++) {
-            if (i != IDs.get(i)) {
+        for (int i = 0; i < modules.size(); i++) {
+            if (!IDs.contains((long) i)) {
                 missingIDS.add((long) i);
             }
 
@@ -190,7 +190,7 @@ public class WisecraftSMP extends JavaPlugin {
         HashMap<Long, ModuleClass> mapModulesToBeAdded = new HashMap<>();
         for (int i = 0, j = 0; i < modulesToBeAdded.size(); i++) {
 
-            if (missingIDS.get(i) < missingIDS.size()) {
+            if (i < missingIDS.size()) {
                 mapModulesToBeAdded.put(missingIDS.get(i), modulesToBeAdded.get(i));
                 continue;
             }
