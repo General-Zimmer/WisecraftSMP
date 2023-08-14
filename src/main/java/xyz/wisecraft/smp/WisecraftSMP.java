@@ -1,10 +1,12 @@
 package xyz.wisecraft.smp;
 
 import com.fren_gor.ultimateAdvancementAPI.AdvancementMain;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 import org.reflections.Reflections;
 import xyz.wisecraft.smp.modulation.ModuleClass;
 import xyz.wisecraft.smp.modulation.UtilModuleCommon;
@@ -18,7 +20,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 
 /**
  * Main class for WisecraftSMP
@@ -95,6 +96,7 @@ public class WisecraftSMP extends JavaPlugin {
             }
 
             // todo implement a way for modules to have deeper dependencies
+            // Put module dependencies infront of its depender.
             for (Class<? extends ModuleClass> moduleDepend : moduleDepends) {
                 for (ModuleClass dependModule : unsortedModules) {
                     if (dependModule.getClass().equals(moduleDepend) && dependModule.getModuleDepends() == null) {
@@ -149,12 +151,15 @@ public class WisecraftSMP extends JavaPlugin {
     }
 
     private void setupModulesFromConfig() {
-        MemorySection mem = (MemorySection) moduleConfig.get(getModulePath());
-        if (mem == null) {
+        ConfigurationSection moduleSection = moduleConfig.getConfigurationSection(getModulePath());
+        Set<String> map = (moduleSection != null) ? moduleSection.getKeys(false) : null;
+
+        if (map == null || map.isEmpty()) {
             setupModuleConfig();
             return;
         }
-        ArrayList<String> modulesInConfig = new ArrayList<>(mem.getKeys(false));
+
+        ArrayList<String> modulesInConfig = new ArrayList<>(map);
 
 
         // Getting missing IDs
@@ -232,7 +237,8 @@ public class WisecraftSMP extends JavaPlugin {
 
     private void createModuleConfig() {
         moduleConfigFile = new File(getDataFolder(), "modules.yml");
-        if (!moduleConfigFile.exists() && moduleConfigFile.getParentFile().mkdirs()) {
+        if (!moduleConfigFile.exists() ) {
+            moduleConfigFile.getParentFile().mkdirs(); // This needs to be exactly here for it to work, idk why
             saveResource("modules.yml", false);
         }
         moduleConfig = YamlConfiguration.loadConfiguration(moduleConfigFile);
