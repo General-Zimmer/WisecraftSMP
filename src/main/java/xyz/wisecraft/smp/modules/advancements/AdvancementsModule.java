@@ -1,5 +1,6 @@
 package xyz.wisecraft.smp.modules.advancements;
 
+import com.craftaro.ultimatetimber.UltimateTimber;
 import com.fren_gor.ultimateAdvancementAPI.AdvancementTab;
 import com.fren_gor.ultimateAdvancementAPI.UltimateAdvancementAPI;
 import com.fren_gor.ultimateAdvancementAPI.advancement.RootAdvancement;
@@ -7,7 +8,10 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDispla
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
 import com.fren_gor.ultimateAdvancementAPI.util.AdvancementKey;
 import com.fren_gor.ultimateAdvancementAPI.util.CoordAdapter;
+import net.luckperms.api.LuckPerms;
 import org.bukkit.Material;
+import xyz.wisecraft.core.WisecraftCore;
+import xyz.wisecraft.core.WisecraftCoreApi;
 import xyz.wisecraft.smp.modules.advancements.adv.AdvancementTabNamespaces;
 import xyz.wisecraft.smp.modules.advancements.adv.common_quests.*;
 import xyz.wisecraft.smp.modules.advancements.adv.legacy.*;
@@ -29,6 +33,9 @@ public class AdvancementsModule implements xyz.wisecraft.smp.modulation.ModuleCl
     private AdvancementTab tutorial_quests;
     private AdvancementTab common_quests;
     private AdvancementTab legacy;
+    private boolean isTimberEnabled = false;
+    private LuckPerms luck;
+    private WisecraftCoreApi core;
 
     @Override
     public void onEnable() {
@@ -36,6 +43,18 @@ public class AdvancementsModule implements xyz.wisecraft.smp.modulation.ModuleCl
         plugin.getAdv().enableSQLite(new File(plugin.getServer().getWorldContainer().getAbsolutePath() + "/world", "advancements.db"));
         api = UltimateAdvancementAPI.getInstance(plugin);
         initializeTabs();
+
+        if (setupDependency("UltimateTimber", UltimateTimber.class) != null) {
+            isTimberEnabled = true;
+        }
+        LuckPerms luckDepend = setupDependency(LuckPerms.class);
+        if (luckDepend != null) {
+            luck = luckDepend;
+        }
+        WisecraftCoreApi coreDepend = setupDependency(WisecraftCoreApi.class);
+        if (luckDepend != null) {
+            core = coreDepend;
+        }
 
         tutorial_quests.automaticallyShowToPlayers();
         tutorial_quests.automaticallyGrantRootAdvancement();
@@ -48,11 +67,8 @@ public class AdvancementsModule implements xyz.wisecraft.smp.modulation.ModuleCl
 
     @Override
     public void registerEvents() {
-        /*
-        plugin.getServer().getPluginManager().registerEvents(new QuestListeners(), plugin);
-         */
-        if (plugin.isTimberEnabled())
-            plugin.getServer().getPluginManager().registerEvents(new TimberListeners(), plugin);
+        if (isTimberEnabled)
+            plugin.getServer().getPluginManager().registerEvents(new TimberListeners(core), plugin);
 
 
 
@@ -60,7 +76,7 @@ public class AdvancementsModule implements xyz.wisecraft.smp.modulation.ModuleCl
         String servName = OtherStorage.getServer_name();
         if (servName.equalsIgnoreCase("l-gp1")  || servName.equalsIgnoreCase("legacy")) {
             new GibRoles().runTaskTimer(plugin, 18000, 18000);
-            plugin.getServer().getPluginManager().registerEvents(new LegacyRoles(), plugin);
+            plugin.getServer().getPluginManager().registerEvents(new LegacyRoles(luck), plugin);
             legacy.automaticallyShowToPlayers();
             legacy.automaticallyGrantRootAdvancement();
         }

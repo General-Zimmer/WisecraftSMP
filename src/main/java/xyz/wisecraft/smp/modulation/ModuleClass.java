@@ -1,6 +1,7 @@
 package xyz.wisecraft.smp.modulation;
 
 import xyz.wisecraft.smp.WisecraftSMP;
+import xyz.wisecraft.smp.modulation.storage.ModulationStorage;
 import xyz.wisecraft.smp.modulation.storage.ModuleSettings;
 
 /**
@@ -53,11 +54,40 @@ public interface ModuleClass extends Comparable<ModuleClass> {
     default void registerCommands() {}
 
     /**
+     * Sets up a dependency. This method gets an Object extending Plugin type.
+     * @param pluginName The name of the dependency.
+     * @param clazz The class of the dependency.
+     * @return The dependency.
+     * @param <T> The type of the dependency.
+     */
+    default <T> T setupDependency(String pluginName, Class<T> clazz) {
+        T dependency = ModulationStorage.getDependency(pluginName, clazz);
+        if (dependency != null) return dependency;
+
+        return UtilModuleCommon.setupDependency(pluginName, clazz);
+    }
+
+    /**
+     * Sets up a dependency. This method gets the registered service provider by the plugin.
+     * @param clazz The class of the dependency.
+     * @return The dependency.
+     * @param <T> The type of the dependency.
+     */
+    default <T> T setupDependency(Class<T> clazz) {
+
+        T dependency = ModulationStorage.getDependency(clazz.getName(), clazz);
+        if (dependency != null) return dependency;
+
+        return UtilModuleCommon.setupDependency(clazz);
+    }
+
+
+    /**
      * Gets the module ID. Will return -1 if the id does not exist.
      * @return The module ID.
      */
     default long getModuleID() {
-        return plugin.getModuleConfig().getLong(UtilModule.getSetting(this, ModuleSettings.ID), -1);
+        return plugin.getModuleConfig().getLong(UtilModuleCommon.getSetting(this, ModuleSettings.ID), -1);
     }
 
     /**
@@ -73,7 +103,7 @@ public interface ModuleClass extends Comparable<ModuleClass> {
      * @return The module enabled status.
      */
     default boolean isModuleEnabled() {
-        return plugin.getModuleConfig().getBoolean(UtilModule.getSetting(this, ModuleSettings.ENABLED));
+        return plugin.getModuleConfig().getBoolean(UtilModuleCommon.getSetting(this, ModuleSettings.ENABLED));
     }
 
 

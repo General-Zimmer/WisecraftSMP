@@ -1,9 +1,9 @@
-package xyz.wisecraft.smp.modulation;
+package xyz.wisecraft.smp.modulation.storage;
 
 public enum ModuleSettings {
 
 
-    ENABLED("enabled"),ID("id");
+    ENABLED("enabled"),ID("id"), PATH("modules");
 
     private final String string;
     ModuleSettings(String string) {

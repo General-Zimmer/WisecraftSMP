@@ -14,8 +14,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.reflections.Reflections;
 import xyz.wisecraft.core.WisecraftCoreApi;
 import xyz.wisecraft.smp.modulation.ModuleClass;
+import xyz.wisecraft.smp.modulation.storage.ModulationStorage;
 import xyz.wisecraft.smp.modulation.storage.ModuleSettings;
-import xyz.wisecraft.smp.modulation.UtilModule;
+import xyz.wisecraft.smp.modulation.UtilModuleCommon;
 import xyz.wisecraft.smp.storage.OtherStorage;
 
 import java.io.File;
@@ -33,17 +34,11 @@ import java.util.logging.Level;
 public class WisecraftSMP extends JavaPlugin {
 
     private static WisecraftSMP instance;
-    private IEssentials ess;
-    private WisecraftCoreApi core;
-    private LuckPerms luck;
-    private boolean isPAPIEnabled = false;
-    private boolean isTimberEnabled = false;
     private AdvancementMain advapi;
     private File moduleConfigFile;
     private FileConfiguration moduleConfig;
-    private final String modulePath = "modules";
     private boolean isModulesEnabledByDefault;
-
+    private final ArrayList<ModuleClass> modules = new ArrayList<>();
 
     /**
      * Production Constructor for WisecraftSMP
@@ -64,7 +59,6 @@ public class WisecraftSMP extends JavaPlugin {
 
     private final Boolean isTesting;
 
-    private final ArrayList<ModuleClass> modules = new ArrayList<>();
 
     @Override
     public void onLoad() {
@@ -78,17 +72,11 @@ public class WisecraftSMP extends JavaPlugin {
         // todo implement a way for config variables to only be added if they're enabled. Don't remove config variables
         //  ever. The check will use bit addition.
 
-        // Dependencies always first
-        setupEssentials();
-        setupWisecraftCore();
-        setupLuckPerms();
-        setupPAPI();
-        setupTimber();
 
-        // todo remember what this to do should have been
-        createModuleConfig();
+
 
         // Config stuff
+        createModuleConfig();
         this.saveDefaultConfig();
         OtherStorage.setServer_name(this.getConfig().getString("server_name"));
 
@@ -100,6 +88,12 @@ public class WisecraftSMP extends JavaPlugin {
         // Initialize modules
         setupModules(reflections.getSubTypesOf(ModuleClass.class));
 
+        // setup modules
+        if (moduleConfig.get(getModulePath()) != null) {
+            setupModuleConfig();
+        } else {
+            setupModulesFromConfig();
+        }
 
         try {
             moduleConfig.save(moduleConfigFile);
@@ -119,56 +113,14 @@ public class WisecraftSMP extends JavaPlugin {
     }
 
 
-    private void setupEssentials() {
-        Plugin setupPlugin = getServer().getPluginManager().getPlugin("Essentials");
-        if (setupPlugin == null) {return;}
-        if(!setupPlugin.isEnabled()) {return;}
-
-        ess = (Essentials) this.getServer().getPluginManager().getPlugin("Essentials");
-    }
-
-    private void setupWisecraftCore() {
-        String name = "WisecraftCore";
-
-        RegisteredServiceProvider<WisecraftCoreApi> provider = getServer().getServicesManager().getRegistration(WisecraftCoreApi.class);
-        if (provider != null) {
-            core = provider.getProvider();
-            return;
-        }
-        Bukkit.getLogger().log(Level.WARNING, "Couldn't get " + name + " provider");
-    }
-    private void setupTimber() {
-        Plugin setupPlugin = getServer().getPluginManager().getPlugin("UltimateTimber");
-        if (setupPlugin == null) {return;}
-        isTimberEnabled = setupPlugin.isEnabled();
-    }
-    private void setupLuckPerms() {
-        String name = "LuckPerms";
-
-
-        RegisteredServiceProvider<LuckPerms> provider = getServer().getServicesManager().getRegistration(LuckPerms.class);
-        if (provider != null) {
-            luck = provider.getProvider();
-            return;
-        }
-        Bukkit.getLogger().log(Level.WARNING, "Couldn't get " + name + " provider");
-    }
-
-    private void setupPAPI() {
-        Plugin setupPlugin = getServer().getPluginManager().getPlugin("PlaceholderAPI");
-        if(setupPlugin != null) {
-            isPAPIEnabled = setupPlugin.isEnabled();
-        }
-    }
 
     private void setupModules(Set<Class<? extends ModuleClass>> modules) {
 
         for (Class<? extends ModuleClass> moduleClass : modules) {
             try {
                 ModuleClass module = moduleClass.getConstructor().newInstance();
-                if (module != null)
-                    this.modules.add(module);
 
+                this.modules.add(module);
             } catch (InstantiationException |
                      IllegalAccessException |
                      NoSuchMethodException |
@@ -176,25 +128,19 @@ public class WisecraftSMP extends JavaPlugin {
                 e.printStackTrace();
             }
 
-            // setup modules
-            if (moduleConfig.get(modulePath.split("\\.")[0]) != null) {
-                setupModuleConfig();
-            } else {
-                setupModulesFromConfig();
-            }
         }
     }
 
     private void setupModulesFromConfig() {
-        MemorySection mem = (MemorySection) moduleConfig.get(getModulePath().split("\\.")[0]);
+        MemorySection mem = (MemorySection) moduleConfig.get(getModulePath());
         ArrayList<String> modulesInConfig = new ArrayList<>(mem.getKeys(false));
 
 
         // Getting missing IDs
         ArrayList<Long> IDs = new ArrayList<>();
         modulesInConfig.forEach(module -> {
-            if (moduleConfig.get(getModulePath() + module + ".id") != null) {
-                IDs.add(moduleConfig.getLong(getModulePath() + module + ".id"));
+            if (moduleConfig.get(UtilModuleCommon.getSetting(module, ModuleSettings.ID)) != null) {
+                IDs.add(moduleConfig.getLong(UtilModuleCommon.getSetting(module, ModuleSettings.ID)));
             }
         });
         ArrayList<Long> missingIDS = new ArrayList<>();
@@ -229,8 +175,8 @@ public class WisecraftSMP extends JavaPlugin {
         }
         // Adding modules to config
         for (Map.Entry<Long, ModuleClass> module : mapModulesToBeAdded.entrySet()) {
-            moduleConfig.set(UtilModule.getSetting(module.getValue(), ModuleSettings.ENABLED), isModulesEnabledByDefault);
-            moduleConfig.set(UtilModule.getSetting(module.getValue(), ModuleSettings.ID), module.getKey());
+            moduleConfig.set(UtilModuleCommon.getSetting(module.getValue(), ModuleSettings.ENABLED), isModulesEnabledByDefault);
+            moduleConfig.set(UtilModuleCommon.getSetting(module.getValue(), ModuleSettings.ID), module.getKey());
         }
 
         // Check if unused module configurations should be removed
@@ -245,7 +191,7 @@ public class WisecraftSMP extends JavaPlugin {
         });
 
         for (String module : modulesToBeRemoved) {
-            moduleConfig.set(modulePath + module, null);
+            moduleConfig.set(getModulePath() + "." + module, null);
         }
 
     }
@@ -254,8 +200,8 @@ public class WisecraftSMP extends JavaPlugin {
         for (int i = 0; i < modules.size(); i++) {
             ModuleClass module = modules.get(i);
 
-            moduleConfig.set(UtilModule.getSetting(module, ModuleSettings.ENABLED), isModulesEnabledByDefault);
-            moduleConfig.set(UtilModule.getSetting(module, ModuleSettings.ID), i);
+            moduleConfig.set(UtilModuleCommon.getSetting(module, ModuleSettings.ENABLED), isModulesEnabledByDefault);
+            moduleConfig.set(UtilModuleCommon.getSetting(module, ModuleSettings.ID), i);
             module.startModule();
         }
     }
@@ -282,7 +228,7 @@ public class WisecraftSMP extends JavaPlugin {
      * @return module path for config.
      */
     public String getModulePath() {
-        return modulePath;
+        return ModuleSettings.PATH.toString();
     }
 
     /**
@@ -293,38 +239,6 @@ public class WisecraftSMP extends JavaPlugin {
         return instance;
     }
 
-    /**
-     * Returns the Essentials plugin instance.
-     * @return Essentials plugin instance.
-     */
-    public static IEssentials getEss() {
-        return instance.ess;
-    }
-
-    /**
-     * Returns the WisecraftCoreApi instance.
-     * @return WisecraftCoreApi instance.
-     */
-    public static WisecraftCoreApi getCore() {
-        return instance.core;
-    }
-
-    /**
-     * Returns the LuckPerms instance.
-     * @return LuckPerms instance.
-     */
-    public static LuckPerms getLuck() {
-        return instance.luck;
-    }
-
-    /**
-     * Returns the modules list.
-     * @return modules list.
-     */
-    public boolean isTimberEnabled() {
-        return isTimberEnabled;
-    }
-
     public File getModuleConfigFile() {
         return moduleConfigFile;
     }
@@ -333,7 +247,4 @@ public class WisecraftSMP extends JavaPlugin {
         return isTesting;
     }
 
-    public boolean isPAPIEnabled() {
-        return isPAPIEnabled;
-    }
 }

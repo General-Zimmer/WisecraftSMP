@@ -30,15 +30,16 @@ public class Angel {
     private int graces;
     private boolean hasDied = false;
     private final WisecraftSMP plugin;
-    private final IEssentials ess = WisecraftSMP.getEss();
+    private final IEssentials ess;
     private final HashMap<UUID, Angel> angels = OtherStorage.getAngels();
 
     /**
      * Get the amount of graces the player has left
      * @param hasDonator If the player has donator
      */
-    public Angel(boolean hasDonator) {
+    public Angel(IEssentials ess, boolean hasDonator) {
         plugin = WisecraftSMP.getInstance();
+        this.ess = ess;
         this.resetGrace(hasDonator);
     }
 

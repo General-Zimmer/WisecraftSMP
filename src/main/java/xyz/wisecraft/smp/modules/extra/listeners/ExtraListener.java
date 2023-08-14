@@ -52,10 +52,6 @@ public class ExtraListener implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
 
-        if (!angels.containsKey(p.getUniqueId()))
-            angels.put(p.getUniqueId(), new Angel(p.hasPermission("wisecraft.donator")));
-
-
         new BukkitRunnable() {
             @Override
             public void run() {

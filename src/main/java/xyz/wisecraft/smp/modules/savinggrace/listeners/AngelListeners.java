@@ -32,8 +32,8 @@ public class AngelListeners implements Listener {
     /**
      * Constructor for the class.
      */
-    public AngelListeners() {
-        this.ess = WisecraftSMP.getEss();
+    public AngelListeners(IEssentials ess) {
+        this.ess = ess;
         this.angels = OtherStorage.getAngels();
 
     }
@@ -47,7 +47,7 @@ public class AngelListeners implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
         if (!angels.containsKey(p.getUniqueId())) {
-            Angel angel = new Angel(p.hasPermission("wisecraft.donator"));
+            Angel angel = new Angel(ess, p.hasPermission("wisecraft.donator"));
             angels.put(p.getUniqueId(), angel);
         }
 
