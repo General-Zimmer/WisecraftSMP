@@ -9,6 +9,7 @@ import org.bukkit.Material;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
 import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
 import xyz.wisecraft.smp.WisecraftSMP;
+import xyz.wisecraft.smp.modules.advancements.AdvancementsModule;
 import xyz.wisecraft.smp.modules.advancements.adv.AdvancementTabNamespaces;
 import xyz.wisecraft.smp.modules.advancements.util.UtilAdv;
 
@@ -20,7 +21,7 @@ public class Expertlumb extends BaseAdvancement implements ParentGrantedVisibili
   public Expertlumb(Advancement parent, float x, float y) {
     super(KEY.getKey(), new AdvancementDisplay(Material.IRON_AXE, "Lumber expert", AdvancementFrameType.CHALLENGE, true, true, x, y , "Expert with 10000 trees cut down!"), parent, 10000);
 
-    if (WisecraftSMP.getInstance().isTimberEnabled())
+    if (AdvancementsModule.getModule().isTimberEnabled())
       registerEvent(TreeFellEvent.class, e -> UtilAdv.checkTimber(e, this));
   }
 }

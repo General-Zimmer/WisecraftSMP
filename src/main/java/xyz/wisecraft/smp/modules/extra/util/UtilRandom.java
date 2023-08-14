@@ -7,7 +7,6 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.wisecraft.smp.WisecraftSMP;
 
@@ -16,29 +15,30 @@ import java.util.ArrayList;
 /**
  * A class for random utilities
  */
-public class UtilRandom {
+public abstract class UtilRandom {
 
     /**
      * Teleports the player to the world
      * @param world the world to teleport to
      * @param sender the player to teleport
      */
-    public static void tpworld(World world, CommandSender sender) {
+    public static void tpworld(IEssentials ess, World world, CommandSender sender, boolean isMultiverseEnabled) {
         WisecraftSMP plugin = WisecraftSMP.getInstance();
-        IEssentials ess = WisecraftSMP.getEss();
 
         if (world == null) {
             sender.sendMessage(ChatColor.RED + "World does not exist");
             return;
         }
         sender.sendMessage(ChatColor.GOLD + "Teleporting to " + world.getName() + " in 1 second(s)");
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                setBack(ess, Bukkit.getPlayerExact(sender.getName()));
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "mvtp " + sender.getName() + " " + world.getName());
-            }
-        }.runTaskLater(plugin, 20);
+
+        if (isMultiverseEnabled)
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    setBack(ess, Bukkit.getPlayerExact(sender.getName()));
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "mvtp " + sender.getName() + " " + world.getName());
+                }
+            }.runTaskLater(plugin, 20);
 
 
     }
@@ -51,8 +51,6 @@ public class UtilRandom {
     public static void setBack(IEssentials ess, Player p) {
         if (ess != null)
             ess.getUser(p).setLastLocation();
-        else
-            Bukkit.getConsoleSender().sendMessage("Ess is null - wc SMP");
     }
 
     /**
@@ -130,6 +128,5 @@ public class UtilRandom {
 
         return containers;
     }
-
 
 }

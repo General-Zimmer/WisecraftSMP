@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerLevelChangeEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.wisecraft.smp.WisecraftSMP;
+import xyz.wisecraft.smp.modules.advancements.AdvancementsModule;
 import xyz.wisecraft.smp.storage.OtherStorage;
 
 import java.util.Date;
@@ -25,7 +26,7 @@ import java.util.UUID;
 public abstract class UtilAdv {
 
     private static final WisecraftSMP plugin = WisecraftSMP.getPlugin(WisecraftSMP.class);
-    private static final LuckPerms luck = WisecraftSMP.getLuck();
+    private static final LuckPerms luck = AdvancementsModule.getModule().getLuck();
 
     //todo move methods expected to be used once to UtilAdvRandom and rename this UtilAdvCommon
 
@@ -146,7 +147,7 @@ public abstract class UtilAdv {
         UUID UUID = p.getUniqueId();
 
 
-        int treesTimbered = WisecraftSMP.getCore().getInfom().get(UUID).getTimber();
+        int treesTimbered = AdvancementsModule.getModule().getCore().getInfom().get(UUID).getTimber();
 
         if (treesTimbered >= adv.getMaxProgression()) {
             adv.setProgression(p, adv.getMaxProgression());

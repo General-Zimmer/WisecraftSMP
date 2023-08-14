@@ -9,6 +9,7 @@ import com.fren_gor.ultimateAdvancementAPI.util.AdvancementKey;
 import com.fren_gor.ultimateAdvancementAPI.visibilities.VanillaVisibility;
 import org.bukkit.Material;
 import xyz.wisecraft.smp.WisecraftSMP;
+import xyz.wisecraft.smp.modules.advancements.AdvancementsModule;
 import xyz.wisecraft.smp.modules.advancements.adv.AdvancementTabNamespaces;
 import xyz.wisecraft.smp.modules.advancements.util.UtilAdv;
 
@@ -20,7 +21,7 @@ public class Lumberjack extends BaseAdvancement implements VanillaVisibility {
   public Lumberjack(Advancement parent, float x, float y) {
     super(KEY.getKey(), new AdvancementDisplay(Material.WOODEN_AXE, "Lumber Jack", AdvancementFrameType.GOAL, true, true, x, y , "I am a Jack, and I'm cutting cutting logs (1000 of them)"), parent, 1000);
 
-    if (WisecraftSMP.getInstance().isTimberEnabled())
+    if (AdvancementsModule.getModule().isTimberEnabled())
       registerEvent(TreeFellEvent.class, e -> UtilAdv.checkTimber(e, this));
   }
 }

@@ -19,9 +19,9 @@ public class LegacyRoles implements Listener {
     /**
      * Constructor
      */
-    public LegacyRoles() {
+    public LegacyRoles(LuckPerms luck) {
         this.plugin = WisecraftSMP.getInstance();
-        this.luck = WisecraftSMP.getLuck();
+        this.luck = luck;
     }
 
 

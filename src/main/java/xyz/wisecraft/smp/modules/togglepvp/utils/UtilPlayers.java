@@ -1,6 +1,7 @@
 package xyz.wisecraft.smp.modules.togglepvp.utils;
 
 import com.nametagedit.plugin.NametagEdit;
+import com.nametagedit.plugin.api.INametagApi;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -10,6 +11,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.wisecraft.smp.WisecraftSMP;
+import xyz.wisecraft.smp.modules.togglepvp.PvPToggleModule;
 import xyz.wisecraft.smp.modules.togglepvp.storage.PVPStorage;
 
 
@@ -23,8 +25,8 @@ import java.util.UUID;
  * Utility class for player related methods.
  */
 public abstract class UtilPlayers {
-	private static final WisecraftSMP instance = WisecraftSMP.getInstance();
-	private static final FileConfiguration config = instance.getConfig();
+	private static final WisecraftSMP plugin = WisecraftSMP.getInstance();
+	private static final FileConfiguration config = plugin.getConfig();
 	private static final HashMap<UUID, Boolean> pvpPlayers = PVPStorage.getPVPPlayers();
 	private static final List<String> blockedWorlds = PVPStorage.getBlockedWorlds();
 	private static final HashMap<UUID, Date> cooldowns = PVPStorage.getCooldowns();
@@ -132,13 +134,15 @@ public abstract class UtilPlayers {
 	 * @param color Color to change nametag to
 	 */
 	public static void ChangeNametag(Player p, String color) {
-		if(instance.getServer().getPluginManager().isPluginEnabled("NametagEdit")) {
-			if(color.equals("reset")) {
-				NametagEdit.getApi().clearNametag(p);
-			} else {
-				NametagEdit.getApi().setPrefix(p, color);
-			}	
+		INametagApi nameAPI = PvPToggleModule.getModule().getNametagAPI();
+		if(nameAPI == null) {return;}
+
+		if(color.equals("reset")) {
+			nameAPI.clearNametag(p);
+		} else {
+			nameAPI.setPrefix(p, color);
 		}
+
 	}
 
 	/**
@@ -168,7 +172,7 @@ public abstract class UtilPlayers {
 				
 			}
 			
-		}.runTaskTimer(instance, 0L, 2L);
+		}.runTaskTimer(plugin, 0L, 2L);
 	}
 	
 }
