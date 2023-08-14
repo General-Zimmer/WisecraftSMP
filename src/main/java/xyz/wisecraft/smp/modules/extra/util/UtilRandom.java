@@ -22,7 +22,7 @@ public abstract class UtilRandom {
      * @param world the world to teleport to
      * @param sender the player to teleport
      */
-    public static void tpworld(IEssentials ess, World world, CommandSender sender) {
+    public static void tpworld(IEssentials ess, World world, CommandSender sender, boolean isMultiverseEnabled) {
         WisecraftSMP plugin = WisecraftSMP.getInstance();
 
         if (world == null) {
@@ -30,13 +30,15 @@ public abstract class UtilRandom {
             return;
         }
         sender.sendMessage(ChatColor.GOLD + "Teleporting to " + world.getName() + " in 1 second(s)");
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                setBack(ess, Bukkit.getPlayerExact(sender.getName()));
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "mvtp " + sender.getName() + " " + world.getName());
-            }
-        }.runTaskLater(plugin, 20);
+
+        if (isMultiverseEnabled)
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    setBack(ess, Bukkit.getPlayerExact(sender.getName()));
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "mvtp " + sender.getName() + " " + world.getName());
+                }
+            }.runTaskLater(plugin, 20);
 
 
     }

@@ -13,6 +13,7 @@ public class ExtraModule implements xyz.wisecraft.smp.modulation.ModuleClass {
 
     IEssentials ess = setupDependency("Essentials", IEssentials.class);
     WisecraftCoreApi core = setupDependency(WisecraftCoreApi.class);
+    boolean isMultiverseEnabled = setupDependency("Multiverse-Core");
     @Override
     public void onEnable() {
 
@@ -20,12 +21,12 @@ public class ExtraModule implements xyz.wisecraft.smp.modulation.ModuleClass {
 
     @Override
     public void registerEvents() {
-        plugin.getServer().getPluginManager().registerEvents(new ExtraListener(), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new ExtraListener(isMultiverseEnabled), plugin);
     }
 
     @Override
     public void registerCommands() {
-        WisecraftCMD wiseCMD = new WisecraftCMD(core, ess);
+        WisecraftCMD wiseCMD = new WisecraftCMD(core, ess, isMultiverseEnabled);
         Objects.requireNonNull(plugin.getCommand("wisecraft"), "command isn't registered").setExecutor(wiseCMD);
         Objects.requireNonNull(plugin.getCommand("wshop"), "command isn't registered").setExecutor(wiseCMD);
     }

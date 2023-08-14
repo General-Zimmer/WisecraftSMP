@@ -1,6 +1,8 @@
 package xyz.wisecraft.smp.modules.togglepvp;
 
 import com.craftaro.ultimatetimber.UltimateTimber;
+import com.nametagedit.plugin.NametagEdit;
+import com.nametagedit.plugin.api.INametagApi;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import org.bukkit.Bukkit;
@@ -20,9 +22,15 @@ import java.util.Objects;
  */
 public class PvPToggleModule implements xyz.wisecraft.smp.modulation.ModuleClass {
 
+    private static PvPToggleModule module;
     private final boolean isTimberEnabled = setupDependency("UltimateTimber", UltimateTimber.class) != null;
     private final boolean isPAPIEnabled = setupDependency("PlaceholderAPI", PlaceholderAPIPlugin.class) != null;
+    private final INametagApi nametagAPI = (setupDependency("NametagEdit", NametagEdit.class) != null ? NametagEdit.getApi() : null);
     private final WisecraftCoreApi core = setupDependency(WisecraftCoreApi.class);
+
+    public PvPToggleModule() {
+        module = this;
+    }
 
     @Override
     public void onEnable() {
@@ -56,5 +64,13 @@ public class PvPToggleModule implements xyz.wisecraft.smp.modulation.ModuleClass
         if(isPAPIEnabled) {
             new PlaceholderAPIHook().register();
         }
+    }
+
+    public INametagApi getNametagAPI() {
+        return nametagAPI;
+    }
+
+    public static PvPToggleModule getModule() {
+        return module;
     }
 }

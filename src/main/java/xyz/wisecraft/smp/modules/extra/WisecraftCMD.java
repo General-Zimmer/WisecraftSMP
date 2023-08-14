@@ -22,13 +22,15 @@ public class WisecraftCMD implements TabExecutor {
 
     private final WisecraftCoreApi core;
     private final IEssentials ess;
+    private boolean isMultiverseEnabled;
 
     /**
      * Constructor
      */
-    public WisecraftCMD(WisecraftCoreApi core, IEssentials ess) {
+    public WisecraftCMD(WisecraftCoreApi core, IEssentials ess, boolean isMultiverseEnabled) {
         this.core = core;
         this.ess = ess;
+        this.isMultiverseEnabled = isMultiverseEnabled;
     }
 
     @Override
@@ -39,7 +41,7 @@ public class WisecraftCMD implements TabExecutor {
         if (p == null) return true;
 
         if (cmd.getName().equals("wshop")) {
-            UtilRandom.tpworld(ess, Bukkit.getWorld("shop"), p);
+            UtilRandom.tpworld(ess, Bukkit.getWorld("shop"), p, isMultiverseEnabled);
             return true;
         }
 
@@ -52,7 +54,7 @@ public class WisecraftCMD implements TabExecutor {
 
             switch (args[0]) {
                 case "shop", "tutorial" -> {
-                    UtilRandom.tpworld(ess, Bukkit.getWorld(args[0]), p);
+                    UtilRandom.tpworld(ess, Bukkit.getWorld(args[0]), p, isMultiverseEnabled);
                     return true;
                 }
                 case "save" -> {

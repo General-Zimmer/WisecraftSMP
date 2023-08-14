@@ -22,6 +22,11 @@ import java.util.UUID;
  */
 public class ExtraListener implements Listener {
     private final WisecraftSMP plugin = WisecraftSMP.getInstance();
+    private boolean isMultiverseEnabled;
+
+    public ExtraListener(boolean isMultiverseEnabled) {
+        this.isMultiverseEnabled = isMultiverseEnabled;
+    }
 
     /**
      * Prevents players from finishing the tutorial.
@@ -50,12 +55,13 @@ public class ExtraListener implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
 
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (!p.hasPlayedBefore() && Bukkit.getWorld("tutorial") != null)
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "mvtp " + p.getName() + " tutorial");
-            }
-        }.runTaskLater(plugin, 4);
+        if (isMultiverseEnabled)
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    if (!p.hasPlayedBefore() && Bukkit.getWorld("tutorial") != null)
+                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "mvtp " + p.getName() + " tutorial");
+                }
+            }.runTaskLater(plugin, 4);
     }
 }

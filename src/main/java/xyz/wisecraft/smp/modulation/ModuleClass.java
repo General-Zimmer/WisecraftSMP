@@ -1,5 +1,6 @@
 package xyz.wisecraft.smp.modulation;
 
+import org.bukkit.plugin.Plugin;
 import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.modulation.storage.ModulationStorage;
 import xyz.wisecraft.smp.modulation.storage.ModuleSettings;
@@ -68,6 +69,19 @@ public interface ModuleClass extends Comparable<ModuleClass> {
         if (dependency != null) return dependency;
 
         return UtilModuleCommon.setupDependency(pluginName, clazz);
+    }
+
+    /**
+     * Sets up a dependency. This method only validates if the plugin is enabled.
+     * @param pluginName The name of the plugin.
+     * @return true if the plugin is enabled.
+     */
+    default boolean setupDependency(String pluginName) {
+
+        Plugin setupPlugin = plugin.getServer().getPluginManager().getPlugin(pluginName);
+        if (setupPlugin == null) {return false;}
+        return setupPlugin.isEnabled();
+
     }
 
     /**
