@@ -18,26 +18,6 @@ public interface ModuleClass extends Comparable<ModuleClass> {
     WisecraftSMP plugin = WisecraftSMP.getInstance();
 
     /**
-     * This method is called when the module is starting.
-     */
-    default boolean startModule() {
-
-        if (!isModuleEnabled() && !hasAllHardDependencies()) return false;
-
-        onEnable();
-        registerEvents();
-        registerCommands();
-        return true;
-    }
-
-    /**
-     * This method is called when the module is shutting down.
-     */
-    default void stopModule() {
-        onDisable();
-    }
-
-    /**
      * This method should have all the startup code for the module.
      */
     void onEnable();
@@ -122,7 +102,6 @@ public interface ModuleClass extends Comparable<ModuleClass> {
         return null;
     }
 
-
     /**
      * Gets the module ID. Will return -1 if the id does not exist.
      * @return The module ID.
@@ -147,6 +126,29 @@ public interface ModuleClass extends Comparable<ModuleClass> {
         return plugin.getModuleConfig().getBoolean(UtilModuleCommon.getSetting(this, ModuleSettings.ENABLED));
     }
 
+    /**
+     * This method is called when the module is starting up.
+     * @return true if the module was enabled.
+     */
+    default boolean startModule() {
+
+        boolean moduleEnabled = !isModuleEnabled();
+        boolean moduleHasAllHardDependencies = !hasAllHardDependencies();
+
+        if (moduleEnabled || moduleHasAllHardDependencies) return false;
+
+        onEnable();
+        registerEvents();
+        registerCommands();
+        return true;
+    }
+
+    /**
+     * This method is called when the module is shutting down.
+     */
+    default void stopModule() {
+        onDisable();
+    }
 
     /**
      * Compares the module ID of this module to another module.
