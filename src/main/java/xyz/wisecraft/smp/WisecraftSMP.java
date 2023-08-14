@@ -68,8 +68,8 @@ public class WisecraftSMP extends JavaPlugin {
 
 
         // Config stuff
-        createModuleConfig();
         this.saveDefaultConfig();
+        createModuleConfig();
         OtherStorage.setServer_name(this.getConfig().getString("server_name"));
 
         isModulesEnabledByDefault = moduleConfig.getBoolean("IsModulesEnabledByDefault", false);
@@ -81,11 +81,8 @@ public class WisecraftSMP extends JavaPlugin {
         setupModules(reflections.getSubTypesOf(ModuleClass.class));
 
         // setup modules
-        if (moduleConfig.get(getModulePath()) != null) {
-            setupModuleConfig();
-        } else {
-            setupModulesFromConfig();
-        }
+        setupModulesFromConfig();
+
 
         ArrayList<ModuleClass> unsortedModules = getModules();
         ArrayList<ModuleClass> sortedModules = new ArrayList<>();
@@ -105,7 +102,7 @@ public class WisecraftSMP extends JavaPlugin {
                         sortedModules.add(dependModule);
                         unsortedModules.remove(dependModule);
                     } else {
-                        throw new RuntimeException("Module " + currentModule.getModuleName() +
+                        throw new RuntimeException("Module: " + currentModule.getModuleName() +
                                 " has one or more level 2+ dependencies. This is not supported yet.");
                     }
                 }
@@ -155,6 +152,10 @@ public class WisecraftSMP extends JavaPlugin {
 
     private void setupModulesFromConfig() {
         MemorySection mem = (MemorySection) moduleConfig.get(getModulePath());
+        if (mem == null) {
+            setupModuleConfig();
+            return;
+        }
         ArrayList<String> modulesInConfig = new ArrayList<>(mem.getKeys(false));
 
 
