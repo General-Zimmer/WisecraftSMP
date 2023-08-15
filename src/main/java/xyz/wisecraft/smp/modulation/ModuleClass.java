@@ -131,11 +131,9 @@ public interface ModuleClass extends Comparable<ModuleClass> {
      * @return true if the module was enabled.
      */
     default boolean startModule() {
+        
 
-        boolean moduleEnabled = !isModuleEnabled();
-        boolean moduleHasAllHardDependencies = !hasAllHardDependencies();
-
-        if (moduleEnabled || moduleHasAllHardDependencies) return false;
+        if (!isModuleEnabled() || !hasAllHardDependencies()) return false;
 
         onEnable();
         registerEvents();
