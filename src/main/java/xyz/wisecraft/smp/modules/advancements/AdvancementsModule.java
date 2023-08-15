@@ -11,7 +11,6 @@ import com.fren_gor.ultimateAdvancementAPI.util.CoordAdapter;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Material;
 import wtf.choco.veinminer.VeinMinerPlugin;
-import xyz.wisecraft.core.WisecraftCore;
 import xyz.wisecraft.core.WisecraftCoreApi;
 import xyz.wisecraft.smp.modules.advancements.adv.AdvancementTabNamespaces;
 import xyz.wisecraft.smp.modules.advancements.adv.common_quests.*;
@@ -73,8 +72,8 @@ public class AdvancementsModule implements xyz.wisecraft.smp.modulation.ModuleCl
         // Check for new citizens. This is async right after this step.
         String servName = OtherStorage.getServer_name();
         if (servName.equalsIgnoreCase("l-gp1")  || servName.equalsIgnoreCase("legacy")) {
-            new GibRoles(core, luck).runTaskTimer(plugin, 18000, 18000);
-            plugin.getServer().getPluginManager().registerEvents(new LegacyRoles(luck), plugin);
+            new GibRoles(core, luck).runTaskTimer(plugin, 20*60*10, 20*60*10);
+            plugin.getServer().getPluginManager().registerEvents(new LegacyRoles(), plugin);
             legacy.automaticallyShowToPlayers();
             legacy.automaticallyGrantRootAdvancement();
         }
