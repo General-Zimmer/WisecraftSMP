@@ -17,7 +17,9 @@ public class Cit_Dia_pick extends TaskAdvancement {
 
     registerEvent(PlayerInventorySlotChangeEvent.class, e -> {
       Player p = e.getPlayer();
-      if (e.getNewItemStack().getType().toString().contains("DIAMOND_PICKAXE")) {
+      String item = e.getNewItemStack().getType().toString();
+
+      if (item.contains("DIAMOND_PICKAXE") || item.contains("NETHERITE_PICKAXE")) {
         incrementProgression(p);
       }
     });
