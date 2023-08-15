@@ -115,7 +115,7 @@ public class WisecraftSMP extends JavaPlugin {
         for (ModuleClass module : sortedModules)
             if (module.startModule())
                 modules.add(module);
-        
+
         try {
             moduleConfig.save(moduleConfigFile);
         } catch (IOException e) {
@@ -148,7 +148,6 @@ public class WisecraftSMP extends JavaPlugin {
                      InvocationTargetException e) {
                 e.printStackTrace();
             }
-
         }
     }
 
