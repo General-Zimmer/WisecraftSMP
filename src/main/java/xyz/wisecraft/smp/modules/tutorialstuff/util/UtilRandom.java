@@ -1,4 +1,4 @@
-package xyz.wisecraft.smp.modules.extra.util;
+package xyz.wisecraft.smp.modules.tutorialstuff.util;
 
 import net.ess3.api.IEssentials;
 import org.bukkit.Bukkit;

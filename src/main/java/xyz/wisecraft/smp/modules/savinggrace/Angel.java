@@ -10,14 +10,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.wisecraft.smp.WisecraftSMP;
-import xyz.wisecraft.smp.modules.extra.util.UtilRandom;
+import xyz.wisecraft.smp.modules.tutorialstuff.util.UtilRandom;
 import xyz.wisecraft.smp.storage.OtherStorage;
 
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static xyz.wisecraft.smp.modules.extra.util.UtilRandom.getToolTypes;
+import static xyz.wisecraft.smp.modules.tutorialstuff.util.UtilRandom.getToolTypes;
 
 /**
  * Class for the Angel object.
