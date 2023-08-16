@@ -27,7 +27,7 @@ import java.util.UUID;
  */
 public class PvPListener implements Listener {
 
-	private final WisecraftSMP instance = WisecraftSMP.getInstance();
+	private final WisecraftSMP plugin = WisecraftSMP.getInstance();
 	private final HashMap<UUID, Boolean> pvpPlayers = PVPStorage.getPVPPlayers();
 	private final List<String> blockedWorlds = PVPStorage.getBlockedWorlds();
 
@@ -189,7 +189,7 @@ public class PvPListener implements Listener {
 	public void onLightningStrike(LightningStrikeEvent e){
 		if(e.getCause() == LightningStrikeEvent.Cause.TRIDENT){
 			e.getLightning().setMetadata("TRIDENT", new FixedMetadataValue(
-					instance, e.getLightning().getLocation()
+					plugin, e.getLightning().getLocation()
 			));
 		}
 	}

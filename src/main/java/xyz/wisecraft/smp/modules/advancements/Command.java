@@ -1,8 +1,10 @@
 package xyz.wisecraft.smp.modules.advancements;
 
+import net.luckperms.api.LuckPerms;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.jetbrains.annotations.NotNull;
+import xyz.wisecraft.core.WisecraftCoreApi;
 import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.modules.advancements.threads.GibRoles;
 
@@ -16,6 +18,14 @@ public class Command implements TabExecutor {
 
     private final WisecraftSMP plugin = WisecraftSMP.getInstance();
 
+    private final WisecraftCoreApi core;
+    private final LuckPerms luck;
+
+    public Command(WisecraftCoreApi core, LuckPerms luck) {
+        this.core = core;
+        this.luck = luck;
+    }
+
     @Override
     public boolean onCommand(CommandSender sender,
                              @NotNull org.bukkit.command.Command cmd,
@@ -28,7 +38,7 @@ public class Command implements TabExecutor {
                 case "save" -> sender.sendMessage("Saving private Ryan");
                 case "load" -> sender.sendMessage("WOOO you tried to load");
                 case "rank" -> {
-                    new GibRoles().runTask(plugin);
+                    new GibRoles(core, luck).runTask(plugin);
                     sender.sendMessage("Auto citizen triggered");
                 }
             }

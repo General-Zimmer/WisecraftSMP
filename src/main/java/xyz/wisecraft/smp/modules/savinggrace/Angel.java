@@ -30,7 +30,6 @@ public class Angel {
     private int graces;
     private boolean hasDied = false;
     private final WisecraftSMP plugin;
-    private final IEssentials ess = WisecraftSMP.getEss();
     private final HashMap<UUID, Angel> angels = OtherStorage.getAngels();
 
     /**
@@ -82,11 +81,11 @@ public class Angel {
      * @param p Player
      * @throws Exception If the kit doesn't exist
      */
-    public void giveStarter(User user, Player p) throws Exception {
+    public void giveStarter(IEssentials ess, Player p) throws Exception {
         this.setDied(false);
         World tut = Bukkit.getWorld("tutorial");
         if (tut != null)
-            //todo Need a tick delay otherwise they will teleport to spawn. Need to figure out why
+            //todo Need a tick delay otherwise they will teleport to essentials spawn. Need to figure out why
             new BukkitRunnable() {
                 @Override
                 public void run() {
@@ -95,10 +94,16 @@ public class Angel {
                 }
             }.runTaskLater(plugin, 1);
 
-        Kit kit = new Kit("starter", ess);
-        kit.expandItems(user);
+
+        if (ess != null) {
+            User user = ess.getUser(p);
+            Kit kit = new Kit("starter", ess);
+            kit.expandItems(user);
+            p.sendMessage("You have been granted some new items.");
+        }
+
         angels.get(p.getUniqueId()).clear();
-        p.sendMessage(ChatColor.BLUE + "You didn't /sethome or place a bed! You have been granted some new items.");
+        p.sendMessage(ChatColor.BLUE + "You didn't /sethome or place a bed!");
     }
 
     /**

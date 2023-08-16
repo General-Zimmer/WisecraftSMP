@@ -6,6 +6,7 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.tasks.AbstractMultiTasksA
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import xyz.wisecraft.smp.WisecraftSMP;
+import xyz.wisecraft.smp.modules.advancements.AdvancementsModule;
 import xyz.wisecraft.smp.modules.advancements.adv.AdvancementTabNamespaces;
 
 import java.util.UUID;
@@ -23,7 +24,7 @@ public class Cit_block_break extends TaskAdvancement {
       UUID UUID = p.getUniqueId();
 
 
-      int blocksBroke = WisecraftSMP.getCore().getInfom().get(UUID).getBlocksBroke();
+      int blocksBroke = AdvancementsModule.getModule().getCore().getInfom().get(UUID).getBlocksBroke();
 
       if (blocksBroke >= getMaxProgression()) {
         setProgression(p, getMaxProgression());

@@ -32,8 +32,8 @@ public class AngelListeners implements Listener {
     /**
      * Constructor for the class.
      */
-    public AngelListeners() {
-        this.ess = WisecraftSMP.getEss();
+    public AngelListeners(IEssentials ess) {
+        this.ess = ess;
         this.angels = OtherStorage.getAngels();
 
     }
@@ -87,12 +87,16 @@ public class AngelListeners implements Listener {
         UUID UUID = p.getUniqueId();
         Angel angel = angels.get(UUID);
 
+        boolean hasHome = false;
+
+        if (ess != null)
+            hasHome = ess.getUser(e.getPlayer()).hasHome();
+
         //Does dis person have home?
-        User user = ess.getUser(e.getPlayer());
-        if (user.hasHome() || e.isBedSpawn() || e.isAnchorSpawn()) {
+        if (hasHome || e.isBedSpawn() || e.isAnchorSpawn()) {
             angel.giveGrace(e);
         } else {
-            angels.get(e.getPlayer().getUniqueId()).giveStarter(user, e.getPlayer());
+            angels.get(e.getPlayer().getUniqueId()).giveStarter(ess, e.getPlayer());
         }
 
 

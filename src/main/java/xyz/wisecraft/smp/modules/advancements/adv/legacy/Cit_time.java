@@ -6,6 +6,7 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.tasks.AbstractMultiTasksA
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockPlaceEvent;
 import xyz.wisecraft.smp.WisecraftSMP;
+import xyz.wisecraft.smp.modules.advancements.AdvancementsModule;
 import xyz.wisecraft.smp.modules.advancements.adv.AdvancementTabNamespaces;
 
 import java.util.UUID;
@@ -23,7 +24,7 @@ public class Cit_time extends TaskAdvancement {
       UUID UUID = p.getUniqueId();
 
 
-      int time = WisecraftSMP.getCore().getInfom().get(UUID).getTime();
+      int time = AdvancementsModule.getModule().getCore().getInfom().get(UUID).getTime();
 
       if (time >= getMaxProgression()) {
         setProgression(p, getMaxProgression());

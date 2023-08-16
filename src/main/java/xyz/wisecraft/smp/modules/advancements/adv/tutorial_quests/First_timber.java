@@ -10,6 +10,7 @@ import com.fren_gor.ultimateAdvancementAPI.visibilities.VanillaVisibility;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import xyz.wisecraft.smp.WisecraftSMP;
+import xyz.wisecraft.smp.modules.advancements.AdvancementsModule;
 import xyz.wisecraft.smp.modules.advancements.adv.AdvancementTabNamespaces;
 
 public class First_timber extends BaseAdvancement implements VanillaVisibility {
@@ -20,7 +21,7 @@ public class First_timber extends BaseAdvancement implements VanillaVisibility {
   public First_timber(Advancement parent, float x, float y) {
     super(KEY.getKey(), new AdvancementDisplay(Material.WOODEN_AXE, "TIIIMBBEEER!", AdvancementFrameType.TASK, true, false, x, y , "Is going down! "), parent, 1);
 
-    if (WisecraftSMP.getInstance().isTimberEnabled())
+    if (AdvancementsModule.getModule().isTimberEnabled())
       registerEvent(TreeFellEvent.class, e -> {
         Player p = e.getPlayer();
         incrementProgression(p);
