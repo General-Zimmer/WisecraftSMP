@@ -1,6 +1,7 @@
 package xyz.wisecraft.smp.modules.cropharvester;
 
 import org.bukkit.Material;
+import xyz.wisecraft.smp.modules.cropharvester.listener.CropTrampleListener;
 import xyz.wisecraft.smp.modules.cropharvester.listener.HarvestListener;
 import xyz.wisecraft.smp.storage.OtherStorage;
 
@@ -26,6 +27,7 @@ public class CropHarvesterModule implements xyz.wisecraft.smp.modulation.ModuleC
     @Override
     public void registerEvents() {
         plugin.getServer().getPluginManager().registerEvents(new HarvestListener(), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new CropTrampleListener(), plugin);
     }
 
 }

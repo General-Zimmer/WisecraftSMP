@@ -42,12 +42,9 @@ public abstract class UtilRandom {
      * @param player Player to get mainhand item from
      */
     public static void farmCropWithHoeIfMaxAgeOnLocation(Location mainLocation, int x, int y, int z, ItemStack item, Player player) {
-        boolean gpEnabled = plugin.isGriefPreventionEnabled();
-        boolean tgEnabled = plugin.isWorldGuardEnabled();
-        boolean twEnabled = plugin.isTownyEnabled();
 
         boolean blockWasBroken = false;
-        GriefPreventionProtection gpp = new GriefPreventionProtection(plugin);
+
 
         Location checkLocation = new Location(mainLocation.getWorld(),
                 (mainLocation.getX() + x), mainLocation.getY() + y, mainLocation.getZ() + z);
@@ -57,35 +54,22 @@ public abstract class UtilRandom {
             return;
         }
 
-        Material blockMaterial = currentBlock.getBlockData().getMaterial();
         ProtectionQuery pq = new ProtectionQuery();
 
+        Material blockMaterial = currentBlock.getBlockData().getMaterial();
+
+        /*
         boolean townyCanDestroy = PlayerCacheUtil.getCachePermission(player, currentBlock.getLocation(), currentBlock.getType(), TownyPermission.ActionType.DESTROY);
-        boolean blockIsMaxAge = getAgeAbleFromBlock(currentBlock).getAge() == getAgeAbleFromBlock(currentBlock).getMaximumAge();
+        boolean griefCheck = griefClaimCheck(checkLocation, player); // GriefPrevention
+        boolean blockCanBreakYes = pq.testBlockBreak(player, currentBlock); // World Guard
 
-        ArrayList<Boolean> farmChecksArrayList = new ArrayList<>();
-        if (gpEnabled) {
-            farmChecksArrayList.add(gpp.canBreak(player, checkLocation));
-        }
-        if (tgEnabled) {
-            farmChecksArrayList.add(pq.testBlockBreak(player, currentBlock));
-        }
-        if (twEnabled) {
-            farmChecksArrayList.add(townyCanDestroy);
-        }
-        farmChecksArrayList.add(blockIsMaxAge);
+         */
+        boolean townyCanDestroy = true;
+        boolean griefCheck = true;
+        boolean blockCanBreakYes = true;
 
-        boolean canDestroyBlock = true;
-        int i = 0;
-        while (canDestroyBlock && i < farmChecksArrayList.size()) {
-            if (!farmChecksArrayList.get(i)) {
-                canDestroyBlock = false;
-            }
-            i++;
-        }
-
-
-        if (canDestroyBlock) {
+        if (getAgeAbleFromBlock(currentBlock).getAge() == getAgeAbleFromBlock(currentBlock).getMaximumAge()
+                && griefCheck && blockCanBreakYes && townyCanDestroy) {
             currentBlock.breakNaturally(item);
             currentBlock.setType(blockMaterial);
             blockWasBroken = true;
@@ -154,61 +138,6 @@ public abstract class UtilRandom {
         }
 
 
-/*
-
-            if (!checkLocations[1]) { // Right check ... Z decreases
-                for (int i = -1; i >= width * (-1); i--) {
-                    checkLocation = mainLocation.add(0, 0, i);
-                    Block currentBlock = checkLocation.getBlock();
-
-                    if (currentBlock.getBlockData() instanceof Ageable) {
-                        locationsToBeFarmed.add(checkLocation);
-                        count++;
-                    }
-                }
-            }
-            player.sendMessage("Count: " + count);
-            count = 0;
-
-             */
-
-        /*
-           // Right check ... X increases
-                for (int i = 0; i < width; i++) {
-                    checkLocation = new Location(mainLocation.getWorld(),
-                            (mainLocation.getX() + i), mainLocation.getY(), mainLocation.getZ());
-                    Block currentBlock = checkLocation.getBlock();
-                    if (currentBlock.getBlockData() instanceof Ageable) {
-                        locationsToBeFarmed.add(checkLocation);
-                        count++;
-                    }
-                }
-
-
-            player.sendMessage("Count: " + count);
-            if (count < 4) {
-                count = 0;
-            } else {
-                checkLocations[0] = true;
-            }
-            if (count == 0) { // Left check ... X decreases
-            for (int i = 0; i > width * (-1); i--) {
-                checkLocation = new Location(mainLocation.getWorld(),
-                        (mainLocation.getX() + i), mainLocation.getY(), mainLocation.getZ());
-                Block currentBlock = checkLocation.getBlock();
-                if (currentBlock.getBlockData() instanceof Ageable) {
-                    locationsToBeFarmed.add(checkLocation);
-                    count++;
-                }
-            }
-                if (count < 4) {
-                    count = 0;
-                } else {
-                    checkLocations[1] = true;
-                }
-            }
-             */
-
     private static ArrayList<Location> findOptimalFarmingBlocks(Location mainLocation, int width, int height) {
             Location checkLocation = mainLocation;
             ArrayList<Location> finalFarmingList = new ArrayList<>();
@@ -231,6 +160,98 @@ public abstract class UtilRandom {
             }
         }
         return finalFarmingList;
+    }
+
+
+    // This is ze latest method
+    private static ArrayList<Location> findOptimalFarming(Location mainLocation, int width, int height) {
+        Location checkLocation = mainLocation;
+        ArrayList<Location> blocksToBeFarmed = new ArrayList<>();
+        ArrayList<Location> finalBlocksToBeFarmed = new ArrayList<>();
+        boolean farmingAreaFound = false;
+        int cropMax = width * height;
+
+        // Do things 4 times
+
+        // Left & up
+        for (int x = width * (-1) + 1; x < 1; x++) {
+
+            for (int z = 0; z < height; z++) {
+                checkLocation = new Location(mainLocation.getWorld(),
+                        (mainLocation.getX() + x), mainLocation.getY(), mainLocation.getZ() + z);
+                Block currentBlock = checkLocation.getBlock();
+                if (currentBlock.getBlockData() instanceof Ageable) {
+                    if (getAgeAbleFromBlock(currentBlock).getAge() == getAgeAbleFromBlock(currentBlock).getMaximumAge()) {
+                        blocksToBeFarmed.add(checkLocation);
+                    }
+                }
+            }
+        }
+            finalBlocksToBeFarmed.addAll(blocksToBeFarmed);
+            blocksToBeFarmed.clear();
+
+
+        // Left & down
+        for (int x = width * (-1) + 1; x < 1; x++) {
+
+            for (int z = height * (-1) + 1; z < 1; z++) {
+                checkLocation = new Location(mainLocation.getWorld(),
+                        (mainLocation.getX() + x), mainLocation.getY(), mainLocation.getZ() + z);
+                Block currentBlock = checkLocation.getBlock();
+                if (currentBlock.getBlockData() instanceof Ageable) {
+                    if (getAgeAbleFromBlock(currentBlock).getAge() == getAgeAbleFromBlock(currentBlock).getMaximumAge()) {
+                        blocksToBeFarmed.add(checkLocation);
+                    }
+                }
+            }
+        }
+        if (blocksToBeFarmed.size() > finalBlocksToBeFarmed.size()) {
+            finalBlocksToBeFarmed.clear();
+            finalBlocksToBeFarmed.addAll(blocksToBeFarmed);
+            blocksToBeFarmed.clear();
+        }
+
+        // Right & up
+        for (int x = 0; x < width; x++) {
+
+            for (int z = 0; z < height; z++) {
+                checkLocation = new Location(mainLocation.getWorld(),
+                        (mainLocation.getX() + x), mainLocation.getY(), mainLocation.getZ() + z);
+                Block currentBlock = checkLocation.getBlock();
+                if (currentBlock.getBlockData() instanceof Ageable) {
+                    if (getAgeAbleFromBlock(currentBlock).getAge() == getAgeAbleFromBlock(currentBlock).getMaximumAge()) {
+                        blocksToBeFarmed.add(checkLocation);
+                    }
+                }
+            }
+        }
+        if (blocksToBeFarmed.size() > finalBlocksToBeFarmed.size()) {
+            finalBlocksToBeFarmed.clear();
+            finalBlocksToBeFarmed.addAll(blocksToBeFarmed);
+            blocksToBeFarmed.clear();
+        }
+
+        // Right & down
+        for (int x = 0; x < width; x++) {
+
+            for (int z = height * (-1) + 1; z < 1; z++) {
+                checkLocation = new Location(mainLocation.getWorld(),
+                        (mainLocation.getX() + x), mainLocation.getY(), mainLocation.getZ() + z);
+                Block currentBlock = checkLocation.getBlock();
+                if (currentBlock.getBlockData() instanceof Ageable) {
+                    if (getAgeAbleFromBlock(currentBlock).getAge() == getAgeAbleFromBlock(currentBlock).getMaximumAge()) {
+                        blocksToBeFarmed.add(checkLocation);
+                    }
+                }
+            }
+        }
+        if (blocksToBeFarmed.size() > finalBlocksToBeFarmed.size()) {
+            finalBlocksToBeFarmed.clear();
+            finalBlocksToBeFarmed.addAll(blocksToBeFarmed);
+            blocksToBeFarmed.clear();
+        }
+
+        return finalBlocksToBeFarmed;
     }
     private static ArrayList<Location> checkFarmingBlocksInRow(Location mainLocation, int width, int height, int direction) {
         Location checkLocation = mainLocation;
@@ -267,18 +288,6 @@ public abstract class UtilRandom {
                     }
                 }
             }
-            /*
-            for (int i = directionFactorI; i <= directionFactorMax; i++) {
-                checkLocation = new Location(mainLocation.getWorld(),
-                        (mainLocation.getX() + i), mainLocation.getY(), mainLocation.getZ());
-                Block currentBlock = checkLocation.getBlock();
-                if (currentBlock.getBlockData() instanceof Ageable) {
-                    locationsToBeFarmed.add(checkLocation);
-                    count++;
-                }
-            }
-
-             */
         }
         if (direction == 3 || direction == 4) {
             for (int i = directionFactorI; i <= directionFactorMax; i++) {
