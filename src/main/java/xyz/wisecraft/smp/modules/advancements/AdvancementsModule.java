@@ -73,7 +73,7 @@ public class AdvancementsModule implements xyz.wisecraft.smp.modulation.ModuleCl
         String servName = OtherStorage.getServer_name();
         if (servName.equalsIgnoreCase("l-gp1")  || servName.equalsIgnoreCase("legacy")) {
             new GibRoles(core, luck).runTaskTimer(plugin, 20*60*10, 20*60*10);
-            plugin.getServer().getPluginManager().registerEvents(new LegacyRoles(), plugin);
+            plugin.getServer().getPluginManager().registerEvents(new LegacyRoles(luck), plugin);
             legacy.automaticallyShowToPlayers();
             legacy.automaticallyGrantRootAdvancement();
         }
