@@ -2,10 +2,13 @@ package xyz.wisecraft.smp.modules.jobsextra.listeners;
 
 import com.gamingmesh.jobs.Jobs;
 import com.gamingmesh.jobs.container.Job;
+import com.gamingmesh.jobs.container.JobsPlayer;
 import org.bukkit.Material;
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 
@@ -18,7 +21,7 @@ public class JobsFeatureListener implements org.bukkit.event.Listener {
 
     private final Job miner;
     private final Job blacksmith;
-    private Job explorer;
+    private final Job explorer;
     private final ArrayList<Material> blacksmithCrafts = new ArrayList<>();
     public JobsFeatureListener() {
 
@@ -69,13 +72,30 @@ public class JobsFeatureListener implements org.bukkit.event.Listener {
     }
 
     @EventHandler
-    public void onExplorerGetElytra(PlayerAttemptPickupItemEvent e) {
+    public void onExplorerPickup(PlayerAttemptPickupItemEvent e) {
         Player p = e.getPlayer();
 
-        if (!Jobs.getPlayerManager().getJobsPlayer(p).isInJob(explorer)) {
+        JobsPlayer pJobs = Jobs.getPlayerManager().getJobsPlayer(p);
+
+        if (p.getWorld().toString().contains("end") && !pJobs.isInJob(explorer)) {
             if (e.getItem().getItemStack().getType().equals(Material.ELYTRA)) {
                 e.setCancelled(true);
             }
+        }
+    }
+
+    @EventHandler
+    public void onExplorerBreak(EntityDamageByEntityEvent e) {
+        Player p = e.getDamager() instanceof Player ? (Player) e.getDamager() : null;
+        ItemFrame itemFrame = e.getEntity() instanceof ItemFrame ? (ItemFrame) e.getEntity() : null;
+
+        if (itemFrame == null || p == null) return;
+
+        JobsPlayer pJobs = Jobs.getPlayerManager().getJobsPlayer(p);
+
+        if (itemFrame.getWorld().toString().contains("end") && !pJobs.isInJob(explorer)) {
+            e.setCancelled(true);
+            p.sendMessage("You need to be explorer to get Elytras from the end!");
         }
     }
 
