@@ -12,6 +12,7 @@ import xyz.wisecraft.smp.modulation.ModuleClass;
 import xyz.wisecraft.smp.modulation.UtilModuleCommon;
 import xyz.wisecraft.smp.modulation.storage.ModuleSettings;
 import xyz.wisecraft.smp.storage.OtherStorage;
+import xyz.wisecraft.smp.util.UtilRandom;
 
 import java.io.File;
 import java.io.IOException;
@@ -85,36 +86,23 @@ public class WisecraftSMP extends JavaPlugin {
         setupModulesFromConfig();
 
 
+        ArrayList<ModuleClass> allModules = getModules();
         ArrayList<ModuleClass> unsortedModules = getModules();
         ArrayList<ModuleClass> sortedModules = new ArrayList<>();
-        for (ModuleClass currentModule : unsortedModules) {
-            ArrayList<Class<? extends ModuleClass>> moduleDepends = currentModule.getModuleDepends();
-            // If module has no dependencies add it to the sorted modules
-            if (moduleDepends == null) {
-                sortedModules.add(currentModule);
-                continue;
-            }
+        do {
+            ArrayList<ModuleClass> tempList = UtilRandom.findDependencies(unsortedModules.get(0), allModules);
+            sortedModules.addAll(tempList);
+            unsortedModules.removeAll(tempList);
+        } while (!unsortedModules.isEmpty());
 
-            // todo implement a way for modules to have deeper dependencies
-            // Put module dependencies infront of its depender.
-            for (Class<? extends ModuleClass> moduleDepend : moduleDepends) {
-                for (ModuleClass dependModule : unsortedModules) {
-                    if (dependModule.getClass().equals(moduleDepend) && dependModule.getModuleDepends() == null) {
-                        sortedModules.add(dependModule);
-                    } else {
-                        throw new RuntimeException("Module: " + currentModule.getModuleName() +
-                                " has one or more level 2+ dependencies. This is not supported yet.");
-                    }
-                }
-
-            }
-
-        }
-
+        
         modules.clear();
-        for (ModuleClass module : sortedModules)
+        for (int i = sortedModules.size(); i > 0; i--) {
+            ModuleClass module = sortedModules.get(i-1);
+
             if (module.startModule())
                 modules.add(module);
+        }
         
         try {
             moduleConfig.save(moduleConfigFile);
