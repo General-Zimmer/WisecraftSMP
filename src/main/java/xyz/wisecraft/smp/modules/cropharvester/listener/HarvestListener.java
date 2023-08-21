@@ -33,6 +33,7 @@ public class HarvestListener implements Listener {
 
         Bukkit.getPluginManager().callEvent(harvestEvent);
         if (harvestEvent.isCancelled()) return;
+        // Add the Grief checking here
 
         int BlockAge = ageable.getAge();
 

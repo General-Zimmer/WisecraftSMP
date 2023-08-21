@@ -81,9 +81,10 @@ public class WisecraftSMP extends JavaPlugin {
         setupModules(reflections.getSubTypesOf(ModuleClass.class));
 
         // setup modules
-        setupModulesFromConfig();
+        setupModulesFromConfig(); // todo prevent comments from being removed
 
 
+        // Sort modules by dependencies
         ArrayList<ModuleClass> allModules = getModules();
         ArrayList<ModuleClass> unsortedModules = getModules();
         ArrayList<ModuleClass> sortedModules = new ArrayList<>();
@@ -94,6 +95,7 @@ public class WisecraftSMP extends JavaPlugin {
         } while (!unsortedModules.isEmpty());
 
 
+        // Start modules
         modules.clear();
         for (int i = sortedModules.size(); i > 0; i--) {
             ModuleClass module = sortedModules.get(i-1);

@@ -11,6 +11,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
+import xyz.wisecraft.smp.modules.cropharvester.events.PrepareCropHarvestEvent;
 
 import java.util.ArrayList;
 
@@ -22,12 +23,14 @@ public class JobsFeatureListener implements org.bukkit.event.Listener {
     private final Job miner;
     private final Job blacksmith;
     private final Job explorer;
+    private final Job farmer;
     private final ArrayList<Material> blacksmithCrafts = new ArrayList<>();
     public JobsFeatureListener() {
 
         this.miner = getSpecificJob("Miner");
         this.blacksmith = getSpecificJob("Blacksmith");
         this.explorer = getSpecificJob("Explorer");
+        this.farmer = getSpecificJob("Farmer");
 
         blacksmithCrafts.add(Material.DIAMOND_AXE);
         blacksmithCrafts.add(Material.DIAMOND_HOE);
@@ -98,7 +101,16 @@ public class JobsFeatureListener implements org.bukkit.event.Listener {
         }
     }
 
+    @EventHandler
+    public void onHarvestCrop(PrepareCropHarvestEvent e) {
+        Player p = e.getPlayer();
 
+        JobsPlayer pJobs = Jobs.getPlayerManager().getJobsPlayer(p);
+
+        if (!pJobs.isInJob(farmer)) {
+            e.setCancelled(true);
+        }
+    }
 
 
     // Methods and NOT events from here on out
