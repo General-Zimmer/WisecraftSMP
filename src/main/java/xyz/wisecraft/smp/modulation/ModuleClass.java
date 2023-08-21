@@ -79,7 +79,7 @@ public interface ModuleClass extends Comparable<ModuleClass> {
     }
 
     /**
-     * Checks if the module has all the hard dependencies.
+     * Checks if the module has all the hard dependencies. All dependencies needs to be setup in the constructor.
      * @return true if the module has all the hard dependencies.
      */
     default boolean hasAllHardDependencies() {
