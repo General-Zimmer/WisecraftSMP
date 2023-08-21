@@ -23,6 +23,7 @@ public class CropTrampleListener implements Listener {
             return;
         }
 
+
         if (event.getAction() == Action.PHYSICAL && currentBlock.getType().equals(Material.FARMLAND)) {
             CropTrampleEvent cropTrampleEvent = new CropTrampleEvent(event.getPlayer(), CropTrampleEvent.TrampleCause.PLAYER, event.getClickedBlock());
             Bukkit.getPluginManager().callEvent(cropTrampleEvent);

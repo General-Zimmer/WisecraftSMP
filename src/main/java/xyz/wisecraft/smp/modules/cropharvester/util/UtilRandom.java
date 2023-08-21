@@ -123,7 +123,7 @@ public abstract class UtilRandom {
         int y = 1;
         boolean farmingAreaFound = false;
 
-        locationsToBeFarmed = findOptimalFarmingBlocks(mainLocation, width, height);
+        locationsToBeFarmed = findOptimalFarming(mainLocation, width, height);
 
 
 
