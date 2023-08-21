@@ -12,14 +12,13 @@ public class PrepareCropHarvestEvent extends PlayerEvent implements Cancellable 
     private boolean cancelled = false;
     private final Ageable block;
 
-    public PrepareCropHarvestEvent(@NotNull Player who, @NotNull Ageable block) {
-        super(who);
-        this.block = block;
-    }
-
     public PrepareCropHarvestEvent(@NotNull Player who, @NotNull Ageable block, boolean async) {
         super(who, async);
         this.block = block;
+    }
+
+    public PrepareCropHarvestEvent(@NotNull Player who, @NotNull Ageable block) {
+        this(who, block, false);
     }
 
     @Override
@@ -35,5 +34,9 @@ public class PrepareCropHarvestEvent extends PlayerEvent implements Cancellable 
     @Override
     public void setCancelled(boolean cancelState) {
         this.cancelled = cancelState;
+    }
+
+    public Ageable getBlock() {
+        return block;
     }
 }
