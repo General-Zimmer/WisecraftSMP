@@ -33,11 +33,10 @@ public class JobsFeatureListener implements org.bukkit.event.Listener {
         blacksmithCrafts.add(Material.DIAMOND_HOE);
         blacksmithCrafts.add(Material.DIAMOND_SHOVEL);
         blacksmithCrafts.add(Material.DIAMOND_SWORD);
-        blacksmithCrafts.add(Material.DIAMOND_BOOTS);
-        blacksmithCrafts.add(Material.DIAMOND_CHESTPLATE);
         blacksmithCrafts.add(Material.DIAMOND_HELMET);
+        blacksmithCrafts.add(Material.DIAMOND_CHESTPLATE);
         blacksmithCrafts.add(Material.DIAMOND_LEGGINGS);
-
+        blacksmithCrafts.add(Material.DIAMOND_BOOTS);
 
     }
 
@@ -62,7 +61,7 @@ public class JobsFeatureListener implements org.bukkit.event.Listener {
     public void onBlacksmithCraft(CraftItemEvent e) {
         Player p = e.getInventory().getHolder() instanceof Player ? (Player) e.getInventory().getHolder() : null;
 
-        if (p == null || !Jobs.getPlayerManager().getJobsPlayer(p).isInJob(blacksmith)) return;
+        if (p == null || Jobs.getPlayerManager().getJobsPlayer(p).isInJob(blacksmith)) return;
 
         Material craftType = e.getRecipe().getResult().getType();
 
