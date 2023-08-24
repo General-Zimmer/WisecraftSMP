@@ -90,6 +90,11 @@ public abstract class UtilModuleCommon {
         return sortedArrayTrimmed;
     }
 
+    /**
+     * Gets all modules by their dependencies.
+     * @param modules The modules to sort.
+     * @return The sorted modules.
+     */
     private static ArrayList<ModuleClass> sortModulesByTheirDependencies(ArrayList<ModuleClass> modules) {
         ArrayList<ModuleClass> allModules = new ArrayList<>(modules);
         ArrayList<ModuleClass> unsortedModules = new ArrayList<>(modules);
@@ -106,6 +111,14 @@ public abstract class UtilModuleCommon {
         return sortedModules;
     }
 
+    /**
+     * Finds all dependencies of a module.
+     * <p>
+     *     note: This method is recursive so all dependencies of the module and its dependencies will be found.
+     * @param parentModule The parent module.
+     * @param allModules All modules.
+     * @return All dependencies of the module.
+     */
     private static ArrayList<ModuleClass> findDependencies(ModuleClass parentModule, ArrayList<ModuleClass> allModules) {
         ArrayList<ModuleClass> dependencies = new ArrayList<>();
         dependencies.add(parentModule);
@@ -119,6 +132,13 @@ public abstract class UtilModuleCommon {
         return dependencies;
     }
 
+    /**
+     * Gets a module instance from a class.
+     * @param parentModule The parent module.
+     * @param allModules the list the instance should be in.
+     * @param dependency The dependency class.
+     * @return The module instance.
+     */
     private static @NotNull ModuleClass getModuleInstanceFromClass(ModuleClass parentModule, ArrayList<ModuleClass> allModules, Class<? extends ModuleClass> dependency) {
         ModuleClass dependencyInstance = null;
 
