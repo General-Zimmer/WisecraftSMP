@@ -84,7 +84,7 @@ public class WisecraftSMP extends JavaPlugin {
         setupModulesFromConfig(); // todo prevent comments from being removed
 
 
-        ArrayList<ModuleClass> sortedModules = UtilModuleCommon.sortModulesByTheirDependencies(modules);
+        ArrayList<ModuleClass> sortedModules = UtilModuleCommon.sortDependTrimmed(modules);
 
         // Start modules
         modules.clear();
