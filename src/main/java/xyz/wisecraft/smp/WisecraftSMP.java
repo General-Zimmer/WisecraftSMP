@@ -84,7 +84,7 @@ public class WisecraftSMP extends JavaPlugin {
 
         ArrayList<ModuleClass> sortedModules = UtilModuleCommon.sortDependTrimmed(modules);
 
-        // Start modules
+        // Start/load modules
         modules.clear();
         for (int i = sortedModules.size(); i > 0; i--) {
             ModuleClass module = sortedModules.get(i-1);

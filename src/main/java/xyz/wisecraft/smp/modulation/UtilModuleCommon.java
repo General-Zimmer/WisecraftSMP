@@ -2,6 +2,7 @@ package xyz.wisecraft.smp.modulation;
 
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
+import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.modulation.storage.ModulationStorage;
 import xyz.wisecraft.smp.modulation.storage.ModuleSettings;
@@ -66,22 +67,13 @@ public abstract class UtilModuleCommon {
     }
 
 
-    public static ArrayList<ModuleClass> sortModulesByTheirDependencies(ArrayList<ModuleClass> modules) {
-        ArrayList<ModuleClass> allModules = new ArrayList<>(modules);
-        ArrayList<ModuleClass> unsortedModules = new ArrayList<>(modules);
-        ArrayList<ModuleClass> sortedModules = new ArrayList<>();
-
-
-        // Sort modules by dependencies
-        do {
-            ArrayList<ModuleClass> tempList = UtilRandom.findDependencies(unsortedModules.get(0), allModules);
-            sortedModules.addAll(tempList);
-            unsortedModules.removeAll(tempList);
-        } while (!unsortedModules.isEmpty());
-
-        return sortedModules;
-    }
-
+    /**
+     * Gets all modules by their dependencies and trimmes all duplicates.
+     * <p>
+     *     Note: Modules are sorted with the last entry being the first to be loaded.
+     * @param modules The modules to trim.
+     * @return The trimmed modules.
+     */
     public static ArrayList<ModuleClass> sortDependTrimmed(ArrayList<ModuleClass> modules) {
         ArrayList<ModuleClass> sortedArray = sortModulesByTheirDependencies(modules);
         ArrayList<ModuleClass> sortedArrayTrimmed = new ArrayList<>();
@@ -96,6 +88,55 @@ public abstract class UtilModuleCommon {
         } while (!sortedArray.isEmpty());
 
         return sortedArrayTrimmed;
+    }
+
+    private static ArrayList<ModuleClass> sortModulesByTheirDependencies(ArrayList<ModuleClass> modules) {
+        ArrayList<ModuleClass> allModules = new ArrayList<>(modules);
+        ArrayList<ModuleClass> unsortedModules = new ArrayList<>(modules);
+        ArrayList<ModuleClass> sortedModules = new ArrayList<>();
+
+
+        // Sort modules by dependencies
+        do {
+            ArrayList<ModuleClass> tempList = findDependencies(unsortedModules.get(0), allModules);
+            sortedModules.addAll(tempList);
+            unsortedModules.removeAll(tempList);
+        } while (!unsortedModules.isEmpty());
+
+        return sortedModules;
+    }
+
+    private static ArrayList<ModuleClass> findDependencies(ModuleClass parentModule, ArrayList<ModuleClass> allModules) {
+        ArrayList<ModuleClass> dependencies = new ArrayList<>();
+        dependencies.add(parentModule);
+        parentModule.getModuleDepends().forEach(dependency -> {
+
+            ModuleClass dependencyInstance = getModuleInstanceFromClass(parentModule, allModules, dependency);
+
+            dependencies.addAll(findDependencies(dependencyInstance, allModules));
+        });
+
+        return dependencies;
+    }
+
+    private static @NotNull ModuleClass getModuleInstanceFromClass(ModuleClass parentModule, ArrayList<ModuleClass> allModules, Class<? extends ModuleClass> dependency) {
+        ModuleClass dependencyInstance = null;
+
+        for (ModuleClass module : allModules) {
+            if (module.getClass().equals(dependency)) {
+                dependencyInstance = module;
+                break; // Mikeal, du kan ikke see denne linje
+            }
+        }
+
+        if (dependencyInstance == null) {
+            throw new RuntimeException("Module: " + parentModule.getClass().getSimpleName() + " or doesn't exist.");
+        }
+        if (dependencyInstance.getModuleDepends().contains(parentModule.getClass())) {
+            throw new RuntimeException("Direct circular dependency detected!");
+        }
+
+        return dependencyInstance;
     }
 
 }
