@@ -1,10 +1,10 @@
-package modulationTests.findDependenciesTests.testmodules;
+package modulationTests.findDependenciesTests.testmodules.generic;
 
 import xyz.wisecraft.smp.modulation.ModuleClass;
 
 import java.util.ArrayList;
 
-public class TestModule2 implements ModuleClass {
+public class GenericTest3 implements ModuleClass {
     @Override
     public void onEnable() {
 
@@ -13,7 +13,8 @@ public class TestModule2 implements ModuleClass {
     @Override
     public ArrayList<Class<? extends ModuleClass>> getModuleDepends() {
         ArrayList<Class<? extends ModuleClass>> depends = new ArrayList<>();
-        depends.add(TestModule1.class);
+        depends.add(GenericTest1.class);
+        depends.add(GenericTest2.class);
         return depends;
     }
 }

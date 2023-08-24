@@ -5,6 +5,9 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.modulation.storage.ModulationStorage;
 import xyz.wisecraft.smp.modulation.storage.ModuleSettings;
+import xyz.wisecraft.smp.util.UtilRandom;
+
+import java.util.ArrayList;
 
 public abstract class UtilModuleCommon {
 
@@ -60,6 +63,48 @@ public abstract class UtilModuleCommon {
         T dependency = clazz.cast(provider.getProvider());
         ModulationStorage.addDependency(clazz.getName(), dependency);
         return dependency;
+    }
+
+
+    public static ArrayList<ModuleClass> sortModulesByTheirDependencies(ArrayList<ModuleClass> modules) {
+        ArrayList<ModuleClass> allModules = new ArrayList<>(modules);
+        ArrayList<ModuleClass> unsortedModules = new ArrayList<>(modules);
+        ArrayList<ModuleClass> sortedModules = new ArrayList<>();
+
+        // Put modules with dependencies first
+        for (int i = 0; i < unsortedModules.size(); i++) {
+            ModuleClass module = unsortedModules.get(i);
+
+            if (module.getModuleDepends().isEmpty()) {
+                unsortedModules.remove(module);
+                unsortedModules.add(module);
+            }
+        }
+
+        // Sort modules by dependencies
+        do {
+            ArrayList<ModuleClass> tempList = UtilRandom.findDependencies(unsortedModules.get(0), allModules);
+            sortedModules.addAll(0, tempList);
+            unsortedModules.removeAll(tempList);
+        } while (!unsortedModules.isEmpty());
+
+        return sortedModules;
+    }
+
+    public static ArrayList<ModuleClass> sortDependTrimmed(ArrayList<ModuleClass> modules) {
+        ArrayList<ModuleClass> sortedArray = sortModulesByTheirDependencies(modules);
+        ArrayList<ModuleClass> sortedArrayTrimmed = new ArrayList<>();
+
+
+        do {
+            ModuleClass module = sortedArray.get(0);
+
+            sortedArray.remove(module);
+            if (!sortedArray.contains(module))
+                sortedArrayTrimmed.add(module);
+        } while (!sortedArray.isEmpty());
+
+        return sortedArrayTrimmed;
     }
 
 }

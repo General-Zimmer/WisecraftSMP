@@ -1,10 +1,10 @@
-package modulationTests.findDependenciesTests.testmodules;
+package modulationTests.findDependenciesTests.testmodules.generic;
 
 import xyz.wisecraft.smp.modulation.ModuleClass;
 
 import java.util.ArrayList;
 
-public class TestModule6 implements ModuleClass {
+public class GenericTest1 implements ModuleClass {
     @Override
     public void onEnable() {
 

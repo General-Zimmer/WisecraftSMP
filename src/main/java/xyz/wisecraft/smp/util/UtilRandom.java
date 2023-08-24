@@ -9,19 +9,18 @@ public class UtilRandom {
 
     public static ArrayList<ModuleClass> findDependencies(ModuleClass parentModule, ArrayList<ModuleClass> allModules) {
         ArrayList<ModuleClass> dependencies = new ArrayList<>();
-
+        dependencies.add(parentModule);
         parentModule.getModuleDepends().forEach(dependency -> {
 
             ModuleClass dependencyInstance = getModuleInstanceFromClass(parentModule, allModules, dependency);
 
             dependencies.addAll(findDependencies(dependencyInstance, allModules));
         });
-        dependencies.add(parentModule);
+
         return dependencies;
     }
 
-    @NotNull
-    private static ModuleClass getModuleInstanceFromClass(ModuleClass parentModule, ArrayList<ModuleClass> allModules, Class<? extends ModuleClass> dependency) {
+    private static @NotNull ModuleClass getModuleInstanceFromClass(ModuleClass parentModule, ArrayList<ModuleClass> allModules, Class<? extends ModuleClass> dependency) {
         ModuleClass dependencyInstance = null;
 
         for (ModuleClass module : allModules) {
@@ -32,10 +31,11 @@ public class UtilRandom {
         }
 
         if (dependencyInstance == null) {
-            throw new RuntimeException("Module: " + parentModule.getModuleName() + " has a dependency that is not a module.");
+            throw new RuntimeException("Module: " + parentModule.getClass().getSimpleName() + " has a dependency that " +
+                    "is not a module or doesn't exist.");
         }
         if (dependencyInstance.getModuleDepends().contains(parentModule.getClass())) {
-            throw new RuntimeException("Circular dependency detected!");
+            throw new RuntimeException("Direct circular dependency detected!");
         }
 
         return dependencyInstance;
