@@ -97,7 +97,7 @@ public class JobsFeatureListener implements org.bukkit.event.Listener {
 
         if (itemFrame.getWorld().toString().contains("end") && !pJobs.isInJob(explorer)) {
             e.setCancelled(true);
-            p.sendMessage("You need to be explorer to get Elytras from the end!");
+            p.sendMessage("You need to have the job \"explorer\" to get Elytras from the end!");
         }
     }
 
