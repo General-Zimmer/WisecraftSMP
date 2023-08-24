@@ -71,20 +71,11 @@ public abstract class UtilModuleCommon {
         ArrayList<ModuleClass> unsortedModules = new ArrayList<>(modules);
         ArrayList<ModuleClass> sortedModules = new ArrayList<>();
 
-        // Put modules with dependencies first
-        for (int i = 0; i < unsortedModules.size(); i++) {
-            ModuleClass module = unsortedModules.get(i);
-
-            if (module.getModuleDepends().isEmpty()) {
-                unsortedModules.remove(module);
-                unsortedModules.add(module);
-            }
-        }
 
         // Sort modules by dependencies
         do {
             ArrayList<ModuleClass> tempList = UtilRandom.findDependencies(unsortedModules.get(0), allModules);
-            sortedModules.addAll(0, tempList);
+            sortedModules.addAll(tempList);
             unsortedModules.removeAll(tempList);
         } while (!unsortedModules.isEmpty());
 

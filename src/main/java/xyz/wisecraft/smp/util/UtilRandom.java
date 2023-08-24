@@ -31,8 +31,7 @@ public class UtilRandom {
         }
 
         if (dependencyInstance == null) {
-            throw new RuntimeException("Module: " + parentModule.getClass().getSimpleName() + " has a dependency that " +
-                    "is not a module or doesn't exist.");
+            throw new RuntimeException("Module: " + parentModule.getClass().getSimpleName() + " or doesn't exist.");
         }
         if (dependencyInstance.getModuleDepends().contains(parentModule.getClass())) {
             throw new RuntimeException("Direct circular dependency detected!");

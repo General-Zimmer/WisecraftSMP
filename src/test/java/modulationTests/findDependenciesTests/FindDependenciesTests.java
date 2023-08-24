@@ -43,16 +43,19 @@ public class FindDependenciesTests {
 
     @Test
     public void longDependTest() {
-        modules.add(new GenericTest1());
+
+        modules.add(new LongTest7());
         modules.add(new GenericTest2());
         modules.add(new GenericTest3());
+        modules.add(new LongTest4());
+        modules.add(new LongTest6());
         modules.add(new LongTest1());
         modules.add(new LongTest2());
         modules.add(new LongTest3());
-        modules.add(new LongTest4());
+        modules.add(new GenericTest1());
         modules.add(new LongTest5());
-        modules.add(new LongTest6());
-        modules.add(new LongTest7());
+
+
 
         ArrayList<String> strings = new ArrayList<>();
 
@@ -83,7 +86,7 @@ public class FindDependenciesTests {
                 () -> UtilModuleCommon.sortDependTrimmed(modules));
 
 
-        Assertions.assertArrayEquals(("Module: " + GenericTest3.class.getSimpleName() + " has a dependency that is not a module or doesn't exist.").toCharArray(),
+        Assertions.assertArrayEquals(("Module: " + GenericTest3.class.getSimpleName() + " or doesn't exist.").toCharArray(),
                 exception.getMessage().toCharArray());
 
     }
