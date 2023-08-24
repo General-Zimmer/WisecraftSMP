@@ -10,9 +10,7 @@ import java.util.ArrayList;
  * This class is used to create modules.
  */
 public class JobsExtrasModule implements xyz.wisecraft.smp.modulation.ModuleClass {
-
     private final boolean jobs = setupDependency("Jobs");
-
 
     @Override
     public void onEnable() {
