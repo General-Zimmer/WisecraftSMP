@@ -97,6 +97,11 @@ public interface ModuleClass extends Comparable<ModuleClass> {
         return depends;
     }
 
+    /**
+     * Gets an instance of the module or null if it isn't loaded.
+     * @param clazz The class of the module.
+     * @return The module instance.
+     */
     default ModuleClass getModule(Class<?> clazz) {
         for (ModuleClass module : plugin.getModules()) {
             if (module.getClass().equals(clazz))
