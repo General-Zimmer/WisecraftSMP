@@ -8,7 +8,7 @@ import org.bukkit.event.player.PlayerEvent;
 import org.jetbrains.annotations.NotNull;
 
 public class PrepareCropHarvestEvent extends PlayerEvent implements Cancellable {
-    private final HandlerList handlers = new HandlerList();
+    private static final HandlerList handlers = new HandlerList();
     private boolean cancelled = false;
     private final Ageable block;
 
@@ -26,6 +26,7 @@ public class PrepareCropHarvestEvent extends PlayerEvent implements Cancellable 
         return handlers;
     }
 
+    public static HandlerList getHandlerList() {return handlers;}
     @Override
     public boolean isCancelled() {
         return cancelled;

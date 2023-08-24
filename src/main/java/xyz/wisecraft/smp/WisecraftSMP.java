@@ -84,10 +84,21 @@ public class WisecraftSMP extends JavaPlugin {
         setupModulesFromConfig(); // todo prevent comments from being removed
 
 
-        // Sort modules by dependencies
+
         ArrayList<ModuleClass> allModules = getModules();
         ArrayList<ModuleClass> unsortedModules = getModules();
         ArrayList<ModuleClass> sortedModules = new ArrayList<>();
+
+        // Put modules with dependencies first
+        for (int i = 0, j = 0; i < unsortedModules.size(); i++) {
+            ModuleClass module = unsortedModules.get(i);
+
+            if (module.getModuleDepends().isEmpty()) continue;
+            unsortedModules.remove(module);
+            unsortedModules.add(j, module);
+            j++;
+        }
+        // Sort modules by dependencies
         do {
             ArrayList<ModuleClass> tempList = UtilRandom.findDependencies(unsortedModules.get(0), allModules);
             sortedModules.addAll(0, tempList);

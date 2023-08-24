@@ -4,6 +4,7 @@ import org.bukkit.plugin.Plugin;
 import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.modulation.storage.ModulationStorage;
 import xyz.wisecraft.smp.modulation.storage.ModuleSettings;
+import xyz.wisecraft.smp.modules.cropharvester.CropHarvesterModule;
 
 import java.util.ArrayList;
 
@@ -90,6 +91,7 @@ public interface ModuleClass extends Comparable<ModuleClass> {
      * Gets the module dependencies of other modules. This method should be overridden if the module has dependencies.
      * @return The module dependencies.
      */
+    @SuppressWarnings("UnnecessaryLocalVariable")
     default ArrayList<Class<? extends ModuleClass>> getModuleDepends() {
         ArrayList<Class<? extends ModuleClass>> depends = new ArrayList<>();
         return depends;
