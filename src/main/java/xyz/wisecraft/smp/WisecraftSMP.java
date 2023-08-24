@@ -91,7 +91,7 @@ public class WisecraftSMP extends JavaPlugin {
         ArrayList<ModuleClass> sortedModules = new ArrayList<>();
         do {
             ArrayList<ModuleClass> tempList = UtilRandom.findDependencies(unsortedModules.get(0), allModules);
-            sortedModules.addAll(tempList);
+            sortedModules.addAll(0, tempList);
             unsortedModules.removeAll(tempList);
         } while (!unsortedModules.isEmpty());
 
