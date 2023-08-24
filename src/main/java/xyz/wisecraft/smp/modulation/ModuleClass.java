@@ -91,7 +91,8 @@ public interface ModuleClass extends Comparable<ModuleClass> {
      * @return The module dependencies.
      */
     default ArrayList<Class<? extends ModuleClass>> getModuleDepends() {
-        return new ArrayList<>();
+        ArrayList<Class<? extends ModuleClass>> depends = new ArrayList<>();
+        return depends;
     }
 
     default ModuleClass getModule(Class<?> clazz) {
