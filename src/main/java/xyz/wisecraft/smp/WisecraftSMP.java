@@ -65,8 +65,6 @@ public class WisecraftSMP extends JavaPlugin {
         //  ever. The check will use bit addition.
 
 
-
-
         // Config stuff
         this.saveDefaultConfig();
         createModuleConfig();
