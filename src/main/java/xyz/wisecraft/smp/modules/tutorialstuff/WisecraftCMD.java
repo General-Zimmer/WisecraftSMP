@@ -1,4 +1,4 @@
-package xyz.wisecraft.smp.modules.extra;
+package xyz.wisecraft.smp.modules.tutorialstuff;
 
 import net.ess3.api.IEssentials;
 import org.bukkit.Bukkit;
@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.core.WisecraftCoreApi;
 import xyz.wisecraft.smp.modules.advancements.util.UtilAdv;
-import xyz.wisecraft.smp.modules.extra.util.UtilRandom;
+import xyz.wisecraft.smp.modules.tutorialstuff.util.UtilRandom;
 
 import java.util.ArrayList;
 import java.util.List;

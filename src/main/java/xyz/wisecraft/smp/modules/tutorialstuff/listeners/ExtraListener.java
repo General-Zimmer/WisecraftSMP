@@ -1,4 +1,4 @@
-package xyz.wisecraft.smp.modules.extra.listeners;
+package xyz.wisecraft.smp.modules.tutorialstuff.listeners;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -10,19 +10,13 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.wisecraft.smp.WisecraftSMP;
-import xyz.wisecraft.smp.modules.extra.util.UtilRandom;
-import xyz.wisecraft.smp.modules.savinggrace.Angel;
-import xyz.wisecraft.smp.storage.OtherStorage;
-
-import java.util.HashMap;
-import java.util.UUID;
 
 /**
  * Listener class for player events.
  */
 public class ExtraListener implements Listener {
     private final WisecraftSMP plugin = WisecraftSMP.getInstance();
-    private boolean isMultiverseEnabled;
+    private final boolean isMultiverseEnabled;
 
     public ExtraListener(boolean isMultiverseEnabled) {
         this.isMultiverseEnabled = isMultiverseEnabled;

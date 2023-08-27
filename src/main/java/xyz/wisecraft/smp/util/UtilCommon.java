@@ -16,12 +16,11 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class UtilCommon {
     /**
-     * Note: This can give false positives due to the fact that 1. trees can be made to last longer than TimeFrame or
-     * 2. if multiple people nearby are using Timber and the culprit wasn't the one with the highest time or
-     * 3. if someone can get over 32 blocks away from the victim
-     * <p>
-     * A Timber cooldown of over TimeFrame is needed to prevent people from abusing 2. false positive reason
-     *
+     * Note: This can give false positives due to the fact that
+     * <p> 1. trees can be made to last longer than TimeFrame or
+     * <p> 2. if multiple people nearby are using Timber and the culprit wasn't the one with the highest time or
+     * <p> 3. if someone can get over 32 blocks away from the victim
+     * <p> A Timber cooldown of over TimeFrame is needed to prevent people from abusing 2. false positive reason
      * @param victim Player that was hit by a tree
      * @return Who might have used Timber
      */

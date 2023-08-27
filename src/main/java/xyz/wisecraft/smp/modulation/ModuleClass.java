@@ -4,6 +4,7 @@ import org.bukkit.plugin.Plugin;
 import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.modulation.storage.ModulationStorage;
 import xyz.wisecraft.smp.modulation.storage.ModuleSettings;
+import xyz.wisecraft.smp.modules.cropharvester.CropHarvesterModule;
 
 import java.util.ArrayList;
 
@@ -79,7 +80,7 @@ public interface ModuleClass extends Comparable<ModuleClass> {
     }
 
     /**
-     * Checks if the module has all the hard dependencies.
+     * Checks if the module has all the hard dependencies. All dependencies needs to be setup in the constructor.
      * @return true if the module has all the hard dependencies.
      */
     default boolean hasAllHardDependencies() {
@@ -90,10 +91,17 @@ public interface ModuleClass extends Comparable<ModuleClass> {
      * Gets the module dependencies of other modules. This method should be overridden if the module has dependencies.
      * @return The module dependencies.
      */
+    @SuppressWarnings("UnnecessaryLocalVariable")
     default ArrayList<Class<? extends ModuleClass>> getModuleDepends() {
-        return null;
+        ArrayList<Class<? extends ModuleClass>> depends = new ArrayList<>();
+        return depends;
     }
 
+    /**
+     * Gets an instance of the module or null if it isn't loaded.
+     * @param clazz The class of the module.
+     * @return The module instance.
+     */
     default ModuleClass getModule(Class<?> clazz) {
         for (ModuleClass module : plugin.getModules()) {
             if (module.getClass().equals(clazz))

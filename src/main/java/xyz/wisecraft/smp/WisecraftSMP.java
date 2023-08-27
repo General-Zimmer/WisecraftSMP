@@ -2,16 +2,15 @@ package xyz.wisecraft.smp;
 
 import com.fren_gor.ultimateAdvancementAPI.AdvancementMain;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.MemorySection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 import org.reflections.Reflections;
 import xyz.wisecraft.smp.modulation.ModuleClass;
 import xyz.wisecraft.smp.modulation.UtilModuleCommon;
 import xyz.wisecraft.smp.modulation.storage.ModuleSettings;
 import xyz.wisecraft.smp.storage.OtherStorage;
+import xyz.wisecraft.smp.util.UtilRandom;
 
 import java.io.File;
 import java.io.IOException;
@@ -66,8 +65,6 @@ public class WisecraftSMP extends JavaPlugin {
         //  ever. The check will use bit addition.
 
 
-
-
         // Config stuff
         this.saveDefaultConfig();
         createModuleConfig();
@@ -82,40 +79,20 @@ public class WisecraftSMP extends JavaPlugin {
         setupModules(reflections.getSubTypesOf(ModuleClass.class));
 
         // setup modules
-        setupModulesFromConfig();
+        setupModulesFromConfig(); // todo prevent comments from being removed
 
 
-        ArrayList<ModuleClass> unsortedModules = getModules();
-        ArrayList<ModuleClass> sortedModules = new ArrayList<>();
-        for (ModuleClass currentModule : unsortedModules) {
-            ArrayList<Class<? extends ModuleClass>> moduleDepends = currentModule.getModuleDepends();
-            // If module has no dependencies add it to the sorted modules
-            if (moduleDepends == null) {
-                sortedModules.add(currentModule);
-                continue;
-            }
+        ArrayList<ModuleClass> sortedModules = UtilModuleCommon.sortDependTrimmed(modules);
 
-            // todo implement a way for modules to have deeper dependencies
-            // Put module dependencies infront of its depender.
-            for (Class<? extends ModuleClass> moduleDepend : moduleDepends) {
-                for (ModuleClass dependModule : unsortedModules) {
-                    if (dependModule.getClass().equals(moduleDepend) && dependModule.getModuleDepends() == null) {
-                        sortedModules.add(dependModule);
-                    } else {
-                        throw new RuntimeException("Module: " + currentModule.getModuleName() +
-                                " has one or more level 2+ dependencies. This is not supported yet.");
-                    }
-                }
-
-            }
-
-        }
-
+        // Start/load modules
         modules.clear();
-        for (ModuleClass module : sortedModules)
+        for (int i = sortedModules.size(); i > 0; i--) {
+            ModuleClass module = sortedModules.get(i-1);
+
             if (module.startModule())
                 modules.add(module);
-        
+        }
+
         try {
             moduleConfig.save(moduleConfigFile);
         } catch (IOException e) {
@@ -148,7 +125,6 @@ public class WisecraftSMP extends JavaPlugin {
                      InvocationTargetException e) {
                 e.printStackTrace();
             }
-
         }
     }
 

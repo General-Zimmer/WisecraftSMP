@@ -184,7 +184,10 @@
             <url>https://nexus.frengor.com/repository/public/</url>
         </repository>
 
-
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -265,6 +268,12 @@
             <artifactId>MockBukkit-v1.20</artifactId>
             <version>3.9.0</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.Zrips</groupId>
+            <artifactId>Jobs</artifactId>
+            <version>master-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
