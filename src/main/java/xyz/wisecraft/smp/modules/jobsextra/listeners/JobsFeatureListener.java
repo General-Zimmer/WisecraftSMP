@@ -12,6 +12,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import xyz.wisecraft.smp.modules.cropharvester.events.PrepareCropHarvestEvent;
+import xyz.wisecraft.smp.modules.jobsextra.JobsExtrasModule;
 
 import java.util.ArrayList;
 
@@ -22,15 +23,14 @@ public class JobsFeatureListener implements org.bukkit.event.Listener {
 
     private final Job miner;
     private final Job blacksmith;
-    private final Job explorer;
+
     private final Job farmer;
     private final ArrayList<Material> blacksmithCrafts = new ArrayList<>();
-    public JobsFeatureListener() {
+    public JobsFeatureListener(JobsExtrasModule module) {
 
-        this.miner = getSpecificJob("Miner");
-        this.blacksmith = getSpecificJob("Blacksmith");
-        this.explorer = getSpecificJob("Explorer");
-        this.farmer = getSpecificJob("Farmer");
+        this.miner = module.getSpecificJob("Miner");
+        this.blacksmith = module.getSpecificJob("Blacksmith");
+        this.farmer = module.getSpecificJob("Farmer");
 
         blacksmithCrafts.add(Material.DIAMOND_AXE);
         blacksmithCrafts.add(Material.DIAMOND_HOE);
@@ -70,34 +70,8 @@ public class JobsFeatureListener implements org.bukkit.event.Listener {
 
         if (blacksmithCrafts.contains(craftType)) {
             e.setCancelled(true);
-        }
-    }
-
-    @EventHandler
-    public void onExplorerPickup(PlayerAttemptPickupItemEvent e) {
-        Player p = e.getPlayer();
-
-        JobsPlayer pJobs = Jobs.getPlayerManager().getJobsPlayer(p);
-
-        if (p.getWorld().toString().contains("end") && !pJobs.isInJob(explorer)) {
-            if (e.getItem().getItemStack().getType().equals(Material.ELYTRA)) {
-                e.setCancelled(true);
-            }
-        }
-    }
-
-    @EventHandler
-    public void onExplorerBreak(EntityDamageByEntityEvent e) {
-        Player p = e.getDamager() instanceof Player ? (Player) e.getDamager() : null;
-        ItemFrame itemFrame = e.getEntity() instanceof ItemFrame ? (ItemFrame) e.getEntity() : null;
-
-        if (itemFrame == null || p == null) return;
-
-        JobsPlayer pJobs = Jobs.getPlayerManager().getJobsPlayer(p);
-
-        if (itemFrame.getWorld().toString().contains("end") && !pJobs.isInJob(explorer)) {
-            e.setCancelled(true);
-            p.sendMessage("You need to have the job \"explorer\" to get Elytras from the end!");
+            p.sendMessage("You need to have the job \"blacksmith\" to craft diamond gear! " +
+                    "Except for diamond pickaxe and diamond chestplate");
         }
     }
 
@@ -114,12 +88,5 @@ public class JobsFeatureListener implements org.bukkit.event.Listener {
 
 
     // Methods and NOT events from here on out
-    private Job getSpecificJob(String name) {
-        for (Job job : Jobs.getJobs()) {
-            if (job.getName().equalsIgnoreCase(name))
-                return job;
-        }
-        return null;
-    }
 
 }

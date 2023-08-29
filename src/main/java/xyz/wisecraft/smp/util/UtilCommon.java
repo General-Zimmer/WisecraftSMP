@@ -6,6 +6,7 @@ import xyz.wisecraft.core.data.templates.Timers;
 import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.modules.advancements.util.UtilAdv;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -60,7 +61,7 @@ public class UtilCommon {
         // Check who broke a tree recently
         for (Player attacker : Bukkit.getOnlinePlayers()) {
             Timers attackerTimer = timers.get(attacker.getUniqueId());
-            double secSinceAttackerTimber = UtilAdv.calcCurrentSeconds(attackerTimer.getTree());
+            double secSinceAttackerTimber = UtilCommon.calcCurrentSeconds(attackerTimer.getTree());
             UUID attackerUUID = attacker.getUniqueId();
 
             if (!victimUUID.toString().equals(attackerUUID.toString()) && secSinceAttackerTimber < timeFrame)
@@ -69,6 +70,16 @@ public class UtilCommon {
         if (players.isEmpty())
             return null;
         return players;
+    }
+
+    /**
+     * Get the time in seconds since previousDate
+     * @param previousDate Date to compare to
+     * @return Seconds since previousDate
+     */
+    public static double calcCurrentSeconds(Date previousDate) {
+        Date currentDate = new Date();
+        return (currentDate.getTime() - previousDate.getTime())/1000.0;
     }
 
 }
