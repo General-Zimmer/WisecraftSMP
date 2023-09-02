@@ -15,22 +15,26 @@ import xyz.wisecraft.smp.modules.cropharvester.events.PrepareCropHarvestEvent;
 import xyz.wisecraft.smp.modules.jobsextra.JobsExtrasModule;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * This class is for extra jobs features.
  */
 public class JobsFeatureListener implements org.bukkit.event.Listener {
 
+    private final HashMap<Job, Integer> jobLevels = new HashMap<>();
     private final Job miner;
     private final Job blacksmith;
-
     private final Job farmer;
     private final ArrayList<Material> blacksmithCrafts = new ArrayList<>();
     public JobsFeatureListener(JobsExtrasModule module) {
 
         this.miner = module.getSpecificJob("Miner");
+        jobLevels.put(miner, module.getPlugin().getConfig().getInt("JOBS_SETTINGS.DEFAULT_ABILITY_LEVEL"));
         this.blacksmith = module.getSpecificJob("Blacksmith");
+        jobLevels.put(blacksmith, module.getPlugin().getConfig().getInt("JOBS_SETTINGS.DEFAULT_ABILITY_LEVEL"));
         this.farmer = module.getSpecificJob("Farmer");
+        jobLevels.put(farmer, module.getPlugin().getConfig().getInt("JOBS_SETTINGS.DEFAULT_ABILITY_LEVEL"));
 
         blacksmithCrafts.add(Material.DIAMOND_AXE);
         blacksmithCrafts.add(Material.DIAMOND_HOE);
@@ -46,9 +50,11 @@ public class JobsFeatureListener implements org.bukkit.event.Listener {
     @EventHandler
     public void onMinerBreak(BlockBreakEvent e) {
         Player p = e.getPlayer();
+        Job pJob = miner;
+        JobsPlayer pJobs = Jobs.getPlayerManager().getJobsPlayer(p);
 
         // Check if player is in miner
-        if (Jobs.getPlayerManager().getJobsPlayer(p).isInJob(miner))
+        if (pJobs.isInJob(pJob) && pJobs.getJobProgression(pJob).getLevel() >= jobLevels.get(pJob))
             return;
 
         Material type = e.getBlock().getType();
@@ -63,8 +69,11 @@ public class JobsFeatureListener implements org.bukkit.event.Listener {
     @EventHandler
     public void onBlacksmithCraft(CraftItemEvent e) {
         Player p = e.getInventory().getHolder() instanceof Player ? (Player) e.getInventory().getHolder() : null;
+        Job pJob = blacksmith;
+        JobsPlayer pJobs = Jobs.getPlayerManager().getJobsPlayer(p);
 
-        if (p == null || Jobs.getPlayerManager().getJobsPlayer(p).isInJob(blacksmith)) return;
+        if (p == null || pJobs.isInJob(pJob) &&
+                pJobs.getJobProgression(pJob).getLevel() >= jobLevels.get(pJob)) return;
 
         Material craftType = e.getRecipe().getResult().getType();
 
@@ -78,10 +87,10 @@ public class JobsFeatureListener implements org.bukkit.event.Listener {
     @EventHandler
     public void onHarvestCrop(PrepareCropHarvestEvent e) {
         Player p = e.getPlayer();
-
+        Job pJob = farmer;
         JobsPlayer pJobs = Jobs.getPlayerManager().getJobsPlayer(p);
 
-        if (!pJobs.isInJob(farmer)) {
+        if (!(pJobs.isInJob(pJob) && pJobs.getJobProgression(pJob).getLevel() >= jobLevels.get(pJob))) {
             e.setCancelled(true);
         }
     }

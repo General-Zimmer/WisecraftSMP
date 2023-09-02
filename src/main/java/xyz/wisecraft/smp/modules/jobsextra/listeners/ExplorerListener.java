@@ -22,15 +22,18 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public class ExplorerListener implements Listener {
+    private final HashMap<Job, Integer> jobLevels = new HashMap<>();
     private final Job explorer;
 
     public ExplorerListener(JobsExtrasModule module) {
         this.explorer = module.getSpecificJob("Explorer");
+        jobLevels.put(explorer, module.getPlugin().getConfig().getInt("JOBS_SETTINGS.DEFAULT_ABILITY_LEVEL"));
     }
 
     @EventHandler
     public void onExplorerPickup(PlayerAttemptPickupItemEvent e) {
         Player p = e.getPlayer();
+        Job pJob = explorer;
         JobsPlayer pJobs = Jobs.getPlayerManager().getJobsPlayer(p);
         HashMap<UUID, Date> elytraDrops = JobsStorage.getElytraDrop();
         Item item = e.getItem();
@@ -46,9 +49,9 @@ public class ExplorerListener implements Listener {
             }
         }
 
-        if ((p.getWorld().toString().contains("end") && !pJobs.isInJob(explorer))) {
+        if ((p.getWorld().toString().contains("end") && !(pJobs.isInJob(pJob) && pJobs.getJobProgression(pJob).getLevel() >= jobLevels.get(pJob))))
             e.setCancelled(true);
-        }
+
     }
 
     @EventHandler

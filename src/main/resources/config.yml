@@ -51,3 +51,7 @@ FARM_SETTINGS:
   - "0X0 GOLDEN_HOE"
   - "3x3 DIAMOND_HOE"
   - "5x5 NETHERITE_HOE"
+
+JOBS_SETTINGS:
+  # The default level for a job
+  DEFAULT_ABILITY_LEVEL: 100

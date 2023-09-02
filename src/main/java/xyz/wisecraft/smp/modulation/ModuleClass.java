@@ -166,4 +166,7 @@ public interface ModuleClass extends Comparable<ModuleClass> {
         return Long.compare(this.getModuleID(), module.getModuleID());
     }
 
+    default WisecraftSMP getPlugin() {
+        return plugin;
+    }
 }
