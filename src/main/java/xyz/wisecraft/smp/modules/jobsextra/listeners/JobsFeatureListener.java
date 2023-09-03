@@ -12,25 +12,29 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import xyz.wisecraft.smp.modules.cropharvester.events.PrepareCropHarvestEvent;
+import xyz.wisecraft.smp.modules.jobsextra.JobsExtrasModule;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * This class is for extra jobs features.
  */
 public class JobsFeatureListener implements org.bukkit.event.Listener {
 
+    private final HashMap<Job, Integer> jobLevels = new HashMap<>();
     private final Job miner;
     private final Job blacksmith;
-    private final Job explorer;
     private final Job farmer;
     private final ArrayList<Material> blacksmithCrafts = new ArrayList<>();
-    public JobsFeatureListener() {
+    public JobsFeatureListener(JobsExtrasModule module) {
 
-        this.miner = getSpecificJob("Miner");
-        this.blacksmith = getSpecificJob("Blacksmith");
-        this.explorer = getSpecificJob("Explorer");
-        this.farmer = getSpecificJob("Farmer");
+        this.miner = module.getSpecificJob("Miner");
+        jobLevels.put(miner, module.getPlugin().getConfig().getInt("JOBS_SETTINGS.DEFAULT_ABILITY_LEVEL"));
+        this.blacksmith = module.getSpecificJob("Blacksmith");
+        jobLevels.put(blacksmith, module.getPlugin().getConfig().getInt("JOBS_SETTINGS.DEFAULT_ABILITY_LEVEL"));
+        this.farmer = module.getSpecificJob("Farmer");
+        jobLevels.put(farmer, module.getPlugin().getConfig().getInt("JOBS_SETTINGS.DEFAULT_ABILITY_LEVEL"));
 
         blacksmithCrafts.add(Material.DIAMOND_AXE);
         blacksmithCrafts.add(Material.DIAMOND_HOE);
@@ -46,9 +50,11 @@ public class JobsFeatureListener implements org.bukkit.event.Listener {
     @EventHandler
     public void onMinerBreak(BlockBreakEvent e) {
         Player p = e.getPlayer();
+        Job pJob = miner;
+        JobsPlayer pJobs = Jobs.getPlayerManager().getJobsPlayer(p);
 
         // Check if player is in miner
-        if (Jobs.getPlayerManager().getJobsPlayer(p).isInJob(miner))
+        if (pJobs.isInJob(pJob) && pJobs.getJobProgression(pJob).getLevel() >= jobLevels.get(pJob))
             return;
 
         Material type = e.getBlock().getType();
@@ -63,63 +69,33 @@ public class JobsFeatureListener implements org.bukkit.event.Listener {
     @EventHandler
     public void onBlacksmithCraft(CraftItemEvent e) {
         Player p = e.getInventory().getHolder() instanceof Player ? (Player) e.getInventory().getHolder() : null;
+        Job pJob = blacksmith;
+        JobsPlayer pJobs = Jobs.getPlayerManager().getJobsPlayer(p);
 
-        if (p == null || Jobs.getPlayerManager().getJobsPlayer(p).isInJob(blacksmith)) return;
+        if (p == null || pJobs.isInJob(pJob) &&
+                pJobs.getJobProgression(pJob).getLevel() >= jobLevels.get(pJob)) return;
 
         Material craftType = e.getRecipe().getResult().getType();
 
         if (blacksmithCrafts.contains(craftType)) {
             e.setCancelled(true);
-        }
-    }
-
-    @EventHandler
-    public void onExplorerPickup(PlayerAttemptPickupItemEvent e) {
-        Player p = e.getPlayer();
-
-        JobsPlayer pJobs = Jobs.getPlayerManager().getJobsPlayer(p);
-
-        if (p.getWorld().toString().contains("end") && !pJobs.isInJob(explorer)) {
-            if (e.getItem().getItemStack().getType().equals(Material.ELYTRA)) {
-                e.setCancelled(true);
-            }
-        }
-    }
-
-    @EventHandler
-    public void onExplorerBreak(EntityDamageByEntityEvent e) {
-        Player p = e.getDamager() instanceof Player ? (Player) e.getDamager() : null;
-        ItemFrame itemFrame = e.getEntity() instanceof ItemFrame ? (ItemFrame) e.getEntity() : null;
-
-        if (itemFrame == null || p == null) return;
-
-        JobsPlayer pJobs = Jobs.getPlayerManager().getJobsPlayer(p);
-
-        if (itemFrame.getWorld().toString().contains("end") && !pJobs.isInJob(explorer)) {
-            e.setCancelled(true);
-            p.sendMessage("You need to have the job \"explorer\" to get Elytras from the end!");
+            p.sendMessage("You need to have the job \"blacksmith\" to craft diamond gear! " +
+                    "Except for diamond pickaxe and diamond chestplate");
         }
     }
 
     @EventHandler
     public void onHarvestCrop(PrepareCropHarvestEvent e) {
         Player p = e.getPlayer();
-
+        Job pJob = farmer;
         JobsPlayer pJobs = Jobs.getPlayerManager().getJobsPlayer(p);
 
-        if (!pJobs.isInJob(farmer)) {
+        if (!(pJobs.isInJob(pJob) && pJobs.getJobProgression(pJob).getLevel() >= jobLevels.get(pJob))) {
             e.setCancelled(true);
         }
     }
 
 
     // Methods and NOT events from here on out
-    private Job getSpecificJob(String name) {
-        for (Job job : Jobs.getJobs()) {
-            if (job.getName().equalsIgnoreCase(name))
-                return job;
-        }
-        return null;
-    }
 
 }

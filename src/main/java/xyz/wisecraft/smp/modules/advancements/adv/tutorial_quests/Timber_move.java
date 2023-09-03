@@ -15,6 +15,7 @@ import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.modules.advancements.AdvancementsModule;
 import xyz.wisecraft.smp.modules.advancements.adv.AdvancementTabNamespaces;
 import xyz.wisecraft.smp.modules.advancements.util.UtilAdv;
+import xyz.wisecraft.smp.util.UtilCommon;
 
 import java.util.Objects;
 
@@ -35,7 +36,7 @@ public class Timber_move extends BaseAdvancement implements VanillaVisibility {
 
         if (deathMessage.equalsIgnoreCase(victim.getName() + " died")) {
           Timers times = module.getCore().getTimers().get(victim.getUniqueId());
-          double secSinceVictimTimber = UtilAdv.calcCurrentSeconds(times.getTree());
+          double secSinceVictimTimber = UtilCommon.calcCurrentSeconds(times.getTree());
 
           // todo check if this can be replaced with whoTimber
           if (secSinceVictimTimber < 1.7) {

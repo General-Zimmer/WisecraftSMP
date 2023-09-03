@@ -77,7 +77,6 @@ public class Angel {
 
     /**
      * Give starter gear and teleport to tutorial
-     * @param user Essentials user
      * @param p Player
      * @throws Exception If the kit doesn't exist
      */

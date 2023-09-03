@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.core.WisecraftCoreApi;
 import xyz.wisecraft.smp.modules.advancements.util.UtilAdv;
 import xyz.wisecraft.smp.modules.tutorialstuff.util.UtilRandom;
+import xyz.wisecraft.smp.util.UtilCommon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +73,7 @@ public class WisecraftCMD implements TabExecutor {
                 case "time" -> {
                     if (core == null) return true;
 
-                    p.sendMessage(Double.toString(UtilAdv.calcCurrentSeconds(
+                    p.sendMessage(Double.toString(UtilCommon.calcCurrentSeconds(
                             core.getTimers().get(
                                     p.getUniqueId()).getTree())));
                 }

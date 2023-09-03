@@ -43,7 +43,6 @@ public class FindDependenciesTests {
 
     @Test
     public void longDependTest() {
-
         modules.add(new LongTest7());
         modules.add(new GenericTest2());
         modules.add(new GenericTest3());
@@ -54,7 +53,6 @@ public class FindDependenciesTests {
         modules.add(new LongTest3());
         modules.add(new GenericTest1());
         modules.add(new LongTest5());
-
 
 
         ArrayList<String> strings = new ArrayList<>();
@@ -80,15 +78,11 @@ public class FindDependenciesTests {
         modules.add(new GenericTest1());
         modules.add(new GenericTest3());
 
-
-
         Exception exception = Assertions.assertThrows(RuntimeException.class,
                 () -> UtilModuleCommon.sortDependTrimmed(modules));
 
-
         Assertions.assertArrayEquals(("Module: " + GenericTest3.class.getSimpleName() + " or doesn't exist.").toCharArray(),
                 exception.getMessage().toCharArray());
-
     }
 
     @Test
@@ -96,15 +90,11 @@ public class FindDependenciesTests {
         modules.add(new CircularTest1());
         modules.add(new CircularTest2());
 
-
-
         Exception exception = Assertions.assertThrows(RuntimeException.class,
                 () -> UtilModuleCommon.sortDependTrimmed(modules));
 
-
         Assertions.assertArrayEquals("Direct circular dependency detected!".toCharArray(),
                 exception.getMessage().toCharArray());
-
     }
 
 
