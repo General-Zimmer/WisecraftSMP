@@ -106,6 +106,7 @@ public abstract class UtilRandom {
         if (cropModule.isGriefpreventionEnabled()) {
             Claim claim = GriefPrevention.instance.dataStore.getClaimAt(currentBlock.getLocation(), true, null);
             if (claim != null) {
+                // todo use checkPermission(Player, ClaimPermission, Event) instead
                 griefCheck = claim.getOwnerID().equals(player.getUniqueId()) || claim.hasExplicitPermission(player, ClaimPermission.Build);
             }
         }
