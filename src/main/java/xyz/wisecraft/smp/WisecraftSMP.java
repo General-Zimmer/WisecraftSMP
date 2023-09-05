@@ -4,6 +4,7 @@ import com.fren_gor.ultimateAdvancementAPI.AdvancementMain;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.reflections.Reflections;
 import xyz.wisecraft.smp.modulation.ModuleClass;
@@ -29,22 +30,19 @@ public class WisecraftSMP extends JavaPlugin {
     private AdvancementMain advapi;
     private File moduleConfigFile;
     private FileConfiguration moduleConfig;
-    private boolean isModulesEnabledByDefault;
     private final ArrayList<ModuleClass> modules = new ArrayList<>();
 
     /**
      * Production Constructor for WisecraftSMP
      */
     public WisecraftSMP() {
-        super();
         isTesting = false;
         instance = this;
     }
     /**
      * test Constructor for WisecraftSMP
      */
-    public WisecraftSMP(boolean isTesting) {
-        super();
+    public WisecraftSMP(Boolean isTesting) {
         this.isTesting = isTesting;
         instance = this;
     }
@@ -67,10 +65,10 @@ public class WisecraftSMP extends JavaPlugin {
 
         // Config stuff
         this.saveDefaultConfig();
-        createModuleConfig();
+        moduleConfig = createModuleConfig(this, this.getDataFolder().toString());
         OtherStorage.setServer_name(this.getConfig().getString("server_name"));
 
-        isModulesEnabledByDefault = moduleConfig.getBoolean("IsModulesEnabledByDefault", false);
+        boolean isModulesEnabledByDefault = moduleConfig.getBoolean("IsModulesEnabledByDefault", false);
 
         // Fetching modules
         Reflections reflections = new Reflections("xyz.wisecraft.smp.modules");
@@ -79,7 +77,7 @@ public class WisecraftSMP extends JavaPlugin {
         setupModules(reflections.getSubTypesOf(ModuleClass.class));
 
         // setup modules
-        setupModulesFromConfig(); // todo prevent comments from being removed
+        UtilRandom.setupModulesFromConfig(moduleConfig, modules, isModulesEnabledByDefault, getModulePath()); // todo prevent comments from being removed
 
 
         ArrayList<ModuleClass> sortedModules = UtilModuleCommon.sortDependTrimmed(modules);
@@ -128,98 +126,23 @@ public class WisecraftSMP extends JavaPlugin {
         }
     }
 
-    private void setupModulesFromConfig() {
-        ConfigurationSection moduleSection = moduleConfig.getConfigurationSection(getModulePath());
-        Set<String> map = (moduleSection != null) ? moduleSection.getKeys(false) : null;
 
-        if (map == null || map.isEmpty()) {
-            setupModuleConfig();
-            return;
-        }
-
-        ArrayList<String> modulesInConfig = new ArrayList<>(map);
-
-
-        // Getting missing IDs
-        ArrayList<Long> IDs = new ArrayList<>();
-        modulesInConfig.forEach(module -> {
-            if (!(moduleConfig.getLong(UtilModuleCommon.getSetting(module, ModuleSettings.ID), -1) == -1)) {
-                IDs.add(moduleConfig.getLong(UtilModuleCommon.getSetting(module, ModuleSettings.ID)));
-            }
-        });
-        ArrayList<Long> missingIDS = new ArrayList<>();
-        for (int i = 0; i < modules.size(); i++) {
-            if (!IDs.contains((long) i)) {
-                missingIDS.add((long) i);
-            }
-
-        }
-
-        // Getting missing modules
-        ArrayList<ModuleClass> modulesToBeAdded = new ArrayList<>();
-        modules.forEach(module -> {
-            if (!modulesInConfig.contains(module.getModuleName())) {
-                modulesToBeAdded.add(module);
-            }
-        });
-
-
-        // Combining missing IDS and missing modules
-        HashMap<Long, ModuleClass> mapModulesToBeAdded = new HashMap<>();
-        for (int i = 0, j = 0; i < modulesToBeAdded.size(); i++) {
-
-            if (i < missingIDS.size()) {
-                mapModulesToBeAdded.put(missingIDS.get(i), modulesToBeAdded.get(i));
-                continue;
-            }
-
-            mapModulesToBeAdded.put((long) modulesToBeAdded.size()+j, modulesToBeAdded.get(i));
-            j++;
-
-        }
-        // Adding modules to config
-        for (Map.Entry<Long, ModuleClass> module : mapModulesToBeAdded.entrySet()) {
-            moduleConfig.set(UtilModuleCommon.getSetting(module.getValue(), ModuleSettings.ENABLED), isModulesEnabledByDefault);
-            moduleConfig.set(UtilModuleCommon.getSetting(module.getValue(), ModuleSettings.ID), module.getKey());
-        }
-
-        // Check if unused module configurations should be removed
-        if (!moduleConfig.getBoolean("Remove_Old_Module_Settings")) return;
-
-        // Remove modules not present in the code
-        ArrayList<String> modulesToBeRemoved = new ArrayList<>(modulesInConfig);
-        modules.forEach(module -> {
-            if (modulesInConfig.contains(module.getModuleName())) {
-                modulesToBeRemoved.remove(module.getModuleName());
-            }
-        });
-
-        for (String module : modulesToBeRemoved) {
-            moduleConfig.set(getModulePath() + "." + module, null);
-        }
-
-    }
-
-    private void setupModuleConfig() {
-        for (int i = 0; i < modules.size(); i++) {
-            ModuleClass module = modules.get(i);
-
-            moduleConfig.set(UtilModuleCommon.getSetting(module, ModuleSettings.ENABLED), isModulesEnabledByDefault);
-            moduleConfig.set(UtilModuleCommon.getSetting(module, ModuleSettings.ID), i);
-        }
-    }
 
     public FileConfiguration getModuleConfig() {
         return this.moduleConfig;
     }
 
-    private void createModuleConfig() {
-        moduleConfigFile = new File(getDataFolder(), "modules.yml");
-        if (!moduleConfigFile.exists() ) {
-            moduleConfigFile.getParentFile().mkdirs(); // This needs to be exactly here for it to work, idk why
-            saveResource("modules.yml", false);
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    public static FileConfiguration createModuleConfig(Plugin plugin, File moduleConfigFile) {
+        if (!moduleConfigFile.exists()) {
+            moduleConfigFile.getParentFile().mkdirs(); // This needs to be exactly here for it to work
+            plugin.saveResource("modules.yml", false);
         }
-        moduleConfig = YamlConfiguration.loadConfiguration(moduleConfigFile);
+        return YamlConfiguration.loadConfiguration(moduleConfigFile);
+    }
+
+    public static FileConfiguration createModuleConfig(Plugin plugin, String getDataFolder) {
+        return createModuleConfig(plugin, new File(getDataFolder, "modules.yml"));
     }
 
     public AdvancementMain getAdv() {
@@ -244,6 +167,10 @@ public class WisecraftSMP extends JavaPlugin {
 
     public Boolean getIsTesting() {
         return isTesting;
+    }
+
+    public File getModuleConfigFile() {
+        return moduleConfigFile;
     }
 
     public ArrayList<ModuleClass> getModules() {

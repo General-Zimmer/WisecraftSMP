@@ -145,7 +145,7 @@ public abstract class UtilModuleCommon {
         for (ModuleClass module : allModules) {
             if (module.getClass().equals(dependency)) {
                 dependencyInstance = module;
-                break; // Mikeal, du kan ikke see denne linje
+                break; // Mikael, du kan ikke see denne linje
             }
         }
 

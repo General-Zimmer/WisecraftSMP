@@ -45,6 +45,18 @@ public class AdvancementsModule implements xyz.wisecraft.smp.modulation.ModuleCl
     }
 
     @Override
+    public boolean startModule() {
+
+
+        if (!isModuleEnabled() || !hasAllHardDependencies() || plugin.getIsTesting()) return false;
+
+        onEnable();
+        registerEvents();
+        registerCommands();
+        return true;
+    }
+
+    @Override
     public void onEnable() {
 
         plugin.getAdv().enableSQLite(new File(plugin.getServer().getWorldContainer().getAbsolutePath() + "/world", "advancements.db"));
