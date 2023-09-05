@@ -4,6 +4,9 @@ import com.craftaro.ultimatetimber.core.hooks.protection.GriefPreventionProtecti
 import com.palmergames.bukkit.towny.object.TownyPermission;
 import com.palmergames.bukkit.towny.utils.PlayerCacheUtil;
 import com.sk89q.worldguard.bukkit.ProtectionQuery;
+import me.ryanhamshire.GriefPrevention.Claim;
+import me.ryanhamshire.GriefPrevention.ClaimPermission;
+import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -52,7 +55,7 @@ public abstract class UtilRandom {
         }
 
         // Grief plugin checks
-        boolean canBreak = canPlayerBreak(player, currentBlock, checkLocation);
+        boolean canBreak = canPlayerBreak(player, currentBlock);
 
         if (getAgeAbleFromBlock(currentBlock).getAge() == getAgeAbleFromBlock(currentBlock).getMaximumAge() && canBreak) {
             Material blockMaterial = currentBlock.getBlockData().getMaterial();
@@ -94,14 +97,18 @@ public abstract class UtilRandom {
         }
     }
 
-    private static boolean canPlayerBreak(Player player, Block currentBlock, Location checkLocation) {
+    private static boolean canPlayerBreak(Player player, Block currentBlock) {
         CropHarvesterModule cropModule = CropHarvesterModule.getInstance();
 
         boolean griefCheck = true;
         boolean blockCanBreakYes = true;
         boolean townyCanDestroy = true;
-        if (cropModule.isGriefpreventionEnabled())
-            griefCheck = new GriefPreventionProtection(plugin).canBreak(player, checkLocation); // GriefPrevention
+        if (cropModule.isGriefpreventionEnabled()) {
+            Claim claim = GriefPrevention.instance.dataStore.getClaimAt(currentBlock.getLocation(), true, null);
+            if (claim != null) {
+                griefCheck = claim.getOwnerID().equals(player.getUniqueId()) || claim.hasExplicitPermission(player, ClaimPermission.Build);
+            }
+        }
         if (cropModule.isWorldGuardEnabled())
             blockCanBreakYes = new ProtectionQuery().testBlockBreak(player, currentBlock); // World Guard
         if (cropModule.isTownyEnabled())

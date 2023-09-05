@@ -129,7 +129,7 @@ public interface ModuleClass extends Comparable<ModuleClass> {
      * @return The module enabled status.
      */
     default boolean isModuleDisabled() {
-        return plugin.getModuleConfig().getBoolean(UtilModuleCommon.getSetting(this, ModuleSettings.ENABLED), false);
+        return !plugin.getModuleConfig().getBoolean(UtilModuleCommon.getSetting(this, ModuleSettings.ENABLED), false);
     }
 
     /**
