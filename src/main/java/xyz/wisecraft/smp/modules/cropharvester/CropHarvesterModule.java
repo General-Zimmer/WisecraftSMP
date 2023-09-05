@@ -36,9 +36,8 @@ public class CropHarvesterModule implements xyz.wisecraft.smp.modulation.ModuleC
     @Override
     public void registerEvents() {
         plugin.getServer().getPluginManager().registerEvents(new HarvestListener(), plugin);
-        // plugin.getServer().getPluginManager().registerEvents(new CropTrampleListener(), plugin);
 
-        if (plugin.getConfig().getBoolean("SETTINGS.ANTI_TRAMPLE_CROPS")) {
+        if (plugin.getConfig().getBoolean("SETTINGS.ANTI_TRAMPLE_CROPS", false)) {
             plugin.getServer().getPluginManager().registerEvents(new CropTrampleListener(), plugin);
         }
     }
