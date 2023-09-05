@@ -14,14 +14,13 @@ import xyz.wisecraft.smp.modules.advancements.util.UtilAdv;
 public class LegacyRoles implements Listener {
 
     private final WisecraftSMP plugin;
-    private final LuckPerms luck;
 
     /**
-     * Constructor
+     * Constructor for LegacyRoles
+     *
      */
-    public LegacyRoles(LuckPerms luck) {
+    public LegacyRoles() {
         this.plugin = WisecraftSMP.getInstance();
-        this.luck = luck;
     }
 
 

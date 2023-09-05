@@ -1,15 +1,15 @@
-package xyz.wisecraft.smp.modules.extra;
+package xyz.wisecraft.smp.modules.tutorialstuff;
 
 import net.ess3.api.IEssentials;
 import xyz.wisecraft.core.WisecraftCoreApi;
-import xyz.wisecraft.smp.modules.extra.listeners.ExtraListener;
+import xyz.wisecraft.smp.modules.tutorialstuff.listeners.ExtraListener;
 
 import java.util.Objects;
 
 /**
  * This class is used to create modules.
  */
-public class ExtraModule implements xyz.wisecraft.smp.modulation.ModuleClass {
+public class TutorialStuffModule implements xyz.wisecraft.smp.modulation.ModuleClass {
 
     IEssentials ess = setupDependency("Essentials", IEssentials.class);
     WisecraftCoreApi core = setupDependency(WisecraftCoreApi.class);

@@ -6,6 +6,7 @@ import xyz.wisecraft.core.data.templates.Timers;
 import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.modules.advancements.util.UtilAdv;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -16,12 +17,11 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class UtilCommon {
     /**
-     * Note: This can give false positives due to the fact that 1. trees can be made to last longer than TimeFrame or
-     * 2. if multiple people nearby are using Timber and the culprit wasn't the one with the highest time or
-     * 3. if someone can get over 32 blocks away from the victim
-     * <p>
-     * A Timber cooldown of over TimeFrame is needed to prevent people from abusing 2. false positive reason
-     *
+     * Note: This can give false positives due to the fact that
+     * <p> 1. trees can be made to last longer than TimeFrame or
+     * <p> 2. if multiple people nearby are using Timber and the culprit wasn't the one with the highest time or
+     * <p> 3. if someone can get over 32 blocks away from the victim
+     * <p> A Timber cooldown of over TimeFrame is needed to prevent people from abusing 2. false positive reason
      * @param victim Player that was hit by a tree
      * @return Who might have used Timber
      */
@@ -61,7 +61,7 @@ public class UtilCommon {
         // Check who broke a tree recently
         for (Player attacker : Bukkit.getOnlinePlayers()) {
             Timers attackerTimer = timers.get(attacker.getUniqueId());
-            double secSinceAttackerTimber = UtilAdv.calcCurrentSeconds(attackerTimer.getTree());
+            double secSinceAttackerTimber = UtilCommon.calcCurrentSeconds(attackerTimer.getTree());
             UUID attackerUUID = attacker.getUniqueId();
 
             if (!victimUUID.toString().equals(attackerUUID.toString()) && secSinceAttackerTimber < timeFrame)
@@ -70,6 +70,16 @@ public class UtilCommon {
         if (players.isEmpty())
             return null;
         return players;
+    }
+
+    /**
+     * Get the time in seconds since previousDate
+     * @param previousDate Date to compare to
+     * @return Seconds since previousDate
+     */
+    public static double calcCurrentSeconds(Date previousDate) {
+        Date currentDate = new Date();
+        return (currentDate.getTime() - previousDate.getTime())/1000.0;
     }
 
 }

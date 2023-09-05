@@ -25,19 +25,15 @@ import java.util.UUID;
  */
 public class AngelListeners implements Listener {
 
-
     private final IEssentials ess;
     private final HashMap<UUID, Angel> angels;
-
     /**
      * Constructor for the class.
      */
     public AngelListeners(IEssentials ess) {
         this.ess = ess;
         this.angels = OtherStorage.getAngels();
-
     }
-
 
     /**
      * Adds the player to the hashmap when they join.
@@ -50,8 +46,6 @@ public class AngelListeners implements Listener {
             Angel angel = new Angel(p.hasPermission("wisecraft.donator"));
             angels.put(p.getUniqueId(), angel);
         }
-
-
     }
 
     /**
@@ -63,7 +57,6 @@ public class AngelListeners implements Listener {
         Player p = e.getPlayer();
         UUID UUID = p.getUniqueId();
 
-
         Angel angel = angels.get(UUID);
 
         // Prevent items from being destroyed after leaving
@@ -71,9 +64,7 @@ public class AngelListeners implements Listener {
             angel.safeDelete(UUID);
         else if (!angel.hasDied())
             angels.remove(UUID);
-
     }
-
 
     /**
      * Gives the player their items back when they respawn.
@@ -98,8 +89,6 @@ public class AngelListeners implements Listener {
         } else {
             angels.get(e.getPlayer().getUniqueId()).giveStarter(ess, e.getPlayer());
         }
-
-
     }
 
     /**
@@ -116,9 +105,5 @@ public class AngelListeners implements Listener {
         PlayerInventory inv = e.getEntity().getInventory();
 
         angel.saveGear(drops, inv);
-
     }
-
-
-
 }

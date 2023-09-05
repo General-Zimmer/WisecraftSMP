@@ -69,16 +69,6 @@ public abstract class UtilAdv {
     }
 
     /**
-     * Get the time in seconds since previousDate
-     * @param previousDate Date to compare to
-     * @return Seconds since previousDate
-     */
-    public static double calcCurrentSeconds(Date previousDate) {
-        Date currentDate = new Date();
-        return (currentDate.getTime() - previousDate.getTime())/1000.0;
-    }
-
-    /**
      * Create a role
      * @param group Group to create role from
      * @return Role
