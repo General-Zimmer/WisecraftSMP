@@ -18,6 +18,8 @@ SETTINGS:
   TIMBER_TIMEFRAME: 2.5
   # Worlds to disable PvP toggling in (i.e. will always use the world's settings)
   BLOCKED_WORLDS: []
+  # True means Trampling crops is not permissible if Anti-Grief plugins are enabled. False means its disabled
+  ANTI_TRAMPLE_CROPS: true
 
 #<pvpstate> goes in place of a player's current pvp state
 #<argument> goes in place of a player's name or other arguement

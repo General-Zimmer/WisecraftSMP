@@ -58,11 +58,9 @@ public interface ModuleClass extends Comparable<ModuleClass> {
      * @return true if the plugin is enabled.
      */
     default boolean setupDependency(String pluginName) {
-
         Plugin setupPlugin = plugin.getServer().getPluginManager().getPlugin(pluginName);
         if (setupPlugin == null) {return false;}
         return setupPlugin.isEnabled();
-
     }
 
     /**
