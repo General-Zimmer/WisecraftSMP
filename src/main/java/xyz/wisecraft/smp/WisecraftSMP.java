@@ -76,16 +76,13 @@ public class WisecraftSMP extends JavaPlugin {
         Reflections reflections = new Reflections("xyz.wisecraft.smp.modules");
 
         // Initialize modules
-        setupModules(reflections.getSubTypesOf(ModuleClass.class));
+        ArrayList<ModuleClass> unsortedModules = setupModules(reflections.getSubTypesOf(ModuleClass.class));
 
         // setup modules
         setupModulesFromConfig(); // todo prevent comments from being removed
-
-
-        ArrayList<ModuleClass> sortedModules = UtilModuleCommon.sortDependTrimmed(modules);
+        ArrayList<ModuleClass> sortedModules = UtilModuleCommon.sortDependTrimmed(unsortedModules);
 
         // Start/load modules
-        modules.clear();
         for (int i = sortedModules.size(); i > 0; i--) {
             ModuleClass module = sortedModules.get(i-1);
 
@@ -112,13 +109,16 @@ public class WisecraftSMP extends JavaPlugin {
 
 
 
-    private void setupModules(Set<Class<? extends ModuleClass>> modules) {
+    private ArrayList<ModuleClass> setupModules(Set<Class<? extends ModuleClass>> moduleClazzes) {
 
-        for (Class<? extends ModuleClass> moduleClass : modules) {
+        ArrayList<ModuleClass> modules = new ArrayList<>();
+
+        for (Class<? extends ModuleClass> moduleClass : moduleClazzes) {
             try {
                 ModuleClass module = moduleClass.getConstructor().newInstance();
 
-                this.modules.add(module);
+                modules.add(module); // This is on a seperate line so it's easier to debug and
+                // to make sure it's not added to the array in case of failure
             } catch (InstantiationException |
                      IllegalAccessException |
                      NoSuchMethodException |
@@ -126,6 +126,7 @@ public class WisecraftSMP extends JavaPlugin {
                 e.printStackTrace();
             }
         }
+        return modules;
     }
 
     private void setupModulesFromConfig() {
