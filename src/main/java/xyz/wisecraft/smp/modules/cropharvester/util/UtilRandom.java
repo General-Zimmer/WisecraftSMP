@@ -42,23 +42,21 @@ public abstract class UtilRandom {
      * @param player Player to get mainhand item from
      */
     private static void farmCropWithHoe(Location mainLocation, int x, int y, int z, ItemStack item, Player player) {
-
         boolean blockWasBroken = false;
-
         Location checkLocation = new Location(mainLocation.getWorld(),
                 (mainLocation.getX() + x), mainLocation.getY() + y, mainLocation.getZ() + z);
-
         Block currentBlock = checkLocation.getBlock();
-        if (!(currentBlock.getBlockData() instanceof Ageable)) {
+
+        if (!(currentBlock.getBlockData() instanceof Ageable)) { // This can be put into getAgeAbleFromBlock
             return;
         }
 
         // Grief plugin checks
         boolean canBreak = canPlayerBreak(player, currentBlock, checkLocation);
 
-        Material blockMaterial = currentBlock.getBlockData().getMaterial();
-
         if (getAgeAbleFromBlock(currentBlock).getAge() == getAgeAbleFromBlock(currentBlock).getMaximumAge() && canBreak) {
+            Material blockMaterial = currentBlock.getBlockData().getMaterial();
+
             currentBlock.breakNaturally(item);
             currentBlock.setType(blockMaterial);
             blockWasBroken = true;
