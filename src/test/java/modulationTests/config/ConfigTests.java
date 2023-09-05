@@ -30,7 +30,7 @@ public class ConfigTests {
 
     @Test
     public void testModuleConfig() {
-
+        // todo make tests for module config
     }
 
     @AfterEach
