@@ -13,8 +13,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import xyz.wisecraft.smp.WisecraftSMP;
+import xyz.wisecraft.smp.modules.cropharvester.CropHarvesterModule;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -41,10 +41,9 @@ public abstract class UtilRandom {
      * @param item Item used to break block naturally
      * @param player Player to get mainhand item from
      */
-    public static void farmCropWithHoeIfMaxAgeOnLocation(Location mainLocation, int x, int y, int z, ItemStack item, Player player) {
+    private static void farmCropWithHoe(Location mainLocation, int x, int y, int z, ItemStack item, Player player) {
 
         boolean blockWasBroken = false;
-
 
         Location checkLocation = new Location(mainLocation.getWorld(),
                 (mainLocation.getX() + x), mainLocation.getY() + y, mainLocation.getZ() + z);
@@ -54,32 +53,18 @@ public abstract class UtilRandom {
             return;
         }
 
-        ProtectionQuery pq = new ProtectionQuery();
+        // Grief plugin checks
+        boolean canBreak = canPlayerBreak(player, currentBlock, checkLocation);
 
         Material blockMaterial = currentBlock.getBlockData().getMaterial();
 
-        /*
-        boolean townyCanDestroy = PlayerCacheUtil.getCachePermission(player, currentBlock.getLocation(), currentBlock.getType(), TownyPermission.ActionType.DESTROY);
-        boolean griefCheck = griefClaimCheck(checkLocation, player); // GriefPrevention
-        boolean blockCanBreakYes = pq.testBlockBreak(player, currentBlock); // World Guard
-
-         */
-        boolean townyCanDestroy = true;
-        boolean griefCheck = true;
-        boolean blockCanBreakYes = true;
-
-        if (getAgeAbleFromBlock(currentBlock).getAge() == getAgeAbleFromBlock(currentBlock).getMaximumAge()
-                && griefCheck && blockCanBreakYes && townyCanDestroy) {
+        if (getAgeAbleFromBlock(currentBlock).getAge() == getAgeAbleFromBlock(currentBlock).getMaximumAge() && canBreak) {
             currentBlock.breakNaturally(item);
             currentBlock.setType(blockMaterial);
             blockWasBroken = true;
         }
 
-        if (!blockWasBroken) {
-            return;
-        }
-
-        if (player.getGameMode() == org.bukkit.GameMode.CREATIVE) {
+        if (!blockWasBroken || player.getGameMode() == org.bukkit.GameMode.CREATIVE) {
             return;
         }
 
@@ -99,213 +84,33 @@ public abstract class UtilRandom {
 
         int size = width / (-2);
         if (width == 0) {
-            farmCropWithHoeIfMaxAgeOnLocation(mainLocation, 0, 0, 0, item, player);
+            farmCropWithHoe(mainLocation, 0, 0, 0, item, player);
             return;
         }
 
         for (int z = size; z <= size * (-1); z++) {
 
             for (int x = size; x <= size * (-1); x++) {
-                farmCropWithHoeIfMaxAgeOnLocation(mainLocation, x, 0, z, item, player);
+                farmCropWithHoe(mainLocation, x, 0, z, item, player);
             }
         }
     }
 
-    public static void farmOptimalFarmingBlocks(int width, int height, Block startBlock, ItemStack item, Player player) {
-        boolean[] checkLocations = new boolean[4];
-        ArrayList<Location> locationsToBeFarmed = new ArrayList<>();
-        // int max = width * height;
-        int count = 0;
-        Location mainLocation = startBlock.getLocation();
+    private static boolean canPlayerBreak(Player player, Block currentBlock, Location checkLocation) {
+        CropHarvesterModule cropModule = CropHarvesterModule.getInstance();
 
-        Location checkLocation = mainLocation;
+        boolean griefCheck = true;
+        boolean blockCanBreakYes = true;
+        boolean townyCanDestroy = true;
+        if (cropModule.isGriefpreventionEnabled())
+            griefCheck = new GriefPreventionProtection(plugin).canBreak(player, checkLocation); // GriefPrevention
+        if (cropModule.isWorldGuardEnabled())
+            blockCanBreakYes = new ProtectionQuery().testBlockBreak(player, currentBlock); // World Guard
+        if (cropModule.isTownyEnabled())
+            townyCanDestroy = PlayerCacheUtil.getCachePermission(player, currentBlock.getLocation(), currentBlock.getType(), TownyPermission.ActionType.DESTROY);
 
-        int y = 1;
-        boolean farmingAreaFound = false;
-
-        locationsToBeFarmed = findOptimalFarming(mainLocation, width, height);
-
-
-
-            // player.sendMessage("Count final: " + count);
-            // player.sendMessage("" + locationsToBeFarmed.size());
-            player.sendMessage("New Farming run");
-            player.sendMessage("Locationstobefarmed: " + locationsToBeFarmed.size());
-            for (Location location: locationsToBeFarmed) {
-                farmCropWithHoeIfMaxAgeOnLocation(location, 0, 0, 0, item, player);
-                player.sendMessage("X: " + location.getX() + "  Z: " + location.getZ());
-            }
-        }
-
-
-    private static ArrayList<Location> findOptimalFarmingBlocks(Location mainLocation, int width, int height) {
-            Location checkLocation = mainLocation;
-            ArrayList<Location> finalFarmingList = new ArrayList<>();
-            int totalBlocksToBeFarmed = width * height;
-            int totalCount = 0;
-
-            for (int z = (height * (-1)) + 1; z < height && totalCount < totalBlocksToBeFarmed; z++) {
-            int xCount = 0;
-            for (int x = (width * (-1)) + 1; x < width && (totalCount < totalBlocksToBeFarmed|| xCount < width); x++) {
-                checkLocation = new Location(mainLocation.getWorld(),
-                        (mainLocation.getX() + x), mainLocation.getY(), mainLocation.getZ() + z);
-                Block currentBlock = checkLocation.getBlock();
-                if (currentBlock.getBlockData() instanceof Ageable) {
-                    if (getAgeAbleFromBlock(currentBlock).getAge() == getAgeAbleFromBlock(currentBlock).getMaximumAge()) {
-                        finalFarmingList.add(checkLocation);
-                        totalCount++;
-                        xCount++;
-                    }
-                }
-            }
-        }
-        return finalFarmingList;
+        return griefCheck && blockCanBreakYes && townyCanDestroy;
     }
-
-
-    // This is ze latest method
-    private static ArrayList<Location> findOptimalFarming(Location mainLocation, int width, int height) {
-        Location checkLocation = mainLocation;
-        ArrayList<Location> blocksToBeFarmed = new ArrayList<>();
-        ArrayList<Location> finalBlocksToBeFarmed = new ArrayList<>();
-        boolean farmingAreaFound = false;
-        int cropMax = width * height;
-
-        // Do things 4 times
-
-        // Left & up
-        for (int x = width * (-1) + 1; x < 1; x++) {
-
-            for (int z = 0; z < height; z++) {
-                checkLocation = new Location(mainLocation.getWorld(),
-                        (mainLocation.getX() + x), mainLocation.getY(), mainLocation.getZ() + z);
-                Block currentBlock = checkLocation.getBlock();
-                if (currentBlock.getBlockData() instanceof Ageable) {
-                    if (getAgeAbleFromBlock(currentBlock).getAge() == getAgeAbleFromBlock(currentBlock).getMaximumAge()) {
-                        blocksToBeFarmed.add(checkLocation);
-                    }
-                }
-            }
-        }
-            finalBlocksToBeFarmed.addAll(blocksToBeFarmed);
-            blocksToBeFarmed.clear();
-
-
-        // Left & down
-        for (int x = width * (-1) + 1; x < 1; x++) {
-
-            for (int z = height * (-1) + 1; z < 1; z++) {
-                checkLocation = new Location(mainLocation.getWorld(),
-                        (mainLocation.getX() + x), mainLocation.getY(), mainLocation.getZ() + z);
-                Block currentBlock = checkLocation.getBlock();
-                if (currentBlock.getBlockData() instanceof Ageable) {
-                    if (getAgeAbleFromBlock(currentBlock).getAge() == getAgeAbleFromBlock(currentBlock).getMaximumAge()) {
-                        blocksToBeFarmed.add(checkLocation);
-                    }
-                }
-            }
-        }
-        if (blocksToBeFarmed.size() > finalBlocksToBeFarmed.size()) {
-            finalBlocksToBeFarmed.clear();
-            finalBlocksToBeFarmed.addAll(blocksToBeFarmed);
-            blocksToBeFarmed.clear();
-        }
-
-        // Right & up
-        for (int x = 0; x < width; x++) {
-
-            for (int z = 0; z < height; z++) {
-                checkLocation = new Location(mainLocation.getWorld(),
-                        (mainLocation.getX() + x), mainLocation.getY(), mainLocation.getZ() + z);
-                Block currentBlock = checkLocation.getBlock();
-                if (currentBlock.getBlockData() instanceof Ageable) {
-                    if (getAgeAbleFromBlock(currentBlock).getAge() == getAgeAbleFromBlock(currentBlock).getMaximumAge()) {
-                        blocksToBeFarmed.add(checkLocation);
-                    }
-                }
-            }
-        }
-        if (blocksToBeFarmed.size() > finalBlocksToBeFarmed.size()) {
-            finalBlocksToBeFarmed.clear();
-            finalBlocksToBeFarmed.addAll(blocksToBeFarmed);
-            blocksToBeFarmed.clear();
-        }
-
-        // Right & down
-        for (int x = 0; x < width; x++) {
-
-            for (int z = height * (-1) + 1; z < 1; z++) {
-                checkLocation = new Location(mainLocation.getWorld(),
-                        (mainLocation.getX() + x), mainLocation.getY(), mainLocation.getZ() + z);
-                Block currentBlock = checkLocation.getBlock();
-                if (currentBlock.getBlockData() instanceof Ageable) {
-                    if (getAgeAbleFromBlock(currentBlock).getAge() == getAgeAbleFromBlock(currentBlock).getMaximumAge()) {
-                        blocksToBeFarmed.add(checkLocation);
-                    }
-                }
-            }
-        }
-        if (blocksToBeFarmed.size() > finalBlocksToBeFarmed.size()) {
-            finalBlocksToBeFarmed.clear();
-            finalBlocksToBeFarmed.addAll(blocksToBeFarmed);
-            blocksToBeFarmed.clear();
-        }
-
-        return finalBlocksToBeFarmed;
-    }
-    private static ArrayList<Location> checkFarmingBlocksInRow(Location mainLocation, int width, int height, int direction) {
-        Location checkLocation = mainLocation;
-        ArrayList<Location> locationsToBeFarmed = new ArrayList<>();
-        int count = 0;
-        int directionFactorI = 0;
-        int directionFactorMax = 0;
-
-        switch (direction) {
-            case 1: // Right
-                directionFactorMax = width;
-                break;
-            case 2: // Left
-                directionFactorI = (width * (-1)) + 1;
-                break;
-            case 3: // Up
-                directionFactorI = (height * (-1)) + 1;
-            break;
-            case 4:// Down
-                directionFactorMax = height;
-                break;
-        }
-
-        if (direction == 1 || direction == 2) {
-            for (int z = -1; z > (height * (-1)); z--) {
-
-                for (int x = 0; x < width; x++) {
-                    checkLocation = new Location(mainLocation.getWorld(),
-                            (mainLocation.getX() + x), mainLocation.getY(), mainLocation.getZ() + z);
-                    Block currentBlock = checkLocation.getBlock();
-                    if (currentBlock.getBlockData() instanceof Ageable) {
-                        locationsToBeFarmed.add(checkLocation);
-                        count++;
-                    }
-                }
-            }
-        }
-        if (direction == 3 || direction == 4) {
-            for (int i = directionFactorI; i <= directionFactorMax; i++) {
-                checkLocation = new Location(mainLocation.getWorld(),
-                        (mainLocation.getX()), mainLocation.getY(), mainLocation.getZ() + i);
-                Block currentBlock = checkLocation.getBlock();
-                if (currentBlock.getBlockData() instanceof Ageable) {
-                    locationsToBeFarmed.add(checkLocation);
-                    count++;
-                }
-            }
-        }
-
-        return count > 3 ? locationsToBeFarmed : null;
-    }
-
-
-
 
     // TODO - Make the break Item sound play once a tool is broken
     /**
@@ -320,7 +125,7 @@ public abstract class UtilRandom {
         float randomNumber = rand.nextFloat(100);
         float changeOfDamage = 100 / (durabilityLevel + 1f);
         if (randomNumber < changeOfDamage) {
-            Damageable pdmg = (Damageable)player.getInventory().getItemInMainHand().getItemMeta();
+            Damageable pdmg = (Damageable) player.getInventory().getItemInMainHand().getItemMeta();
             pdmg.setDamage(pdmg.getDamage() + 1);
             if (pdmg.getDamage() >= item.getType().getMaxDurability()) {
                 player.getInventory().setItemInMainHand(new ItemStack(Material.AIR));

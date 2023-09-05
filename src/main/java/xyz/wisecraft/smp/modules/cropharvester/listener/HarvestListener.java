@@ -42,14 +42,8 @@ public class HarvestListener implements Listener {
 
         if (OtherStorage.getTools().containsKey(itemInHand.getType()) && BlockAge == ageable.getMaximumAge()) {
 
-            /*
             int size = Integer.parseInt(OtherStorage.getTools().get(itemInHand.getType()).substring(0,1));
             UtilRandom.farmBlocksXByX(size, clickedBlock, itemInHand,e.getPlayer());
-
-             */
-
-
-            UtilRandom.farmOptimalFarmingBlocks(4,4,clickedBlock, itemInHand, e.getPlayer());
         }
     }
 

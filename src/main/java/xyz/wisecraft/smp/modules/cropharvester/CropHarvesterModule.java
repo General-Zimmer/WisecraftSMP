@@ -11,6 +11,15 @@ import java.util.List;
  * CropHarvesterModule
  */
 public class CropHarvesterModule implements xyz.wisecraft.smp.modulation.ModuleClass {
+    private final boolean isGriefpreventionEnabled = setupDependency("GriefPrevention");
+    private final boolean isWorldGuardEnabled = setupDependency("WorldGuard");
+    private final boolean isTownyEnabled = setupDependency("Towny");
+    static CropHarvesterModule instance;
+
+    public CropHarvesterModule() {
+        instance = this;
+    }
+
     @Override
     public void onEnable() {
 
@@ -34,4 +43,19 @@ public class CropHarvesterModule implements xyz.wisecraft.smp.modulation.ModuleC
         }
     }
 
+    public static CropHarvesterModule getInstance() {
+        return instance;
+    }
+
+    public boolean isGriefpreventionEnabled() {
+        return isGriefpreventionEnabled;
+    }
+
+    public boolean isWorldGuardEnabled() {
+        return isWorldGuardEnabled;
+    }
+
+    public boolean isTownyEnabled() {
+        return isTownyEnabled;
+    }
 }
