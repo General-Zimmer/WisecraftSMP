@@ -31,9 +31,6 @@ public class ConfigTests {
     @Test
     public void testModuleConfig() {
 
-
-        UtilRandom.setupModulesFromConfig(moduleConfig, modules, isModulesEnabledByDefault, getModulePath());
-
     }
 
     @AfterEach

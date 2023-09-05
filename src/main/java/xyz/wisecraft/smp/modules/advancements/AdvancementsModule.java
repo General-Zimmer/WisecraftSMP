@@ -48,7 +48,7 @@ public class AdvancementsModule implements xyz.wisecraft.smp.modulation.ModuleCl
     public boolean startModule() {
 
 
-        if (!isModuleEnabled() || !hasAllHardDependencies() || plugin.getIsTesting()) return false;
+        if (isModuleDisabled() || !hasAllHardDependencies() || plugin.getIsTesting()) return false;
 
         onEnable();
         registerEvents();

@@ -1,7 +1,6 @@
 package xyz.wisecraft.smp;
 
 import com.fren_gor.ultimateAdvancementAPI.AdvancementMain;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -11,15 +10,14 @@ import xyz.wisecraft.smp.modulation.ModuleClass;
 import xyz.wisecraft.smp.modulation.UtilModuleCommon;
 import xyz.wisecraft.smp.modulation.storage.ModuleSettings;
 import xyz.wisecraft.smp.storage.OtherStorage;
-import xyz.wisecraft.smp.util.UtilRandom;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
+
+import static xyz.wisecraft.smp.util.UtilRandom.setupModulesFromConfig;
 
 /**
  * Main class for WisecraftSMP
@@ -28,9 +26,8 @@ public class WisecraftSMP extends JavaPlugin {
 
     private static WisecraftSMP instance;
     private AdvancementMain advapi;
-    private File moduleConfigFile;
     private FileConfiguration moduleConfig;
-    private boolean isModulesEnabledByDefault;
+
     private final ArrayList<ModuleClass> modules = new ArrayList<>();
 
     /**
@@ -66,7 +63,9 @@ public class WisecraftSMP extends JavaPlugin {
 
         // Config stuff
         this.saveDefaultConfig();
-        moduleConfig = createModuleConfig(this, this.getDataFolder().toString());
+
+        File moduleConfigFile = new File(this.getDataFolder().toString(), "modules.yml");
+        moduleConfig = createModuleConfig(this, moduleConfigFile);
         OtherStorage.setServer_name(this.getConfig().getString("server_name"));
 
         boolean isModulesEnabledByDefault = moduleConfig.getBoolean("IsModulesEnabledByDefault", false);
@@ -78,8 +77,9 @@ public class WisecraftSMP extends JavaPlugin {
         ArrayList<ModuleClass> unsortedModules = setupModules(reflections.getSubTypesOf(ModuleClass.class));
 
         // setup modules
-        setupModulesFromConfig(); // todo prevent comments from being removed
         ArrayList<ModuleClass> sortedModules = UtilModuleCommon.sortDependTrimmed(unsortedModules);
+        setupModulesFromConfig(moduleConfig, sortedModules, isModulesEnabledByDefault, getModulePath()); // todo prevent comments from being removed
+
 
         // Start/load modules
         for (int i = sortedModules.size(); i > 0; i--) {
@@ -92,7 +92,7 @@ public class WisecraftSMP extends JavaPlugin {
         try {
             moduleConfig.save(moduleConfigFile);
         } catch (IOException e) {
-            e.printStackTrace();
+            this.getLogger().log(java.util.logging.Level.SEVERE, "Could not save config to " + moduleConfigFile, e);
         }
     }
 
@@ -122,7 +122,7 @@ public class WisecraftSMP extends JavaPlugin {
                      IllegalAccessException |
                      NoSuchMethodException |
                      InvocationTargetException e) {
-                e.printStackTrace();
+                this.getLogger().log(java.util.logging.Level.SEVERE, "Could not instantiate module " + moduleClass.getName(), e);
             }
         }
         return modules;
@@ -141,10 +141,6 @@ public class WisecraftSMP extends JavaPlugin {
             plugin.saveResource("modules.yml", false);
         }
         return YamlConfiguration.loadConfiguration(moduleConfigFile);
-    }
-
-    public static FileConfiguration createModuleConfig(Plugin plugin, String getDataFolder) {
-        return createModuleConfig(plugin, new File(getDataFolder, "modules.yml"));
     }
 
     public AdvancementMain getAdv() {
@@ -169,10 +165,6 @@ public class WisecraftSMP extends JavaPlugin {
 
     public Boolean getIsTesting() {
         return isTesting;
-    }
-
-    public File getModuleConfigFile() {
-        return moduleConfigFile;
     }
 
     public ArrayList<ModuleClass> getModules() {
