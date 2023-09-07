@@ -1,14 +1,13 @@
 package xyz.wisecraft.smp.modules.advancements.listeners;
 
 import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
-import net.luckperms.api.LuckPerms;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import xyz.wisecraft.smp.WisecraftSMP;
-import xyz.wisecraft.smp.modules.advancements.adv.legacy.Citizen;
-import xyz.wisecraft.smp.modules.advancements.adv.legacy.Nobility;
+import xyz.wisecraft.smp.modules.advancements.advs.legacy.Citizen;
+import xyz.wisecraft.smp.modules.advancements.advs.legacy.Nobility;
 import xyz.wisecraft.smp.modules.advancements.util.UtilAdv;
 
 public class LegacyRoles implements Listener {
