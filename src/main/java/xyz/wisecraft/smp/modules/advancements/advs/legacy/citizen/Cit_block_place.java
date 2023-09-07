@@ -1,4 +1,4 @@
-package xyz.wisecraft.smp.modules.advancements.advs.legacy;
+package xyz.wisecraft.smp.modules.advancements.advs.legacy.citizen;
 
 import com.fren_gor.ultimateAdvancementAPI.util.AdvancementKey;
 import com.fren_gor.ultimateAdvancementAPI.advancement.tasks.TaskAdvancement;
@@ -10,13 +10,13 @@ import xyz.wisecraft.smp.modules.advancements.advs.AdvancementTabNamespaces;
 
 import java.util.UUID;
 
-public class Nob_block_place extends TaskAdvancement {
+public class Cit_block_place extends TaskAdvancement {
 
-  public static AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.legacy_NAMESPACE, "nob_block_place");
+  public static AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.legacy_NAMESPACE, "cit_block_place");
 
 
-  public Nob_block_place(AbstractMultiTasksAdvancement multitask) {
-    super(KEY.getKey(), multitask, 10000 );
+  public Cit_block_place(AbstractMultiTasksAdvancement multitask) {
+    super(KEY.getKey(), multitask, 2000);
 
     registerEvent(BlockPlaceEvent.class, e -> {
       Player p = e.getPlayer();
