@@ -14,6 +14,6 @@ public class Allspecialty extends MultiTasksAdvancement  {
 
 
   public Allspecialty(Advancement parent, float x, float y) {
-    super(KEY.getKey(), new AdvancementDisplay(Material.OAK_SAPLING, "Job hopping", AdvancementFrameType.TASK, true, true, x, y , "Use every job's specialty available"), parent, 5);
+    super(KEY.getKey(), new AdvancementDisplay(Material.DEBUG_STICK, "Job hopping", AdvancementFrameType.TASK, true, true, x, y , "Use every job's specialty available"), parent, 5);
   }
 }

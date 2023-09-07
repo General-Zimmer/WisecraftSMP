@@ -3,7 +3,9 @@ version: '${project.version}'
 main: xyz.wisecraft.smp.WisecraftSMP
 api-version: 1.18
 depend: []
-softdepend: [Multiverse-Core, UltimateTimber, Essentials, WisecraftCore, LuckPerms, PlaceholderAPI, NametagEdit, GriefPrevention, Towny, WorldGuard]
+softdepend: [Multiverse-Core, UltimateTimber, Essentials, WisecraftCore,
+             LuckPerms, PlaceholderAPI, NametagEdit, VeinMiner, GriefPrevention,
+             Towny, WorldGuard, Jobs]
 authors: [General_Zimmer]
 commands:
   wisecraft:

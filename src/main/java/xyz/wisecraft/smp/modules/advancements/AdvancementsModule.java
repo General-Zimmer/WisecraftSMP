@@ -11,6 +11,7 @@ import com.fren_gor.ultimateAdvancementAPI.util.AdvancementKey;
 import com.fren_gor.ultimateAdvancementAPI.util.CoordAdapter;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Material;
+import org.jetbrains.annotations.NotNull;
 import wtf.choco.veinminer.VeinMinerPlugin;
 import xyz.wisecraft.core.WisecraftCoreApi;
 import xyz.wisecraft.smp.modules.advancements.advs.AdvancementTabNamespaces;
@@ -47,10 +48,11 @@ public class AdvancementsModule implements xyz.wisecraft.smp.modulation.ModuleCl
     private AdvancementTab tutorial_quests;
     private AdvancementTab common_quests;
     private AdvancementTab legacy;
-    private final boolean isTimberEnabled = setupDependency("UltimateTimber", UltimateTimber.class) != null;
+    private final boolean isTimberEnabled = setupDependency("UltimateTimber");
     private final LuckPerms luck = setupDependency(LuckPerms.class);
     private final WisecraftCoreApi core = setupDependency(WisecraftCoreApi.class);
-    private final boolean isVeinMinerEnabled = setupDependency("VeinMiner", VeinMinerPlugin.class) != null;
+    private final boolean isVeinMinerEnabled = setupDependency("VeinMiner");
+    private final boolean isJobsEnabled = setupDependency("Jobs");
 
 
     public AdvancementsModule() {
@@ -119,8 +121,14 @@ public class AdvancementsModule implements xyz.wisecraft.smp.modulation.ModuleCl
     public void initializeTabs() {
         tutorial_quests = api.createAdvancementTab(AdvancementTabNamespaces.tutorial_quests_NAMESPACE);
         AdvancementKey tutorialquestsKey = new AdvancementKey(tutorial_quests.getNamespace(), "tutorialquests");
-        CoordAdapter adaptertutorial_quests = CoordAdapter.builder().add(tutorialquestsKey, 0f, 0f).add(Craft_bundle.KEY, 2f, -1f).add(Craft_elytra.KEY, 1f, -1f).add(Regenworlds.KEY, 2f, 0f).add(First_timber.KEY, 3f, 1f).add(Timber_move.KEY, 4f, 1f).add(Veinmine.KEY, 3f, 0f).add(Old_timer.KEY, -1f, 0f).add(Sethome.KEY, 1f, 0f).build();
+        CoordAdapter.@NotNull CoordAdapterBuilder adapterBuildertutorial_quests = CoordAdapter.builder().add(tutorialquestsKey, 0f, 0f)
+                .add(Craft_bundle.KEY, 2f, -1f).add(Craft_elytra.KEY, 1f, -1f).add(Regenworlds.KEY, 2f, 0f)
+                .add(First_timber.KEY, 3f, 1f).add(Timber_move.KEY, 4f, 1f).add(Veinmine.KEY, 3f, 0f)
+                .add(Old_timer.KEY, -1f, 0f).add(Sethome.KEY, 1f, 0f).add(Jointown.KEY, 1f, 3f).add(Gettownplot.KEY, 2f, 3f)
+                .add(Gettingjob.KEY, 1f, 2f).add(Trypvp.KEY, 1f, 1f).add(Firstspecialty.KEY, 2f, 2f).add(Allspecialty.KEY, 3f, 2f);
 
+
+        @NotNull CoordAdapter adaptertutorial_quests = adapterBuildertutorial_quests.build();
         HashSet<BaseAdvancement> tutorial_questsSet = new HashSet<>();
         RootAdvancement tutorialquests = new RootAdvancement(tutorial_quests, tutorialquestsKey.getKey(), new AdvancementDisplay(Material.KNOWLEDGE_BOOK, "Welcome to tutorial quests!", AdvancementFrameType.TASK, false, false, adaptertutorial_quests.getX(tutorialquestsKey), adaptertutorial_quests.getY(tutorialquestsKey), "Here are advancements that can help you get started!"),"textures/block/lime_shulker_box.png",1);
 
@@ -137,14 +145,19 @@ public class AdvancementsModule implements xyz.wisecraft.smp.modulation.ModuleCl
         Regenworlds regenworlds = new Regenworlds(sethome,adaptertutorial_quests.getX(Regenworlds.KEY), adaptertutorial_quests.getY(Regenworlds.KEY));
         tutorial_questsSet.add(regenworlds);
 
-        First_timber first_timber = new First_timber(regenworlds,adaptertutorial_quests.getX(First_timber.KEY), adaptertutorial_quests.getY(First_timber.KEY));
-        tutorial_questsSet.add(first_timber);
+        if (isTimberEnabled()) {
+            First_timber first_timber = new First_timber(regenworlds,adaptertutorial_quests.getX(First_timber.KEY), adaptertutorial_quests.getY(First_timber.KEY));
+            tutorial_questsSet.add(first_timber);
+            Timber_move timber_move = new Timber_move(first_timber,adaptertutorial_quests.getX(Timber_move.KEY), adaptertutorial_quests.getY(Timber_move.KEY));
+            tutorial_questsSet.add(timber_move);
+        }
 
-        Timber_move timber_move = new Timber_move(first_timber,adaptertutorial_quests.getX(Timber_move.KEY), adaptertutorial_quests.getY(Timber_move.KEY));
-        tutorial_questsSet.add(timber_move);
 
-        Veinmine veinmine = new Veinmine(regenworlds,adaptertutorial_quests.getX(Veinmine.KEY), adaptertutorial_quests.getY(Veinmine.KEY));
-        tutorial_questsSet.add(veinmine);
+        if (isVeinMinerEnabled) {
+            Veinmine veinmine = new Veinmine(regenworlds,adaptertutorial_quests.getX(Veinmine.KEY), adaptertutorial_quests.getY(Veinmine.KEY));
+            tutorial_questsSet.add(veinmine);
+        }
+
 
         Old_timer old_timer = new Old_timer(tutorialquests,adaptertutorial_quests.getX(Old_timer.KEY), adaptertutorial_quests.getY(Old_timer.KEY));
         tutorial_questsSet.add(old_timer);
@@ -155,43 +168,48 @@ public class AdvancementsModule implements xyz.wisecraft.smp.modulation.ModuleCl
         Gettownplot gettownplot = new Gettownplot(jointown,adaptertutorial_quests.getX(Gettownplot.KEY), adaptertutorial_quests.getY(Gettownplot.KEY));
         tutorial_questsSet.add(gettownplot);
 
-        Gettingjob gettingjob = new Gettingjob(tutorialquests,adaptertutorial_quests.getX(Gettingjob.KEY), adaptertutorial_quests.getY(Gettingjob.KEY));
-        tutorial_questsSet.add(gettingjob);
 
         Trypvp trypvp = new Trypvp(tutorialquests,adaptertutorial_quests.getX(Trypvp.KEY), adaptertutorial_quests.getY(Trypvp.KEY));
         tutorial_questsSet.add(trypvp);
 
-        Firstspecialty firstspecialty = new Firstspecialty(gettingjob,adaptertutorial_quests.getX(Firstspecialty.KEY), adaptertutorial_quests.getY(Firstspecialty.KEY));
-        tutorial_questsSet.add(firstspecialty);
 
-        Allspecialty allspecialty = new Allspecialty(firstspecialty,adaptertutorial_quests.getX(Allspecialty.KEY), adaptertutorial_quests.getY(Allspecialty.KEY));
-        tutorial_questsSet.add(allspecialty);
+        if (isJobsEnabled) {
+            Gettingjob gettingjob = new Gettingjob(tutorialquests, adaptertutorial_quests.getX(Gettingjob.KEY), adaptertutorial_quests.getY(Gettingjob.KEY));
+            tutorial_questsSet.add(gettingjob);
+            Firstspecialty firstspecialty = new Firstspecialty(gettingjob, adaptertutorial_quests.getX(Firstspecialty.KEY), adaptertutorial_quests.getY(Firstspecialty.KEY));
+            tutorial_questsSet.add(firstspecialty);
 
-        Farmerspec farmerspec = new Farmerspec(allspecialty);
-        Minerspec minerspec = new Minerspec(allspecialty);
-        Enchantspec enchantspec = new Enchantspec(allspecialty);
-        Explorerspec explorerspec = new Explorerspec(allspecialty);
-        Blacksmithspec blacksmithspec = new Blacksmithspec(allspecialty);
-        allspecialty.registerTasks(farmerspec,minerspec,enchantspec,explorerspec,blacksmithspec);
+            Allspecialty allspecialty = new Allspecialty(firstspecialty, adaptertutorial_quests.getX(Allspecialty.KEY), adaptertutorial_quests.getY(Allspecialty.KEY));
+            tutorial_questsSet.add(allspecialty);
 
+            Farmerspec farmerspec = new Farmerspec(allspecialty);
+            Minerspec minerspec = new Minerspec(allspecialty);
+            Enchantspec enchantspec = new Enchantspec(allspecialty);
+            Explorerspec explorerspec = new Explorerspec(allspecialty);
+            Blacksmithspec blacksmithspec = new Blacksmithspec(allspecialty);
+            allspecialty.registerTasks(farmerspec, minerspec, enchantspec, explorerspec, blacksmithspec);
+        }
 
         tutorial_quests.registerAdvancements(tutorialquests, tutorial_questsSet);
 
         // Common quests
         common_quests = api.createAdvancementTab(AdvancementTabNamespaces.common_quests_NAMESPACE);
         AdvancementKey intro_commonKey = new AdvancementKey(common_quests.getNamespace(), "intro_common");
-        CoordAdapter adaptercommon_quests = CoordAdapter.builder().add(tutorialquestsKey, 0f, 0f).add(Craft_bundle.KEY, 2f, -1f).add(Craft_elytra.KEY, 1f, -1f).add(Regenworlds.KEY, 2f, 0f).add(First_timber.KEY, 3f, 1f).add(Timber_move.KEY, 4f, 1f).add(Veinmine.KEY, 3f, 0f).add(Old_timer.KEY, -1f, 0f).add(Sethome.KEY, 1f, 0f).add(intro_commonKey, 0f, 0f).add(Lumberjack.KEY, 1f, 1f).add(Experiencedlumb.KEY, 2f, 1f).add(Expertlumb.KEY, 3f, 1f).add(Juggerjack.KEY, 4f, 1f).add(Flying_accident.KEY, 1f, -1f).add(Hedgehog.KEY, 1f, -2f).add(Ledgehog.KEY, 2f, -2f).add(Hugexp.KEY, 1f, -3f).add(Massivexp.KEY, 2f, -3f).add(Omega_xp.KEY, 3f, -3f).build();
+        CoordAdapter adaptercommon_quests = CoordAdapter.builder().add(tutorialquestsKey, 0f, 0f).add(Craft_bundle.KEY, 2f, -1f).add(Craft_elytra.KEY, 1f, -1f).add(Regenworlds.KEY, 2f, 0f).add(First_timber.KEY, 3f, 1f).add(Timber_move.KEY, 4f, 1f).add(Veinmine.KEY, 3f, 0f).add(Old_timer.KEY, -1f, 0f).add(Sethome.KEY, 1f, 0f).add(Jointown.KEY, 1f, 3f).add(Gettownplot.KEY, 2f, 3f).add(Gettingjob.KEY, 1f, 2f).add(Trypvp.KEY, 1f, 1f).add(Firstspecialty.KEY, 2f, 2f).add(Allspecialty.KEY, 3f, 2f).add(intro_commonKey, 0f, 0f).add(Lumberjack.KEY, 1f, 1f).add(Experiencedlumb.KEY, 2f, 1f).add(Expertlumb.KEY, 3f, 1f).add(Juggerjack.KEY, 4f, 1f).add(Flying_accident.KEY, 1f, -1f).add(Hedgehog.KEY, 1f, -2f).add(Ledgehog.KEY, 2f, -2f).add(Hugexp.KEY, 1f, -3f).add(Massivexp.KEY, 2f, -3f).add(Omega_xp.KEY, 3f, -3f).add(Maxjob.KEY, 1f, 2f).add(Maxjob2atonce.KEY, 2f, 3f).add(Maxjob2.KEY, 2f, 2f).add(Maxjob3.KEY, 3f, 2f).build();
 
         HashSet<BaseAdvancement> common_questsSet = new HashSet<>();
         RootAdvancement intro_common = new RootAdvancement(common_quests, intro_commonKey.getKey(), new AdvancementDisplay(Material.BOOK, "Common advancements!", AdvancementFrameType.TASK, false, false, adaptercommon_quests.getX(intro_commonKey), adaptercommon_quests.getY(intro_commonKey), "Here's a bunch of advancements you can do! Some of them can be a bit tricky"),"textures/block/light_blue_shulker_box.png",1);
-        Lumberjack lumberjack = new Lumberjack(intro_common,adaptercommon_quests.getX(Lumberjack.KEY), adaptercommon_quests.getY(Lumberjack.KEY));
-        common_questsSet.add(lumberjack);
-        Experiencedlumb experiencedlumb = new Experiencedlumb(lumberjack,adaptercommon_quests.getX(Experiencedlumb.KEY), adaptercommon_quests.getY(Experiencedlumb.KEY));
-        common_questsSet.add(experiencedlumb);
-        Expertlumb expertlumb = new Expertlumb(experiencedlumb,adaptercommon_quests.getX(Expertlumb.KEY), adaptercommon_quests.getY(Expertlumb.KEY));
-        common_questsSet.add(expertlumb);
-        Juggerjack juggerjack = new Juggerjack(expertlumb,adaptercommon_quests.getX(Juggerjack.KEY), adaptercommon_quests.getY(Juggerjack.KEY));
-        common_questsSet.add(juggerjack);
+
+        if (isTimberEnabled()) {
+            Lumberjack lumberjack = new Lumberjack(intro_common, adaptercommon_quests.getX(Lumberjack.KEY), adaptercommon_quests.getY(Lumberjack.KEY));
+            common_questsSet.add(lumberjack);
+            Experiencedlumb experiencedlumb = new Experiencedlumb(lumberjack, adaptercommon_quests.getX(Experiencedlumb.KEY), adaptercommon_quests.getY(Experiencedlumb.KEY));
+            common_questsSet.add(experiencedlumb);
+            Expertlumb expertlumb = new Expertlumb(experiencedlumb, adaptercommon_quests.getX(Expertlumb.KEY), adaptercommon_quests.getY(Expertlumb.KEY));
+            common_questsSet.add(expertlumb);
+            Juggerjack juggerjack = new Juggerjack(expertlumb, adaptercommon_quests.getX(Juggerjack.KEY), adaptercommon_quests.getY(Juggerjack.KEY));
+            common_questsSet.add(juggerjack);
+        }
         Flying_accident flying_accident = new Flying_accident(intro_common,adaptercommon_quests.getX(Flying_accident.KEY), adaptercommon_quests.getY(Flying_accident.KEY));
         common_questsSet.add(flying_accident);
         Hedgehog hedgehog = new Hedgehog(intro_common,adaptercommon_quests.getX(Hedgehog.KEY), adaptercommon_quests.getY(Hedgehog.KEY));
@@ -204,22 +222,26 @@ public class AdvancementsModule implements xyz.wisecraft.smp.modulation.ModuleCl
         common_questsSet.add(massivexp);
         Omega_xp omega_xp = new Omega_xp(massivexp,adaptercommon_quests.getX(Omega_xp.KEY), adaptercommon_quests.getY(Omega_xp.KEY));
         common_questsSet.add(omega_xp);
-        Maxjob maxjob = new Maxjob(intro_common,adaptercommon_quests.getX(Maxjob.KEY), adaptercommon_quests.getY(Maxjob.KEY));
-        common_questsSet.add(maxjob);
-        Maxjob2atonce maxjob2atonce = new Maxjob2atonce(maxjob,adaptercommon_quests.getX(Maxjob2atonce.KEY), adaptercommon_quests.getY(Maxjob2atonce.KEY));
-        common_questsSet.add(maxjob2atonce);
-        Maxjob2 maxjob2 = new Maxjob2(maxjob,adaptercommon_quests.getX(Maxjob2.KEY), adaptercommon_quests.getY(Maxjob2.KEY));
-        common_questsSet.add(maxjob2);
 
-        Maxfarmer maxfarmer = new Maxfarmer(maxjob2);
-        Maxminer maxminer = new Maxminer(maxjob2);
-        Maxblacksmith maxblacksmith = new Maxblacksmith(maxjob2);
-        Maxexplorer maxexplorer = new Maxexplorer(maxjob2);
-        Maxenchanter maxenchanter = new Maxenchanter(maxjob2);
-        maxjob2.registerTasks(maxfarmer,maxminer,maxblacksmith,maxexplorer,maxenchanter);
+        if (isJobsEnabled) {
+            Maxjob maxjob = new Maxjob(intro_common, adaptercommon_quests.getX(Maxjob.KEY), adaptercommon_quests.getY(Maxjob.KEY));
+            common_questsSet.add(maxjob);
+            Maxjob2atonce maxjob2atonce = new Maxjob2atonce(maxjob, adaptercommon_quests.getX(Maxjob2atonce.KEY), adaptercommon_quests.getY(Maxjob2atonce.KEY));
+            common_questsSet.add(maxjob2atonce);
+            Maxjob2 maxjob2 = new Maxjob2(maxjob, adaptercommon_quests.getX(Maxjob2.KEY), adaptercommon_quests.getY(Maxjob2.KEY));
+            common_questsSet.add(maxjob2);
 
-        Maxjob3 maxjob3 = new Maxjob3(maxjob2,adaptercommon_quests.getX(Maxjob3.KEY), adaptercommon_quests.getY(Maxjob3.KEY));
-        common_questsSet.add(maxjob3);
+            Maxfarmer maxfarmer = new Maxfarmer(maxjob2);
+            Maxminer maxminer = new Maxminer(maxjob2);
+            Maxblacksmith maxblacksmith = new Maxblacksmith(maxjob2);
+            Maxexplorer maxexplorer = new Maxexplorer(maxjob2);
+            Maxenchanter maxenchanter = new Maxenchanter(maxjob2);
+            maxjob2.registerTasks(maxfarmer, maxminer, maxblacksmith, maxexplorer, maxenchanter);
+
+            Maxjob3 maxjob3 = new Maxjob3(maxjob2, adaptercommon_quests.getX(Maxjob3.KEY), adaptercommon_quests.getY(Maxjob3.KEY));
+            common_questsSet.add(maxjob3);
+        }
+
         common_quests.registerAdvancements(intro_common, common_questsSet);
 
         String servName = OtherStorage.getServer_name();
