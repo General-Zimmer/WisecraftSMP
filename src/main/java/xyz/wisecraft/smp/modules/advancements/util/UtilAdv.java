@@ -2,6 +2,8 @@ package xyz.wisecraft.smp.modules.advancements.util;
 
 import com.craftaro.ultimatetimber.events.TreeFellEvent;
 import com.fren_gor.ultimateAdvancementAPI.advancement.BaseAdvancement;
+import com.gamingmesh.jobs.api.JobsLevelUpEvent;
+import com.gamingmesh.jobs.container.Job;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.node.Node;
@@ -160,4 +162,17 @@ public abstract class UtilAdv {
             adv.revoke(p);
     }
 
+    public static void isJobMaxed(JobsLevelUpEvent e, BaseAdvancement adv) {
+        Player player = e.getPlayer().getPlayer();
+
+        if (adv.incrementProgression(player) < adv.getMaxProgression() && e.getLevel() >= e.getJob().getMaxLevel()) {
+            adv.incrementProgression(player);
+        }
+    }
+
+    public static void isJobMaxed(JobsLevelUpEvent e, BaseAdvancement adv, Job job) {
+        if (job != e.getJob()) return;
+
+        isJobMaxed(e, adv);
+    }
 }
