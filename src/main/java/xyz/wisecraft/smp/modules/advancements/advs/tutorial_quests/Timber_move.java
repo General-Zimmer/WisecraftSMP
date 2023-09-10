@@ -27,6 +27,7 @@ public class Timber_move extends BaseAdvancement implements VanillaVisibility {
 
     if (module.isTimberEnabled())
       registerEvent(PlayerDeathEvent.class, e -> {
+        if (e.isCancelled()) return;
 
         String deathMessage = Objects.requireNonNull(e.getDeathMessage(), "Death message is null");
         Player victim = e.getPlayer();

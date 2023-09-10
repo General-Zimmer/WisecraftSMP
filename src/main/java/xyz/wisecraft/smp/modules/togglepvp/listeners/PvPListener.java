@@ -57,7 +57,7 @@ public class PvPListener implements Listener {
 				if (PVPUtil.checkPVPStates(attacker, victim)) e.setCancelled(true);
 			}
 		} else if (e.getDamager() instanceof LightningStrike &&
-				e.getDamager().getMetadata("TRIDENT").size() >= 1 &&
+                !e.getDamager().getMetadata("TRIDENT").isEmpty() &&
 				e.getEntity() instanceof Player victim) {
 			Boolean isVictimPVPOff = pvpPlayers.get(victim.getUniqueId());
 

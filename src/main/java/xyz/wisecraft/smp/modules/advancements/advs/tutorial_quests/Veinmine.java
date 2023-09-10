@@ -23,6 +23,7 @@ public class Veinmine extends BaseAdvancement implements VanillaVisibility {
 
     if (AdvancementsModule.getModule().isVeinMinerEnabled())
       registerEvent(PlayerVeinMineEvent.class, EventPriority.MONITOR, e -> {
+        if (e.isCancelled()) return;
 
         Player p = e.getPlayer();
         if (!e.isCancelled()) {

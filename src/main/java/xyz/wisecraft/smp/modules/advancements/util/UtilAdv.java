@@ -163,6 +163,8 @@ public abstract class UtilAdv {
     }
 
     public static void isJobMaxed(JobsLevelUpEvent e, BaseAdvancement adv) {
+        if (e.isCancelled()) return;
+
         Player player = e.getPlayer().getPlayer();
 
         if (adv.incrementProgression(player) < adv.getMaxProgression() && e.getLevel() >= e.getJob().getMaxLevel()) {

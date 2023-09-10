@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.modules.togglepvp.PvPToggleModule;
+import xyz.wisecraft.smp.modules.togglepvp.events.PlayerChangedPVPState;
 import xyz.wisecraft.smp.modules.togglepvp.storage.PVPStorage;
 
 
@@ -43,9 +44,10 @@ public abstract class UtilPlayers {
 		else return result;
 	}
 
+
 	/**
-	 * Get the state the player is in.
-	 * @param uuid The UUID of the player to check
+	 * Set the state of the player.
+	 * @param uuid The UUID of the player to set
 	 * @param state The state to set the player to
 	 */
 	public static void setPlayerState(UUID uuid, boolean state){
@@ -53,7 +55,7 @@ public abstract class UtilPlayers {
 	}
 
 	/**
-	 * Set the state PVP state of the player.
+	 * Set the PVP state of the player.
 	 * @param player The player to check
 	 * @param state The state to set the player to
 	 * @param caller The command sender that called the method
@@ -65,7 +67,6 @@ public abstract class UtilPlayers {
 		}
 
 		World world = player.getWorld();
-		// You can't set the state to false (PVP enabled) if the world doesn't allow it
 		if (!world.getPVP() && !state) {
 			if (caller == player) {
 				UtilChat.send(caller, "PVP_WORLD_CANNOT_CHANGE_SELF");
@@ -74,13 +75,19 @@ public abstract class UtilPlayers {
 			}
 			return false;
 		}
-		// You can't set the state to true (PVP disabled) if the world requires it
+
 		if (world.getPVP() && blockedWorlds.contains(world.getName()) && state) {
 			if (caller == player) {
 				UtilChat.send(caller, "PVP_WORLD_CANNOT_CHANGE_SELF");
 			} else {
 				UtilChat.send(caller, "PVP_WORLD_CANNOT_CHANGE_OTHERS");
 			}
+			return false;
+		}
+		PlayerChangedPVPState event = new PlayerChangedPVPState(player);
+		plugin.getServer().getPluginManager().callEvent(event);
+
+		if (event.isCancelled()) {
 			return false;
 		}
 

@@ -21,7 +21,9 @@ public class Sethome extends BaseAdvancement implements VanillaVisibility {
     registerEvent(PlayerCommandPreprocessEvent.class, e -> {
       if (e.isCancelled()) return;
 
-      if (e.getMessage().equalsIgnoreCase("/sethome")) {
+      String cmd = e.getMessage().toLowerCase().split(" ")[0];
+
+      if (cmd.equalsIgnoreCase("/sethome")) {
         incrementProgression(e.getPlayer());
       }
 
