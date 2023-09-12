@@ -6,11 +6,11 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
 import org.jetbrains.annotations.NotNull;
 
-public class PlayerChangedPVPState extends PlayerEvent implements Cancellable {
+public class PlayerChangedPVPStateEvent extends PlayerEvent implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     private boolean cancelled = false;
 
-    public PlayerChangedPVPState(@NotNull Player who) {
+    public PlayerChangedPVPStateEvent(@NotNull Player who) {
         super(who);
     }
 

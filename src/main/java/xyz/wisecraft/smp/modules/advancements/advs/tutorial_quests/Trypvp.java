@@ -8,7 +8,7 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.BaseAdvancement;
 import org.bukkit.Material;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
 import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
-import xyz.wisecraft.smp.modules.togglepvp.events.PlayerChangedPVPState;
+import xyz.wisecraft.smp.modules.togglepvp.events.PlayerChangedPVPStateEvent;
 
 public class Trypvp extends BaseAdvancement  {
 
@@ -18,7 +18,7 @@ public class Trypvp extends BaseAdvancement  {
   public Trypvp(Advancement parent, float x, float y) {
     super(KEY.getKey(), new AdvancementDisplay(Material.DIAMOND_SWORD, "TO WAAAAGHH!", AdvancementFrameType.TASK, true, true, x, y , "Enable pvp with /pvp"), parent, 1);
 
-    registerEvent(PlayerChangedPVPState.class, e -> {
+    registerEvent(PlayerChangedPVPStateEvent.class, e -> {
       Player p = e.getPlayer();
 
       if (isGranted(p))
