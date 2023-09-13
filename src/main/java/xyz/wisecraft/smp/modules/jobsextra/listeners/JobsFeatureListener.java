@@ -91,8 +91,9 @@ public class JobsFeatureListener implements org.bukkit.event.Listener {
         Player p = e.getPlayer();
         Job pJob = farmer;
         JobsPlayer pJobs = Jobs.getPlayerManager().getJobsPlayer(p);
+        boolean isInJob = pJobs.isInJob(pJob);
 
-        if (!(pJobs.isInJob(pJob) && pJobs.getJobProgression(pJob).getLevel() >= jobLevels.get(pJob))) {
+        if (!(isInJob && pJobs.getJobProgression(pJob).getLevel() >= jobLevels.get(pJob))) {
             e.setCancelled(true);
         }
     }
