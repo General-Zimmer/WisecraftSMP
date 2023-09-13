@@ -1,18 +1,17 @@
 package xyz.wisecraft.smp.modules.advancements.advs.tutorial_quests.allspecialty;
 
-import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
+import com.fren_gor.ultimateAdvancementAPI.advancement.tasks.AbstractMultiTasksAdvancement;
+import com.fren_gor.ultimateAdvancementAPI.advancement.tasks.TaskAdvancement;
 import com.fren_gor.ultimateAdvancementAPI.util.AdvancementKey;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.CraftItemEvent;
-import xyz.wisecraft.smp.modules.advancements.AdvancementsModule;
 import xyz.wisecraft.smp.modules.advancements.advs.AdvancementTabNamespaces;
-import com.fren_gor.ultimateAdvancementAPI.advancement.tasks.TaskAdvancement;
-import com.fren_gor.ultimateAdvancementAPI.advancement.tasks.AbstractMultiTasksAdvancement;
-import xyz.wisecraft.smp.modules.advancements.advs.tutorial_quests.Firstspecialty;
 import xyz.wisecraft.smp.storage.OtherStorage;
 
 import java.util.ArrayList;
+
+import static xyz.wisecraft.smp.modules.advancements.util.UtilAdv.grantFirstSpecialty;
 
 public class Blacksmithspec extends TaskAdvancement {
 
@@ -30,9 +29,7 @@ public class Blacksmithspec extends TaskAdvancement {
 
       if (!isGranted(p) && blacksmithCrafts.contains(craftMaterial)) {
         incrementProgression(p, 1);
-        Advancement first = AdvancementsModule.plugin.getAdv().getAdvancement(Firstspecialty.KEY);
-        if (first != null)
-          first.grant(p);
+        grantFirstSpecialty(p);
       }
     });
   }

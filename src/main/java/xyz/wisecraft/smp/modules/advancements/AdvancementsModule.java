@@ -53,6 +53,7 @@ public class AdvancementsModule implements xyz.wisecraft.smp.modulation.ModuleCl
     private final WisecraftCoreApi core = setupDependency(WisecraftCoreApi.class);
     private final boolean isVeinMinerEnabled = setupDependency("VeinMiner");
     private final boolean isJobsEnabled = setupDependency("Jobs");
+    private final boolean isTownyEnabled = setupDependency("Towny");
 
 
     public AdvancementsModule() {
@@ -162,11 +163,14 @@ public class AdvancementsModule implements xyz.wisecraft.smp.modulation.ModuleCl
         Old_timer old_timer = new Old_timer(tutorialquests,adaptertutorial_quests.getX(Old_timer.KEY), adaptertutorial_quests.getY(Old_timer.KEY));
         tutorial_questsSet.add(old_timer);
 
-        Jointown jointown = new Jointown(tutorialquests,adaptertutorial_quests.getX(Jointown.KEY), adaptertutorial_quests.getY(Jointown.KEY));
-        tutorial_questsSet.add(jointown);
+        if (isTownyEnabled) {
+            Jointown jointown = new Jointown(tutorialquests,adaptertutorial_quests.getX(Jointown.KEY), adaptertutorial_quests.getY(Jointown.KEY));
+            tutorial_questsSet.add(jointown);
 
-        Gettownplot gettownplot = new Gettownplot(jointown,adaptertutorial_quests.getX(Gettownplot.KEY), adaptertutorial_quests.getY(Gettownplot.KEY));
-        tutorial_questsSet.add(gettownplot);
+            Gettownplot gettownplot = new Gettownplot(jointown,adaptertutorial_quests.getX(Gettownplot.KEY), adaptertutorial_quests.getY(Gettownplot.KEY));
+            tutorial_questsSet.add(gettownplot);
+        }
+
 
 
         Trypvp trypvp = new Trypvp(tutorialquests,adaptertutorial_quests.getX(Trypvp.KEY), adaptertutorial_quests.getY(Trypvp.KEY));

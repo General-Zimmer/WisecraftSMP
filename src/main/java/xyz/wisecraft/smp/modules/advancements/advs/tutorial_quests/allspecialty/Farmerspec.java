@@ -7,6 +7,8 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.tasks.TaskAdvancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.tasks.AbstractMultiTasksAdvancement;
 import xyz.wisecraft.smp.modules.cropharvester.events.PrepareCropHarvestEvent;
 
+import static xyz.wisecraft.smp.modules.advancements.util.UtilAdv.grantFirstSpecialty;
+
 public class Farmerspec extends TaskAdvancement {
 
   public static AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.tutorial_quests_NAMESPACE, "farmerspec");
@@ -20,8 +22,11 @@ public class Farmerspec extends TaskAdvancement {
 
       Player p = e.getPlayer();
 
-      if (isGranted(p))
+      if (!isGranted(p)) {
         incrementProgression(p, 1);
+        grantFirstSpecialty(p);
+      }
+
 
     });
   }

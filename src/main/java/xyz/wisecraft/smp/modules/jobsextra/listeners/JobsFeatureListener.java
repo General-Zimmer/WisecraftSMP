@@ -60,7 +60,6 @@ public class JobsFeatureListener implements org.bukkit.event.Listener {
 
         Material type = e.getBlock().getType();
         Material debris = Material.ANCIENT_DEBRIS;
-        e.getBlock().getWorld();
 
         if (type.equals(debris))
             e.setCancelled(true);
