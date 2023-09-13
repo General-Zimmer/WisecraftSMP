@@ -3,6 +3,7 @@ package xyz.wisecraft.smp.modules.cropharvester.listener;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -32,18 +33,19 @@ public class HarvestListener implements Listener {
 
         if ( !(clickedBlock.getBlockData() instanceof Ageable ageable)) return;
 
-        PrepareCropHarvestEvent harvestEvent = new PrepareCropHarvestEvent(e.getPlayer(), ageable);
-
-        Bukkit.getPluginManager().callEvent(harvestEvent);
-        if (harvestEvent.isCancelled()) return;
-        // Add the Grief checking here
 
         int BlockAge = ageable.getAge();
 
         if (OtherStorage.getTools().containsKey(itemInHand.getType()) && BlockAge == ageable.getMaximumAge()) {
-
             int size = Integer.parseInt(OtherStorage.getTools().get(itemInHand.getType()).substring(0,1));
-            UtilRandom.farmBlocksXByX(size, clickedBlock, itemInHand,e.getPlayer());
+            Player p = e.getPlayer();
+            PrepareCropHarvestEvent harvestEvent = new PrepareCropHarvestEvent(p, ageable);
+
+            Bukkit.getPluginManager().callEvent(harvestEvent);
+            if (harvestEvent.isCancelled()) return;
+
+
+            UtilRandom.farmBlocksXByX(size, clickedBlock, itemInHand, p);
         }
     }
 

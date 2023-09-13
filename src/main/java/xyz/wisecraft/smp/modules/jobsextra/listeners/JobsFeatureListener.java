@@ -13,6 +13,7 @@ import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import xyz.wisecraft.smp.modules.cropharvester.events.PrepareCropHarvestEvent;
 import xyz.wisecraft.smp.modules.jobsextra.JobsExtrasModule;
+import xyz.wisecraft.smp.storage.OtherStorage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,7 +27,7 @@ public class JobsFeatureListener implements org.bukkit.event.Listener {
     private final Job miner;
     private final Job blacksmith;
     private final Job farmer;
-    private final ArrayList<Material> blacksmithCrafts = new ArrayList<>();
+
     public JobsFeatureListener(JobsExtrasModule module) {
 
         this.miner = module.getSpecificJob("Miner");
@@ -36,14 +37,14 @@ public class JobsFeatureListener implements org.bukkit.event.Listener {
         this.farmer = module.getSpecificJob("Farmer");
         jobLevels.put(farmer, module.getPlugin().getConfig().getInt("JOBS_SETTINGS.DEFAULT_ABILITY_LEVEL"));
 
-        blacksmithCrafts.add(Material.DIAMOND_AXE);
-        blacksmithCrafts.add(Material.DIAMOND_HOE);
-        blacksmithCrafts.add(Material.DIAMOND_SHOVEL);
-        blacksmithCrafts.add(Material.DIAMOND_SWORD);
-        blacksmithCrafts.add(Material.DIAMOND_HELMET);
-        blacksmithCrafts.add(Material.DIAMOND_CHESTPLATE);
-        blacksmithCrafts.add(Material.DIAMOND_LEGGINGS);
-        blacksmithCrafts.add(Material.DIAMOND_BOOTS);
+        OtherStorage.addBlacksmithCraft(Material.DIAMOND_AXE);
+        OtherStorage.addBlacksmithCraft(Material.DIAMOND_HOE);
+        OtherStorage.addBlacksmithCraft(Material.DIAMOND_SHOVEL);
+        OtherStorage.addBlacksmithCraft(Material.DIAMOND_SWORD);
+        OtherStorage.addBlacksmithCraft(Material.DIAMOND_HELMET);
+        OtherStorage.addBlacksmithCraft(Material.DIAMOND_CHESTPLATE);
+        OtherStorage.addBlacksmithCraft(Material.DIAMOND_LEGGINGS);
+        OtherStorage.addBlacksmithCraft(Material.DIAMOND_BOOTS);
 
     }
 
@@ -71,6 +72,8 @@ public class JobsFeatureListener implements org.bukkit.event.Listener {
         Player p = e.getInventory().getHolder() instanceof Player ? (Player) e.getInventory().getHolder() : null;
         Job pJob = blacksmith;
         JobsPlayer pJobs = Jobs.getPlayerManager().getJobsPlayer(p);
+
+        ArrayList<Material> blacksmithCrafts = OtherStorage.getBlacksmithCrafts();
 
         if (p == null || pJobs.isInJob(pJob) &&
                 pJobs.getJobProgression(pJob).getLevel() >= jobLevels.get(pJob)) return;

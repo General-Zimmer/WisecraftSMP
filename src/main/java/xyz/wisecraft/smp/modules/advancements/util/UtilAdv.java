@@ -9,12 +9,14 @@ import net.luckperms.api.model.group.Group;
 import net.luckperms.api.node.Node;
 import net.luckperms.api.node.types.InheritanceNode;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.advancement.AdvancementProgress;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerLevelChangeEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.modules.advancements.AdvancementsModule;
 import xyz.wisecraft.smp.storage.OtherStorage;
@@ -176,5 +178,15 @@ public abstract class UtilAdv {
         if (job != e.getJob()) return;
 
         isJobMaxed(e, adv);
+    }
+
+    public static void IsCraftedItem(org.bukkit.event.inventory.CraftItemEvent e, BaseAdvancement adv, Material itemType) {
+        @NotNull Material resType = e.getRecipe().getResult().getType();
+
+        Player p = Bukkit.getPlayer(e.getWhoClicked().getUniqueId());
+        // todo use google's common library for null checks
+        if (p != null && resType.equals(itemType)) {
+            adv.incrementProgression(p);
+        }
     }
 }

@@ -13,6 +13,8 @@ import org.bukkit.event.inventory.CraftItemEvent;
 import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.modules.advancements.advs.AdvancementTabNamespaces;
 
+import static xyz.wisecraft.smp.modules.advancements.util.UtilAdv.IsCraftedItem;
+
 public class Craft_elytra extends BaseAdvancement implements VanillaVisibility {
 
   public static AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.tutorial_quests_NAMESPACE, "craft_elytra");
@@ -21,14 +23,6 @@ public class Craft_elytra extends BaseAdvancement implements VanillaVisibility {
   public Craft_elytra(Advancement parent, float x, float y) {
     super(KEY.getKey(), new AdvancementDisplay(Material.ELYTRA, "Flying craftsmanship", AdvancementFrameType.TASK, true, true, x, y , "Craft an elytra. Check our wiki on wisecraft.xyz for recipes"), parent, 1);
 
-    registerEvent(CraftItemEvent.class, e -> {
-      @NotNull Material resType = e.getRecipe().getResult().getType();
-
-      Player p = Bukkit.getPlayer(e.getWhoClicked().getUniqueId());
-      // todo use google's common library for null checks
-      if (p != null && resType.equals(Material.ELYTRA)) {
-        incrementProgression(p);
-      }
-    });
+    registerEvent(CraftItemEvent.class, e -> IsCraftedItem(e, this, Material.ELYTRA));
   }
 }

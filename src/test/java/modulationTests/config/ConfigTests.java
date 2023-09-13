@@ -23,7 +23,7 @@ public class ConfigTests {
     public void setUp() {
         server = MockBukkit.mock();
         plugin = MockBukkit.load(WisecraftSMP.class, true);
-        moduleConfigFile = new File("modulation/configtests", "modules.yml");
+        moduleConfigFile = new File(plugin.getDataFolder() + "modulationTests/config/configs", "modules.yml");
         moduleConfig = WisecraftSMP.createModuleConfig(plugin, moduleConfigFile);
     }
 

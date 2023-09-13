@@ -3,6 +3,7 @@ package xyz.wisecraft.smp.storage;
 import org.bukkit.Material;
 import xyz.wisecraft.smp.modules.savinggrace.Angel;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -22,7 +23,7 @@ public abstract class OtherStorage {
      * Angels for saving grace
      */
     private static final HashMap<UUID, Angel> angels = new HashMap<>();
-
+    private static final ArrayList<Material> blacksmithCrafts = new ArrayList<>();
 
     /**
      * Get tools for harvesting crops
@@ -39,6 +40,14 @@ public abstract class OtherStorage {
      */
     public static void addTool(Material material, String size) {
         tools.put(material, size);
+    }
+
+    public static ArrayList<Material> getBlacksmithCrafts() {
+        return new ArrayList<>(blacksmithCrafts);
+    }
+
+    public static void addBlacksmithCraft(Material material) {
+        blacksmithCrafts.add(material);
     }
 
     /**

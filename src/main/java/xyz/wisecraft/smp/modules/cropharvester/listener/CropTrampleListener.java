@@ -19,7 +19,7 @@ public class CropTrampleListener implements Listener {
         Player player = event.getPlayer();
         ItemStack itemInHand = player.getInventory().getItemInMainHand();
 
-        if (itemInHand.getType().equals(Material.AIR)) {
+        if (itemInHand.getType().equals(Material.AIR) || currentBlock == null) {
             return;
         }
 
