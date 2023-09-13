@@ -21,7 +21,7 @@ public class Trypvp extends BaseAdvancement  {
     registerEvent(PlayerChangedPVPStateEvent.class, e -> {
       Player p = e.getPlayer();
 
-      if (isGranted(p))
+      if (!isGranted(p))
         grant(p);
     });
   }

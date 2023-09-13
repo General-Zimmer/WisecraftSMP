@@ -122,11 +122,13 @@ public class AdvancementsModule implements xyz.wisecraft.smp.modulation.ModuleCl
     public void initializeTabs() {
         tutorial_quests = api.createAdvancementTab(AdvancementTabNamespaces.tutorial_quests_NAMESPACE);
         AdvancementKey tutorialquestsKey = new AdvancementKey(tutorial_quests.getNamespace(), "tutorialquests");
-        CoordAdapter.@NotNull CoordAdapterBuilder adapterBuildertutorial_quests = CoordAdapter.builder().add(tutorialquestsKey, 0f, 0f)
-                .add(Craft_bundle.KEY, 2f, -1f).add(Craft_elytra.KEY, 1f, -1f).add(Regenworlds.KEY, 2f, 0f)
+        CoordAdapter.@NotNull CoordAdapterBuilder adapterBuildertutorial_quests = CoordAdapter.builder()
+                .add(tutorialquestsKey, 0f, 0f).add(Craft_bundle.KEY, 2f, -1f)
+                .add(Craft_elytra.KEY, 1f, -1f).add(Regenworlds.KEY, 2f, 0f)
                 .add(First_timber.KEY, 3f, 1f).add(Timber_move.KEY, 4f, 1f).add(Veinmine.KEY, 3f, 0f)
-                .add(Old_timer.KEY, -1f, 0f).add(Sethome.KEY, 1f, 0f).add(Jointown.KEY, 1f, 3f).add(Gettownplot.KEY, 2f, 3f)
-                .add(Gettingjob.KEY, 1f, 2f).add(Trypvp.KEY, 1f, 1f).add(Firstspecialty.KEY, 2f, 2f).add(Allspecialty.KEY, 3f, 2f);
+                .add(Old_timer.KEY, -1f, 0f).add(Sethome.KEY, 1f, 0f).add(Jointown.KEY, 1f, 3f)
+                .add(Gettownplot.KEY, 2f, 3f).add(Gettingjob.KEY, 1f, 2f).add(Trypvp.KEY, 1f, 1f)
+                .add(Firstspecialty.KEY, 2f, 2f).add(Allspecialty.KEY, 3f, 2f);
 
 
         @NotNull CoordAdapter adaptertutorial_quests = adapterBuildertutorial_quests.build();

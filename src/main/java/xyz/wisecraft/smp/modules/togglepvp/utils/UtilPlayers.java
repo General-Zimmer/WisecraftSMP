@@ -1,10 +1,7 @@
 package xyz.wisecraft.smp.modules.togglepvp.utils;
 
 import com.nametagedit.plugin.api.INametagApi;
-import org.bukkit.Color;
-import org.bukkit.Location;
-import org.bukkit.Particle;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -84,7 +81,7 @@ public abstract class UtilPlayers {
 			return false;
 		}
 		PlayerChangedPVPStateEvent event = new PlayerChangedPVPStateEvent(player);
-		plugin.getServer().getPluginManager().callEvent(event);
+		Bukkit.getPluginManager().callEvent(event);
 
 		if (event.isCancelled()) {
 			return false;
