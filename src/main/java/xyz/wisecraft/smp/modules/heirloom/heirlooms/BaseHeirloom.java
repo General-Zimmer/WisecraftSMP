@@ -26,7 +26,7 @@ public abstract class BaseHeirloom {
         NamespacedKey key = new NamespacedKey(HeirloomModule.plugin, "heirloom");
         ItemMeta itemMeta = (itemstack != null) ? itemstack.getItemMeta(): null;
         PersistentDataContainer pdc = (itemMeta != null) ? itemMeta.getPersistentDataContainer(): null;
-        String pdcString = (pdc != null) ? pdc.get(BaseHeirloom.getKey(), PersistentDataType.STRING): null;
+        String pdcString = (pdc != null) ? pdc.get(BaseHeirloom.getHeirloomTypeKey(), PersistentDataType.STRING): null;
         return pdcString != null && pdcString.equals(type.toString());
     }
 
