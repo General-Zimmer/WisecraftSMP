@@ -6,7 +6,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import xyz.wisecraft.core.WisecraftCoreApi;
 import xyz.wisecraft.core.data.templates.Infop;
-import xyz.wisecraft.smp.WisecraftSMP;
 
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;

@@ -1,6 +1,5 @@
 package xyz.wisecraft.smp.modules.savinggrace.listeners;
 
-import com.earth2me.essentials.User;
 import net.ess3.api.IEssentials;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -12,7 +11,6 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.modules.savinggrace.Angel;
 import xyz.wisecraft.smp.storage.OtherStorage;
 

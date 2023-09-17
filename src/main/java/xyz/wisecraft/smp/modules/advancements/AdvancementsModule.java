@@ -1,6 +1,5 @@
 package xyz.wisecraft.smp.modules.advancements;
 
-import com.craftaro.ultimatetimber.UltimateTimber;
 import com.fren_gor.ultimateAdvancementAPI.AdvancementTab;
 import com.fren_gor.ultimateAdvancementAPI.UltimateAdvancementAPI;
 import com.fren_gor.ultimateAdvancementAPI.advancement.BaseAdvancement;
@@ -12,12 +11,12 @@ import com.fren_gor.ultimateAdvancementAPI.util.CoordAdapter;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
-import wtf.choco.veinminer.VeinMinerPlugin;
 import xyz.wisecraft.core.WisecraftCoreApi;
 import xyz.wisecraft.smp.modules.advancements.advs.AdvancementTabNamespaces;
 import xyz.wisecraft.smp.modules.advancements.advs.common_quests.*;
 import xyz.wisecraft.smp.modules.advancements.advs.common_quests.maxjob2.*;
-import xyz.wisecraft.smp.modules.advancements.advs.legacy.*;
+import xyz.wisecraft.smp.modules.advancements.advs.legacy.Citizen;
+import xyz.wisecraft.smp.modules.advancements.advs.legacy.Nobility;
 import xyz.wisecraft.smp.modules.advancements.advs.legacy.citizen.Cit_Dia_pick;
 import xyz.wisecraft.smp.modules.advancements.advs.legacy.citizen.Cit_block_break;
 import xyz.wisecraft.smp.modules.advancements.advs.legacy.citizen.Cit_block_place;
@@ -36,7 +35,6 @@ import xyz.wisecraft.smp.storage.OtherStorage;
 import java.io.File;
 import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * This class is the module class for the Advancements module.

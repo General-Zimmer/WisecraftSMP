@@ -6,7 +6,6 @@ import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.modulation.storage.ModulationStorage;
 import xyz.wisecraft.smp.modulation.storage.ModuleSettings;
-import xyz.wisecraft.smp.util.UtilRandom;
 
 import java.util.ArrayList;
 

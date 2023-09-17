@@ -2,7 +2,6 @@ package xyz.wisecraft.smp.modules.advancements.advs.common_quests;
 
 import com.fren_gor.ultimateAdvancementAPI.util.AdvancementKey;
 import com.gamingmesh.jobs.api.JobsLevelUpEvent;
-import com.gamingmesh.jobs.container.Job;
 import com.gamingmesh.jobs.container.JobProgression;
 import org.bukkit.entity.Player;
 import xyz.wisecraft.smp.modules.advancements.advs.AdvancementTabNamespaces;

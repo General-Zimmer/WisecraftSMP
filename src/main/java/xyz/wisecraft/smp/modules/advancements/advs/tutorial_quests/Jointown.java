@@ -2,7 +2,6 @@ package xyz.wisecraft.smp.modules.advancements.advs.tutorial_quests;
 
 import com.fren_gor.ultimateAdvancementAPI.util.AdvancementKey;
 import com.palmergames.bukkit.towny.event.resident.NewResidentEvent;
-import com.palmergames.bukkit.towny.object.inviteobjects.PlayerJoinTownInvite;
 import org.bukkit.entity.Player;
 import xyz.wisecraft.smp.modules.advancements.advs.AdvancementTabNamespaces;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDisplay;

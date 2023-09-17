@@ -6,9 +6,6 @@ import xyz.wisecraft.smp.modules.advancements.advs.AdvancementTabNamespaces;
 import com.fren_gor.ultimateAdvancementAPI.advancement.tasks.TaskAdvancement;
 import com.fren_gor.ultimateAdvancementAPI.advancement.tasks.AbstractMultiTasksAdvancement;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import static xyz.wisecraft.smp.modules.advancements.util.UtilAdv.grantFirstSpecialty;
 
 public class Minerspec extends TaskAdvancement {

@@ -3,12 +3,10 @@ package modulationTests.config;
 import be.seeseemelk.mockbukkit.MockBukkit;
 import be.seeseemelk.mockbukkit.ServerMock;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import xyz.wisecraft.smp.WisecraftSMP;
-import xyz.wisecraft.smp.util.UtilRandom;
 
 import java.io.File;
 

@@ -1,6 +1,5 @@
 package xyz.wisecraft.smp.modules.cropharvester.util;
 
-import com.craftaro.ultimatetimber.core.hooks.protection.GriefPreventionProtection;
 import com.palmergames.bukkit.towny.object.TownyPermission;
 import com.palmergames.bukkit.towny.utils.PlayerCacheUtil;
 import com.sk89q.worldguard.bukkit.ProtectionQuery;

@@ -9,7 +9,6 @@ import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.core.WisecraftCoreApi;
-import xyz.wisecraft.smp.modules.advancements.util.UtilAdv;
 import xyz.wisecraft.smp.modules.tutorialstuff.util.UtilRandom;
 import xyz.wisecraft.smp.util.UtilCommon;
 

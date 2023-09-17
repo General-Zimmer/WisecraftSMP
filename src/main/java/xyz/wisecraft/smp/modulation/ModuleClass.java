@@ -4,7 +4,6 @@ import org.bukkit.plugin.Plugin;
 import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.modulation.storage.ModulationStorage;
 import xyz.wisecraft.smp.modulation.storage.ModuleSettings;
-import xyz.wisecraft.smp.modules.cropharvester.CropHarvesterModule;
 
 import java.util.ArrayList;
 

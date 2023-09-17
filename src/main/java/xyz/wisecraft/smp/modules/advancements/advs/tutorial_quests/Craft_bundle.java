@@ -1,16 +1,13 @@
 package xyz.wisecraft.smp.modules.advancements.advs.tutorial_quests;
 
-import com.fren_gor.ultimateAdvancementAPI.util.AdvancementKey;
-import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDisplay;
-import com.fren_gor.ultimateAdvancementAPI.visibilities.VanillaVisibility;
-import com.fren_gor.ultimateAdvancementAPI.advancement.BaseAdvancement;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
 import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
-import org.bukkit.entity.Player;
+import com.fren_gor.ultimateAdvancementAPI.advancement.BaseAdvancement;
+import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDisplay;
+import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
+import com.fren_gor.ultimateAdvancementAPI.util.AdvancementKey;
+import com.fren_gor.ultimateAdvancementAPI.visibilities.VanillaVisibility;
+import org.bukkit.Material;
 import org.bukkit.event.inventory.CraftItemEvent;
-import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.modules.advancements.advs.AdvancementTabNamespaces;
 
 import static xyz.wisecraft.smp.modules.advancements.util.UtilAdv.IsCraftedItem;

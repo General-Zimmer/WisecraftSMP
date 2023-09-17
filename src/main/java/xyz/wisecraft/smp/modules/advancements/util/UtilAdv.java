@@ -15,7 +15,6 @@ import org.bukkit.advancement.Advancement;
 import org.bukkit.advancement.AdvancementProgress;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerLevelChangeEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.WisecraftSMP;
@@ -23,7 +22,6 @@ import xyz.wisecraft.smp.modules.advancements.AdvancementsModule;
 import xyz.wisecraft.smp.modules.advancements.advs.tutorial_quests.Firstspecialty;
 import xyz.wisecraft.smp.storage.OtherStorage;
 
-import java.util.Date;
 import java.util.UUID;
 
 /**
