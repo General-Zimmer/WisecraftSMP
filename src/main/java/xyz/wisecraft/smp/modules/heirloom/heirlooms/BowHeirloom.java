@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BowHeirloom extends BaseHeirloom {
-
     private final static ArrayList<ArrayList<Effect>> effects = new ArrayList<>();
 
     public BowHeirloom(int level, float xp, HeirloomType type) {

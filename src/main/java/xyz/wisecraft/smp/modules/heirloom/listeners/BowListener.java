@@ -31,6 +31,13 @@ public class BowListener implements Listener {
         ItemStack bow = e.getBow();
 
         /*
+        if (le instanceof Player p) {
+            UtilRandom.createBowHeirLoom((Player) le);
+        }
+
+         */
+
+
         ItemMeta itemMeta = (bow != null) ? e.getBow().getItemMeta(): null;
         PersistentDataContainer pdc = (itemMeta != null) ? itemMeta.getPersistentDataContainer(): null;
         String pdcString = (pdc != null) ? pdc.get(BaseHeirloom.getHeirloomTypeKey(), PersistentDataType.STRING): null;
@@ -38,10 +45,7 @@ public class BowListener implements Listener {
             return;
         }
 
-         */
-
         if (le instanceof Player p) {
-            // p.sendMessage(pdcString2);
             UtilRandom.createBowHeirLoom((Player) le);
             ItemStack itemStack = p.getInventory().getItemInOffHand();
             if (itemStack.getType().equals(Material.POTION)) {
