@@ -46,7 +46,7 @@ public class BowListener implements Listener {
         }
 
         if (le instanceof Player p) {
-            UtilRandom.createBowHeirLoom((Player) le);
+            UtilRandom.createBowHeirLoom(p);
             ItemStack itemStack = p.getInventory().getItemInOffHand();
             if (itemStack.getType().equals(Material.POTION)) {
                 PotionMeta meta = (PotionMeta) itemStack.getItemMeta();
