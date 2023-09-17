@@ -9,7 +9,7 @@ import xyz.wisecraft.smp.modulation.ModuleClass;
 import java.util.*;
 
 @SuppressWarnings("unused")
-public class ModulationStorage {
+public abstract class ModulationStorage {
 
 
     private static final Object lockModule = new Object();
