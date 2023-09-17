@@ -17,6 +17,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import xyz.wisecraft.smp.modules.heirloom.heirlooms.BaseHeirloom;
 import xyz.wisecraft.smp.modules.heirloom.heirlooms.HeirloomType;
+import xyz.wisecraft.smp.modules.heirloom.util.UtilRandom;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,10 +29,11 @@ public class BowListener implements Listener {
     public void onBowShot(EntityShootBowEvent e) {
         LivingEntity le = e.getEntity();
         ItemStack bow = e.getBow();
+
         /*
         ItemMeta itemMeta = (bow != null) ? e.getBow().getItemMeta(): null;
         PersistentDataContainer pdc = (itemMeta != null) ? itemMeta.getPersistentDataContainer(): null;
-        String pdcString = (pdc != null) ? pdc.get(BaseHeirloom.getKey(), PersistentDataType.STRING): null;
+        String pdcString = (pdc != null) ? pdc.get(BaseHeirloom.getHeirloomTypeKey(), PersistentDataType.STRING): null;
         if (pdcString == null || !pdcString.equals(HeirloomType.BOWHEIRLOOM.toString())) {
             return;
         }
@@ -39,6 +41,8 @@ public class BowListener implements Listener {
          */
 
         if (le instanceof Player p) {
+            // p.sendMessage(pdcString2);
+            UtilRandom.createBowHeirLoom((Player) le);
             ItemStack itemStack = p.getInventory().getItemInOffHand();
             if (itemStack.getType().equals(Material.POTION)) {
                 PotionMeta meta = (PotionMeta) itemStack.getItemMeta();
