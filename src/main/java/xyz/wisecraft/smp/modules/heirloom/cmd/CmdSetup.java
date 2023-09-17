@@ -1,19 +1,17 @@
 package xyz.wisecraft.smp.modules.heirloom.cmd;
 
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabExecutor;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import xyz.wisecraft.smp.modules.heirloom.heirlooms.BaseHeirloom;
 import xyz.wisecraft.smp.modules.heirloom.heirlooms.HeirloomType;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class CmdSetup extends BukkitCommand implements TabExecutor {
+public class CmdSetup extends BukkitCommand {
 
 
     public CmdSetup(@NotNull String name) {
@@ -40,19 +38,24 @@ public class CmdSetup extends BukkitCommand implements TabExecutor {
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (label.equalsIgnoreCase("heirloombow")) {
-            if(sender instanceof Player p) {
-                ItemStack item = p.getInventory().getItemInMainHand();
-                BaseHeirloom.createHeirLoom(item, HeirloomType.BOWHEIRLOOM);
-                return true;
-            }
-        }
-        return false;
-    }
+    public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, @NotNull String[] args) throws IllegalArgumentException {
+        ArrayList<String> list = new ArrayList<>();
+        list.add("heirloombow");
+        list.add("heirloomhoe");
+        list.add("heirloomshovel");
+        list.add("heirloomaxe");
+        list.add("heirloompickaxe");
+        list.add("heirloomhelmet");
+        list.add("heirloomchestplate");
+        list.add("heirloomleggings");
+        list.add("heirloomboots");
+        list.add("heirloomshield");
+        list.add("heirloomtrident");
+        list.add("heirloomcrossbow");
+        list.add("heirloomfishingrod");
+        list.add("heirloomelytra");
+        list.add("heirloomsword");
+        return list;
 
-    @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        return null;
     }
 }
