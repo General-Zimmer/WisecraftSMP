@@ -62,9 +62,4 @@ public class BowListener implements Listener {
             }
         }
     }
-
-    @EventHandler
-    public void onArrowHit() {
-
-    }
 }

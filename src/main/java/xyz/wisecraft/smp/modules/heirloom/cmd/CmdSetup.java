@@ -14,7 +14,7 @@ public class CmdSetup extends BukkitCommand {
     public CmdSetup(@NotNull String name) {
         super(name);
         setDescription("It does something veri useful");
-        setLabel("idk wat dis is");
+        setLabel("heirloombow");
         setPermission("heirloom.admin");
         setPermissionMessage("No, bad person!");
         setUsage("You test ze code");
