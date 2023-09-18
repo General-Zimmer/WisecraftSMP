@@ -27,7 +27,7 @@ public class CmdSetup extends BukkitCommand {
     @Override
     public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, String[] args) {
         sender.sendMessage("You tested ze code!");
-        if (commandLabel.equalsIgnoreCase("heirloombow")) {
+        if (commandLabel.equalsIgnoreCase(this.getName())) {
             if(sender instanceof Player p) {
                 ItemStack item = p.getInventory().getItemInMainHand();
                 BaseHeirloom.createHeirLoom(item, HeirloomType.BOWHEIRLOOM);
