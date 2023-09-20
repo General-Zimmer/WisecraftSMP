@@ -6,7 +6,7 @@ import java.util.UUID;
 public class HoeHeirloom extends BaseHeirloom {
     private String size;
 
-    public HoeHeirloom(int level, float xp, HeirloomType type, Date created, UUID id, UUID creator) {
-        super(level, xp, type, created, id, creator);
+    public HoeHeirloom(int level, float xp, Date created, UUID id, UUID creator) {
+        super(level, xp, HeirloomType.HOEHEIRLOOM, created, id, creator);
     }
 }
