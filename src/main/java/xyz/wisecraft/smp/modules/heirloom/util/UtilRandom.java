@@ -19,13 +19,14 @@ import java.util.ArrayList;
 public abstract class UtilRandom {
 
 
-
+    /**
+     * Implementation not done
+     *
+     * @return Adds the allowed effects to Heirlooms
+     */
     public static ArrayList<Effect> initEffects() {
         return null; // Implementation missing
     }
-    /*
-    Implementation not done, might not need this method in the future
-     */
     public static PotionData getPotionEffectForArrow(ItemStack bow, PotionMeta potionMeta) {
         PersistentDataContainer pdc = bow.getItemMeta().getPersistentDataContainer();
         return null;

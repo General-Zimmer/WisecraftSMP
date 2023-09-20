@@ -25,6 +25,12 @@ import java.util.List;
 public class BowListener implements Listener {
 
 
+    /**
+     * Checks whether the player is holding an Heirloom-bow when an arrow is fired
+     * if it is, then the necessary potion effects are added to the arrow fired
+     * NOTE: Implementation is not fully done and is not supporting of different Heirloom lvls or other PotionTypes
+     * @param e the entity that shot the bow
+     */
     @EventHandler
     public void onBowShot(EntityShootBowEvent e) {
         LivingEntity le = e.getEntity();
@@ -32,7 +38,7 @@ public class BowListener implements Listener {
 
         /*
         if (le instanceof Player p) {
-            UtilRandom.createBowHeirLoom((Player) le);
+            UtilRandom.createBowHeirLoom(p);
         }
 
          */

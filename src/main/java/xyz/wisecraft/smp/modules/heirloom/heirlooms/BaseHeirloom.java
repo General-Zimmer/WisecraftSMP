@@ -36,6 +36,13 @@ public abstract class BaseHeirloom {
         this.ID = id;
         this.playedTied = creator;
     }
+
+    /**
+     *
+     * Takes item in players mainhand and adds the Heirloom info to it
+     * @param item item in players mainhand, item MUST be of a type that is supported in Heirlooms
+     * @param type HeirloomType from HeirloomType enum class
+     */
     public static void createHeirLoom(ItemStack item, HeirloomType type) {
         ItemMeta itemMeta = item.getItemMeta();
         itemMeta.getPersistentDataContainer().set(BaseHeirloom.getHeirloomTypeKey(), PersistentDataType.STRING, type.toString());
@@ -44,9 +51,12 @@ public abstract class BaseHeirloom {
         item.setItemMeta(itemMeta);
     }
 
-    /*
-    Search for Heirloom object in our Heirloom storage that matches the item,
-    if it doesn't exist create one and put it into storage
+    /**
+     * Search for Heirloom object in our Heirloom storage that matches the item,
+     * if it doesn't exist create one and put it into storage
+     * NOTE: NOT IMPLEMENTED YET
+     * @param item in players main hand
+     * @return BaseHeirloom if it exists in Storage, else return null
      */
     public static BaseHeirloom getHeirloom(ItemStack item) {
         return null; //Implementation needs to be made
