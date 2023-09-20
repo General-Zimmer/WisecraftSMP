@@ -5,12 +5,21 @@ import xyz.wisecraft.smp.modulation.ModuleClass;
 import xyz.wisecraft.smp.modules.heirloom.cmd.CmdSetup;
 import xyz.wisecraft.smp.modules.heirloom.listeners.BowListener;
 
+import java.util.ArrayList;
+
 public class HeirloomModule implements ModuleClass {
 
+    // Coming soon
+    // private BukkitRunnable GBHeirlooms
 
     @Override
     public void onEnable() {
 
+    }
+
+    @Override
+    public void onDisable() {
+        ModuleClass.super.onDisable();
     }
 
     @Override

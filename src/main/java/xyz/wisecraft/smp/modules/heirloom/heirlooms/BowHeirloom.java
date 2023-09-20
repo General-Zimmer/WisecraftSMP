@@ -7,13 +7,15 @@ import org.bukkit.persistence.PersistentDataType;
 import xyz.wisecraft.smp.modules.heirloom.HeirloomModule;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 public class BowHeirloom extends BaseHeirloom {
     private final static ArrayList<ArrayList<Effect>> effects = new ArrayList<>();
 
-    public BowHeirloom(int level, float xp, HeirloomType type) {
-        super(level, xp, type);
+    public BowHeirloom(int level, float xp, Date created, UUID id, UUID creator) {
+        super(level, xp, HeirloomType.BOWHEIRLOOM, created, id, creator);
     }
 
     public boolean equals(ItemStack itemstack) {
@@ -22,8 +24,9 @@ public class BowHeirloom extends BaseHeirloom {
     }
 
 
-    /*
-    Returns a Arraylist of enums with the types of potions this bow can use.
+    /**
+     *
+     * @return an Arraylist of enums with the types of potions this bow can use.
      */
     public ArrayList<PotionType> canUsePotionTypes() {
         ArrayList<PotionType> potions = new ArrayList<>();
@@ -41,9 +44,8 @@ public class BowHeirloom extends BaseHeirloom {
 
 
     /**
-     * Returns an ArrayList of all the effects permissible for the bow to use at
-     * its current level
-     * @return
+     * Gives an ArrayList of all the effects permissible for the bow to use at its current level
+     * @return ArrayList<Effect>
      */
     public ArrayList<Effect> canUseEffects() {
         ArrayList<Effect> effects = new ArrayList<>();

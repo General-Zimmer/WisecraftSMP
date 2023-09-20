@@ -1,5 +1,6 @@
 package xyz.wisecraft.smp.modules.heirloom.util;
 
+import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -13,10 +14,15 @@ import xyz.wisecraft.smp.modules.heirloom.HeirloomModule;
 import xyz.wisecraft.smp.modules.heirloom.heirlooms.BaseHeirloom;
 import xyz.wisecraft.smp.modules.heirloom.heirlooms.HeirloomType;
 
+import java.util.ArrayList;
+
 public abstract class UtilRandom {
 
 
 
+    public static ArrayList<Effect> initEffects() {
+        return null; // Implementation missing
+    }
     /*
     Implementation not done, might not need this method in the future
      */
@@ -37,10 +43,7 @@ public abstract class UtilRandom {
     public static void createBowHeirLoom(Player player) {
         ItemStack heirloomBow = checkMainHandForBow(player);
         if (heirloomBow != null) {
-            ItemMeta itemMeta = heirloomBow.getItemMeta();
-            itemMeta.getPersistentDataContainer().set(BaseHeirloom.getHeirloomTypeKey(), PersistentDataType.STRING, HeirloomType.BOWHEIRLOOM.toString());
-            heirloomBow.setItemMeta(itemMeta);
-            player.sendMessage(": " + heirloomBow.getItemMeta().getPersistentDataContainer().isEmpty());
+            BaseHeirloom.createHeirLoom(heirloomBow, HeirloomType.BOWHEIRLOOM);
         }
     }
 }
