@@ -20,7 +20,11 @@ import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
+import xyz.wisecraft.smp.WisecraftSMP;
+import xyz.wisecraft.smp.modules.heirloom.HeirloomModule;
 import xyz.wisecraft.smp.modules.heirloom.heirlooms.BaseHeirloom;
 import xyz.wisecraft.smp.modules.heirloom.heirlooms.HeirloomType;
 import xyz.wisecraft.smp.modules.heirloom.util.UtilRandom;
@@ -84,14 +88,17 @@ public class BowListener implements Listener {
                     le.setNoDamageTicks(0);
                 }
 
-                World world = event.getEntity().getWorld();
-                Location location = event.getEntity().getLocation();
-                ItemMeta offHandMeta = itemStack.getItemMeta();
-                PotionMeta meta = (PotionMeta) itemStack.getItemMeta();
-                PotionData potiondata = meta.getBasePotionData();
-                Location spawnLocation = new Location(world, location.getX(), location.getY(), location.getZ());
-                ThrownPotion thrownPotion = (ThrownPotion) world.spawnEntity(location, EntityType.SPLASH_POTION);
-                thrownPotion.setPotionMeta(meta);
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        World world = event.getEntity().getWorld();
+                        Location location = event.getEntity().getLocation();
+                        PotionMeta meta = (PotionMeta) itemStack.getItemMeta();
+                        ThrownPotion thrownPotion = (ThrownPotion) world.spawnEntity(location, EntityType.SPLASH_POTION);
+                        thrownPotion.setPotionMeta(meta);
+                        thrownPotion.splash();
+                    }
+                }.runTaskLater(WisecraftSMP.getInstance(), 1);
             }
         }
     }
