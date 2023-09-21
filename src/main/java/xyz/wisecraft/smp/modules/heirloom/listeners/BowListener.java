@@ -82,23 +82,25 @@ public class BowListener implements Listener {
         ProjectileSource projectileSource = event.getEntity().getShooter();
         if (projectileSource instanceof Player p) {
             ItemStack itemStack = p.getInventory().getItemInOffHand();
-            if (itemStack.getType().equals(Material.SPLASH_POTION)) {
+            if (itemStack.getType().equals(Material.SPLASH_POTION) || itemStack.getType() == Material.LINGERING_POTION) {
                 Entity hitEntity = event.getHitEntity();
                 if (hitEntity instanceof LivingEntity le) {
                     le.setNoDamageTicks(0);
                 }
+                World world = event.getEntity().getWorld();
+                Location location = event.getEntity().getLocation();
+                if (itemStack.getType() == Material.SPLASH_POTION || itemStack.getType() == Material.LINGERING_POTION) {
 
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        World world = event.getEntity().getWorld();
-                        Location location = event.getEntity().getLocation();
-                        PotionMeta meta = (PotionMeta) itemStack.getItemMeta();
-                        ThrownPotion thrownPotion = (ThrownPotion) world.spawnEntity(location, EntityType.SPLASH_POTION);
-                        thrownPotion.setPotionMeta(meta);
-                        thrownPotion.splash();
-                    }
-                }.runTaskLater(WisecraftSMP.getInstance(), 1);
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            ThrownPotion thrownPotion = (ThrownPotion) world.spawnEntity(location, EntityType.SPLASH_POTION);
+                            thrownPotion.setItem(itemStack);
+                            thrownPotion.splash();
+                        }
+                    }.runTaskLater(WisecraftSMP.getInstance(), 1);
+                }
+
             }
         }
     }
