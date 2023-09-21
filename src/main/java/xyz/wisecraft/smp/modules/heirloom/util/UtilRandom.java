@@ -21,7 +21,10 @@ public abstract class UtilRandom {
 
     /**
      * Implementation not done
-     *
+     * Implementation notes
+     * lvl 1: Normal
+     * lvl 2: Normal + Splash
+     * lvl 3: Normal + Splash + Lingering
      * @return Adds the allowed effects to Heirlooms
      */
     public static ArrayList<Effect> initEffects() {

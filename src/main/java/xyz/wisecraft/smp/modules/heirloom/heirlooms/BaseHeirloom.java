@@ -38,7 +38,6 @@ public abstract class BaseHeirloom {
     }
 
     /**
-     *
      * Takes item in players mainhand and adds the Heirloom info to it
      * @param item item in players mainhand, item MUST be of a type that is supported in Heirlooms
      * @param type HeirloomType from HeirloomType enum class
@@ -97,8 +96,12 @@ public abstract class BaseHeirloom {
         this.level = level;
     }
 
-    public void setXp(float xp) {
-        this.xp = xp;
+    /**
+     * Adds XP to the Heirloom
+     * @param amount the amount that will be added to the BaseHeirlooms current XP
+     */
+    public void giveXP(int amount) {
+        this.xp += amount;
     }
 
 
