@@ -4,6 +4,7 @@ import org.bukkit.Effect;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.modules.heirloom.HeirloomModule;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ public class BowHeirloom extends BaseHeirloom {
         super(level, xp, HeirloomType.BOWHEIRLOOM, created, id, creator);
     }
 
-    public boolean equals(ItemStack itemstack) {
+    public boolean equals(@NotNull ItemStack itemstack) {
         NamespacedKey key = new NamespacedKey(HeirloomModule.plugin, "heirloom");
         return itemstack.getItemMeta().getPersistentDataContainer().get(key, PersistentDataType.STRING).equals(HeirloomType.BOWHEIRLOOM.toString());
     }
@@ -30,13 +31,13 @@ public class BowHeirloom extends BaseHeirloom {
      */
     public ArrayList<PotionType> canUsePotionTypes() {
         ArrayList<PotionType> potions = new ArrayList<>();
-        if (getLevel() >= 0) {
+        if (getLevel() >= 1) {
             potions.add(PotionType.NORMAL);
         }
-        if (getLevel() >= 1) {
+        if (getLevel() >= 2) {
             potions.add(PotionType.SPLASH);
         }
-        if (getLevel() >= 2) {
+        if (getLevel() >= 3) {
             potions.add(PotionType.LINGERING);
         }
         return potions;

@@ -49,8 +49,9 @@ public class BowListener implements Listener {
 
         ItemMeta itemMeta = (bow != null) ? e.getBow().getItemMeta(): null;
         PersistentDataContainer pdc = (itemMeta != null) ? itemMeta.getPersistentDataContainer(): null;
-        String pdcString = (pdc != null) ? pdc.get(BaseHeirloom.getHeirloomTypeKey(), PersistentDataType.STRING): null;
-        if (pdcString == null || !pdcString.equals(HeirloomType.BOWHEIRLOOM.toString())) {
+        String pdcTypeString = (pdc != null) ? pdc.get(BaseHeirloom.getHeirloomTypeKey(), PersistentDataType.STRING): null;
+
+        if (pdcTypeString == null || !pdcTypeString.equals(HeirloomType.BOWHEIRLOOM.toString())) {
             return;
         }
 
@@ -89,7 +90,6 @@ public class BowListener implements Listener {
                 }
                 World world = event.getEntity().getWorld();
                 Location location = event.getEntity().getLocation();
-                if (itemStack.getType() == Material.SPLASH_POTION || itemStack.getType() == Material.LINGERING_POTION) {
 
                     new BukkitRunnable() {
                         @Override
@@ -99,7 +99,6 @@ public class BowListener implements Listener {
                             thrownPotion.splash();
                         }
                     }.runTaskLater(WisecraftSMP.getInstance(), 1);
-                }
 
             }
         }

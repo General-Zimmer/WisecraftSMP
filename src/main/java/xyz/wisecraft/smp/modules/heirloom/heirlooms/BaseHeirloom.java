@@ -7,7 +7,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import xyz.wisecraft.smp.modules.heirloom.HeirloomModule;
+import xyz.wisecraft.smp.modules.heirloom.storage.HeirloomStorage;
 
+import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -42,12 +44,15 @@ public abstract class BaseHeirloom {
      * @param item item in players mainhand, item MUST be of a type that is supported in Heirlooms
      * @param type HeirloomType from HeirloomType enum class
      */
-    public static void createHeirLoom(ItemStack item, HeirloomType type) {
+    public static <T extends BaseHeirloom> void createHeirLoom(ItemStack item, HeirloomType type, Class<T> clazz, UUID playerID) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         ItemMeta itemMeta = item.getItemMeta();
+        UUID uuid = UUID.randomUUID();
         itemMeta.getPersistentDataContainer().set(BaseHeirloom.getHeirloomTypeKey(), PersistentDataType.STRING, type.toString());
         itemMeta.getPersistentDataContainer().set(BaseHeirloom.getHeirloomXPKey(), PersistentDataType.FLOAT, 0F);
         itemMeta.getPersistentDataContainer().set(BaseHeirloom.getHeirloomLVLKey(), PersistentDataType.INTEGER, 0);
+        itemMeta.getPersistentDataContainer().set(BaseHeirloom.getHeirloomIDKey(), PersistentDataType.STRING, uuid.toString());
         item.setItemMeta(itemMeta);
+        HeirloomStorage.addHeirloom(uuid, clazz.getConstructor(Integer.class, Float.class, Date.class, UUID.class, UUID.class).newInstance(0, 0F, new Date(), uuid, playerID));
     }
 
     /**
@@ -90,6 +95,13 @@ public abstract class BaseHeirloom {
 
     public static NamespacedKey getHeirloomLVLKey() {
         return heirloomLVLKey;
+    }
+    public static NamespacedKey getHeirloomIDKey() {
+        return heirloomIDKey;
+    }
+
+    public UUID getID() {
+        return ID;
     }
 
     public void setLevel(int level) {
