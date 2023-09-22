@@ -10,6 +10,7 @@ import com.fren_gor.ultimateAdvancementAPI.util.AdvancementKey;
 import com.fren_gor.ultimateAdvancementAPI.util.CoordAdapter;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Material;
+import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.core.WisecraftCoreApi;
 import xyz.wisecraft.smp.modules.advancements.advs.AdvancementTabNamespaces;
@@ -33,7 +34,9 @@ import xyz.wisecraft.smp.modules.advancements.threads.GibRoles;
 import xyz.wisecraft.smp.storage.OtherStorage;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -59,13 +62,13 @@ public class AdvancementsModule implements xyz.wisecraft.smp.modulation.ModuleCl
     }
 
     @Override
-    public boolean startModule() {
+    public boolean enableModule() {
 
 
         if (isModuleDisabled() || !hasAllHardDependencies() || plugin.getIsTesting()) return false;
 
         onEnable();
-        registerEvents();
+        registerListeners();
         registerCommands();
         return true;
     }
@@ -87,23 +90,25 @@ public class AdvancementsModule implements xyz.wisecraft.smp.modulation.ModuleCl
     }
 
     @Override
-    public void registerEvents() {
+    public ArrayList<Listener> registerListeners() {
+        ArrayList<Listener> listeners = new ArrayList<>();
         if (isTimberEnabled && core != null)
-            plugin.getServer().getPluginManager().registerEvents(new TimberListeners(core), plugin);
+            listeners.add(new TimberListeners(core));
 
 
-        if (luck == null)
-            return;
+
+        if (luck == null) return listeners;
 
         // Check for new citizens. This is async right after this step.
         String servName = OtherStorage.getServer_name();
         if (servName.equalsIgnoreCase("l-gp1")  || servName.equalsIgnoreCase("legacy")) {
             new GibRoles(core, luck).runTaskTimer(plugin, 20*60*10, 20*60*10);
-            plugin.getServer().getPluginManager().registerEvents(new LegacyRoles(), plugin);
+            listeners.add(new LegacyRoles());
             legacy.automaticallyShowToPlayers();
             legacy.automaticallyGrantRootAdvancement();
         }
 
+        return listeners;
     }
 
     @Override

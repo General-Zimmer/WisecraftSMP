@@ -1,10 +1,12 @@
 package xyz.wisecraft.smp.modules.cropharvester;
 
 import org.bukkit.Material;
+import org.bukkit.event.Listener;
 import xyz.wisecraft.smp.modules.cropharvester.listener.CropTrampleListener;
 import xyz.wisecraft.smp.modules.cropharvester.listener.HarvestListener;
 import xyz.wisecraft.smp.storage.OtherStorage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,12 +36,14 @@ public class CropHarvesterModule implements xyz.wisecraft.smp.modulation.ModuleC
     }
 
     @Override
-    public void registerEvents() {
-        plugin.getServer().getPluginManager().registerEvents(new HarvestListener(), plugin);
+    public ArrayList<Listener> registerListeners() {
+        ArrayList<Listener> listeners = new ArrayList<>();
+        listeners.add(new HarvestListener());
 
         if (plugin.getConfig().getBoolean("SETTINGS.ANTI_TRAMPLE_CROPS", false)) {
-            plugin.getServer().getPluginManager().registerEvents(new CropTrampleListener(), plugin);
+            listeners.add(new CropTrampleListener());
         }
+        return listeners;
     }
 
     public static CropHarvesterModule getInstance() {

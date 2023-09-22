@@ -2,6 +2,7 @@ package xyz.wisecraft.smp.modules.jobsextra;
 
 import com.gamingmesh.jobs.Jobs;
 import com.gamingmesh.jobs.container.Job;
+import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitTask;
 import xyz.wisecraft.smp.modulation.ModuleClass;
 import xyz.wisecraft.smp.modules.cropharvester.CropHarvesterModule;
@@ -30,9 +31,11 @@ public class JobsExtrasModule implements xyz.wisecraft.smp.modulation.ModuleClas
     }
 
     @Override
-    public void registerEvents() {
-        plugin.getServer().getPluginManager().registerEvents(new JobsFeatureListener(this), plugin);
-        plugin.getServer().getPluginManager().registerEvents(new ExplorerListener(this), plugin);
+    public ArrayList<Listener> registerListeners() {
+        ArrayList<Listener> listeners = new ArrayList<>();
+        listeners.add(new JobsFeatureListener(this));
+        listeners.add(new ExplorerListener(this));
+        return listeners;
     }
 
     @Override

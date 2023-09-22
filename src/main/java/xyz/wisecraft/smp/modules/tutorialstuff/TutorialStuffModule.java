@@ -1,9 +1,11 @@
 package xyz.wisecraft.smp.modules.tutorialstuff;
 
 import net.ess3.api.IEssentials;
+import org.bukkit.event.Listener;
 import xyz.wisecraft.core.WisecraftCoreApi;
 import xyz.wisecraft.smp.modules.tutorialstuff.listeners.ExtraListener;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 /**
@@ -20,8 +22,10 @@ public class TutorialStuffModule implements xyz.wisecraft.smp.modulation.ModuleC
     }
 
     @Override
-    public void registerEvents() {
-        plugin.getServer().getPluginManager().registerEvents(new ExtraListener(isMultiverseEnabled), plugin);
+    public ArrayList<Listener> registerListeners() {
+        ArrayList<Listener> listeners = new ArrayList<>();
+        listeners.add(new ExtraListener(isMultiverseEnabled));
+        return listeners;
     }
 
     @Override

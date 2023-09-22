@@ -1,6 +1,7 @@
 package xyz.wisecraft.smp.modules.togglepvp;
 
 import com.nametagedit.plugin.api.INametagApi;
+import org.bukkit.event.Listener;
 import xyz.wisecraft.core.WisecraftCoreApi;
 import xyz.wisecraft.smp.modules.togglepvp.listeners.PVPTimberListener;
 import xyz.wisecraft.smp.modules.togglepvp.listeners.PlayerListener;
@@ -10,6 +11,7 @@ import xyz.wisecraft.smp.modules.togglepvp.utils.PersistentData;
 import xyz.wisecraft.smp.modules.togglepvp.utils.PlaceholderAPIHook;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Objects;
 
 /**
@@ -41,12 +43,14 @@ public class PvPToggleModule implements xyz.wisecraft.smp.modulation.ModuleClass
     }
 
     @Override
-    public void registerEvents() {
-        plugin.getServer().getPluginManager().registerEvents(new PlayerListener(), plugin);
-        plugin.getServer().getPluginManager().registerEvents(new PvPListener(), plugin);
+    public ArrayList<Listener> registerListeners() {
+        ArrayList<Listener> listeners = new ArrayList<>();
+        listeners.add(new PlayerListener());
+        listeners.add(new PvPListener());
         if (isTimberEnabled && core != null) {
-            plugin.getServer().getPluginManager().registerEvents(new PVPTimberListener(core), plugin);
+            listeners.add(new PVPTimberListener(core));
         }
+        return listeners;
     }
 
     @Override

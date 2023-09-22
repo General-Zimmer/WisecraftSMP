@@ -1,11 +1,15 @@
 package xyz.wisecraft.smp.modulation;
 
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.modulation.storage.ModulationStorage;
 import xyz.wisecraft.smp.modulation.storage.ModuleSettings;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This interface is used to create modules.
@@ -30,7 +34,9 @@ public interface ModuleClass extends Comparable<ModuleClass> {
     /**
      * This method should register all the events for the module.
      */
-    default void registerEvents() {}
+    default ArrayList<Listener> registerListeners() {
+        return new ArrayList<>();
+    }
 
     /**
      * This method should register all the commands for the module.
@@ -100,9 +106,18 @@ public interface ModuleClass extends Comparable<ModuleClass> {
      * @return The module instance.
      */
     default ModuleClass getModule(Class<?> clazz) {
-        for (ModuleClass module : plugin.getModules()) {
+        for (ModuleClass module : ModulationStorage.getModules().keySet()) {
             if (module.getClass().equals(clazz))
                 return module;
+        }
+        return null;
+    }
+
+    default ArrayList<Listener> getListeners(Class<?> clazz) {
+        HashMap<ModuleClass, ArrayList<Listener>> yeet = ModulationStorage.getModules();
+        for (Map.Entry<ModuleClass, ArrayList<Listener>> module : yeet.entrySet()) {
+            if (module.getKey().getClass().equals(clazz))
+                return module.getValue();
         }
         return null;
     }
@@ -132,16 +147,16 @@ public interface ModuleClass extends Comparable<ModuleClass> {
     }
 
     /**
-     * This method is called when the module is starting up.
+     * Will register all necessary events and commands for the module's function to work.
      * @return true if the module was enabled.
      */
-    default boolean startModule() {
+    default boolean enableModule() {
 
 
         if (isModuleDisabled() || !hasAllHardDependencies()) return false;
 
         onEnable();
-        registerEvents();
+        registerListeners();
         registerCommands();
         return true;
     }
@@ -151,6 +166,8 @@ public interface ModuleClass extends Comparable<ModuleClass> {
      */
     default void stopModule() {
         onDisable();
+        getListeners(this.getClass()).forEach(HandlerList::unregisterAll);
+
     }
 
     /**

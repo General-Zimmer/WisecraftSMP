@@ -1,5 +1,6 @@
 package xyz.wisecraft.smp.modulation.storage;
 
+import org.bukkit.event.Listener;
 import xyz.wisecraft.smp.modulation.ModuleClass;
 
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ public class ModulationStorage {
 
 
     private static final HashMap<String, Object> dependencies = new HashMap<>();
-    private final ArrayList<ModuleClass> modules = new ArrayList<>();
+    private static final HashMap<ModuleClass, ArrayList<Listener>> modules = new HashMap<>();
 
     /**
      * Adds a dependency.
@@ -38,27 +39,18 @@ public class ModulationStorage {
 
     /**
      * Adds a module.
-     * @param module The module.
      */
-    public void addModule(ModuleClass module) {
-        modules.add(module);
+    public static void addModule(ModuleClass module, ArrayList<Listener> listener) {
+        modules.put(module, listener);
     }
 
     /**
      * Gets all modules in a new ArrayList.
      * @return The modules.
      */
-    public ArrayList<ModuleClass> getModules() {
-        return new ArrayList<>(modules);
+    public static HashMap<ModuleClass, ArrayList<Listener>> getModules() {
+        return new HashMap<>(modules);
     }
 
-    /**
-     * Adds all modules from an ArrayList.
-     * @param modules The ArrayList of modules.
-     */
-    public void addAllModules(ArrayList<ModuleClass> modules) {
-        this.modules.clear();
-        this.modules.addAll(modules);
-    }
 
 }

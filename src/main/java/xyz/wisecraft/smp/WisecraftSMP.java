@@ -7,7 +7,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.reflections.Reflections;
 import xyz.wisecraft.smp.modulation.ModuleClass;
-import xyz.wisecraft.smp.modulation.UtilModuleCommon;
+import xyz.wisecraft.smp.modulation.storage.ModulationStorage;
 import xyz.wisecraft.smp.modulation.storage.ModuleSettings;
 import xyz.wisecraft.smp.storage.OtherStorage;
 
@@ -17,6 +17,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Set;
 
+import static xyz.wisecraft.smp.modulation.UtilModuleCommon.sortDependTrimmed;
 import static xyz.wisecraft.smp.util.UtilRandom.setupModulesFromConfig;
 
 /**
@@ -27,8 +28,6 @@ public class WisecraftSMP extends JavaPlugin {
     private static WisecraftSMP instance;
     private AdvancementMain advapi;
     private FileConfiguration moduleConfig;
-
-    private final ArrayList<ModuleClass> modules = new ArrayList<>();
 
     /**
      * Production Constructor for WisecraftSMP
@@ -77,17 +76,16 @@ public class WisecraftSMP extends JavaPlugin {
         ArrayList<ModuleClass> unsortedModules = setupModules(reflections.getSubTypesOf(ModuleClass.class));
 
         // setup modules
-        ArrayList<ModuleClass> sortedModules = UtilModuleCommon.sortDependTrimmed(unsortedModules);
+        ArrayList<ModuleClass> sortedModules = sortDependTrimmed(unsortedModules);
         setupModulesFromConfig(moduleConfig, sortedModules, isModulesEnabledByDefault, getModulePath()); // todo prevent comments from being removed
 
 
         // Start/load modules
-        for (int i = sortedModules.size(); i > 0; i--) {
-            ModuleClass module = sortedModules.get(i-1);
-
-            if (module.startModule())
-                modules.add(module);
-        }
+        sortedModules.forEach(module -> {
+            if (module.enableModule()) {
+                ModulationStorage.addModule(module, module.registerListeners());
+            }
+        });
 
         try {
             moduleConfig.save(moduleConfigFile);
@@ -100,10 +98,9 @@ public class WisecraftSMP extends JavaPlugin {
     public void onDisable() {
         // Plugin shutdown logic
         // Me: We don't do that here
-
-        for (ModuleClass module : this.modules)
+        ModulationStorage.getModules().forEach((module, listeners) -> {
             module.stopModule();
-
+        });
     }
 
 
@@ -165,9 +162,5 @@ public class WisecraftSMP extends JavaPlugin {
 
     public Boolean getIsTesting() {
         return isTesting;
-    }
-
-    public ArrayList<ModuleClass> getModules() {
-        return new ArrayList<>(modules);
     }
 }

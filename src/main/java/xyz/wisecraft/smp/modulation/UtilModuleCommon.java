@@ -1,5 +1,8 @@
 package xyz.wisecraft.smp.modulation;
 
+import org.bukkit.command.Command;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.jetbrains.annotations.NotNull;
@@ -7,7 +10,9 @@ import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.modulation.storage.ModulationStorage;
 import xyz.wisecraft.smp.modulation.storage.ModuleSettings;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public abstract class UtilModuleCommon {
 
@@ -156,6 +161,33 @@ public abstract class UtilModuleCommon {
         }
 
         return dependencyInstance;
+    }
+
+    private static Object getPrivateField(Object object, String field) throws SecurityException,
+            NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+        Class<?> clazz = object.getClass();
+        Field objectField = clazz.getDeclaredField(field);
+        objectField.setAccessible(true);
+        Object result = objectField.get(object);
+        objectField.setAccessible(false);
+        return result;
+    }
+    public static void unRegisterBukkitCommand(PluginCommand cmd) {
+        try {
+            Object result = getPrivateField(plugin.getServer().getPluginManager(), "commandMap");
+            SimpleCommandMap commandMap = (SimpleCommandMap) result;
+            Object map = getPrivateField(commandMap, "knownCommands");
+            @SuppressWarnings("unchecked")
+            HashMap<String, Command> knownCommands = (HashMap<String, Command>) map;
+            knownCommands.remove(cmd.getName());
+            for (String alias : cmd.getAliases()){
+                if(knownCommands.containsKey(alias) && knownCommands.get(alias).toString().contains(plugin.getName())){
+                    knownCommands.remove(alias);
+                }
+            }
+        } catch (Exception e) {
+            plugin.getLogger().log(java.util.logging.Level.SEVERE, "Failed to unregister command " + cmd.getName(), e);
+        }
     }
 
 }
