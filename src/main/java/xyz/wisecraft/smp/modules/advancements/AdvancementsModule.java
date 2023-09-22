@@ -10,9 +10,11 @@ import com.fren_gor.ultimateAdvancementAPI.util.AdvancementKey;
 import com.fren_gor.ultimateAdvancementAPI.util.CoordAdapter;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Material;
+import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.core.WisecraftCoreApi;
+import xyz.wisecraft.smp.modulation.models.ModuleInfo;
 import xyz.wisecraft.smp.modules.advancements.advs.AdvancementTabNamespaces;
 import xyz.wisecraft.smp.modules.advancements.advs.common_quests.*;
 import xyz.wisecraft.smp.modules.advancements.advs.common_quests.maxjob2.*;
@@ -36,15 +38,13 @@ import xyz.wisecraft.smp.storage.OtherStorage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
 
 /**
  * This class is the module class for the Advancements module.
  */
 public class AdvancementsModule implements xyz.wisecraft.smp.modulation.ModuleClass {
 
-    private static AdvancementsModule module = null;
+    private static final AdvancementsModule module = null;
     private UltimateAdvancementAPI api;
     private AdvancementTab tutorial_quests;
     private AdvancementTab common_quests;
@@ -57,20 +57,16 @@ public class AdvancementsModule implements xyz.wisecraft.smp.modulation.ModuleCl
     private final boolean isTownyEnabled = setupDependency("Towny");
 
 
-    public AdvancementsModule() {
-        module = this;
-    }
-
+    // todo implement this as an interface and use a lambda expression to add this to the check.
     @Override
-    public boolean enableModule() {
+    public ModuleInfo enableModule() {
 
 
-        if (isModuleDisabled() || !hasAllHardDependencies() || plugin.getIsTesting()) return false;
+        if (isModuleDisabled() || !hasAllHardDependencies() || plugin.getIsTesting()) return null;
+
 
         onEnable();
-        registerListeners();
-        registerCommands();
-        return true;
+        return new ModuleInfo(getModuleName(), registerListeners(), registerCommands());
     }
 
     @Override
@@ -117,9 +113,11 @@ public class AdvancementsModule implements xyz.wisecraft.smp.modulation.ModuleCl
     }
 
     @Override
-    public void registerCommands() {
-        Objects.requireNonNull(plugin.getCommand("autoroles"), "command autoroles isn't registered").setExecutor(new Command(core, luck));
+    public ArrayList<BukkitCommand> registerCommands() {
+        ArrayList<BukkitCommand> commands = new ArrayList<>(1);
+        commands.add(new AdvCMD(core, luck));
 
+        return commands;
     }
 
     public void initializeTabs() {

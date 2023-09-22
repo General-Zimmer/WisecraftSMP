@@ -18,9 +18,9 @@ import java.util.Objects;
 
 public class Timber_move extends BaseAdvancement implements VanillaVisibility {
 
-  public static AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.tutorial_quests_NAMESPACE, "timber_move");
+  public static final AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.tutorial_quests_NAMESPACE, "timber_move");
 
-  AdvancementsModule module = AdvancementsModule.getModule();
+  final AdvancementsModule module = AdvancementsModule.getModule();
 
   public Timber_move(Advancement parent, float x, float y) {
     super(KEY.getKey(), new AdvancementDisplay(Material.OAK_SAPLING, "You didn't mooove!", AdvancementFrameType.TASK, true, false, x, y , "Trees can be very lethal"), parent, 1);

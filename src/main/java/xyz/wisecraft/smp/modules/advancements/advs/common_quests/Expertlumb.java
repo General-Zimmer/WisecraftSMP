@@ -14,7 +14,7 @@ import xyz.wisecraft.smp.modules.advancements.util.UtilAdv;
 
 public class Expertlumb extends BaseAdvancement implements ParentGrantedVisibility {
 
-  public static AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.common_quests_NAMESPACE, "expertlumb");
+  public static final AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.common_quests_NAMESPACE, "expertlumb");
 
 
   public Expertlumb(Advancement parent, float x, float y) {

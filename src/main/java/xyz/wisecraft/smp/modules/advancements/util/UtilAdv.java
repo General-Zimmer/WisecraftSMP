@@ -22,6 +22,7 @@ import xyz.wisecraft.smp.modules.advancements.AdvancementsModule;
 import xyz.wisecraft.smp.modules.advancements.advs.tutorial_quests.Firstspecialty;
 import xyz.wisecraft.smp.storage.OtherStorage;
 
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -95,7 +96,7 @@ public abstract class UtilAdv {
             InheritanceNode role = UtilAdv.createRole(roleName);
             //Add role and save/commit
 
-            user.data().add(role);
+            user.data().add(Objects.requireNonNull(role));
             luck.getUserManager().saveUser(user);
         });
 
@@ -110,7 +111,7 @@ public abstract class UtilAdv {
         luck.getUserManager().modifyUser(p.getUniqueId(), user -> {
             InheritanceNode role = UtilAdv.createRole(roleName);
             //Add role and save/commit
-            user.data().remove(role);
+            user.data().remove(Objects.requireNonNull(role));
             luck.getUserManager().saveUser(user);
         });
     }

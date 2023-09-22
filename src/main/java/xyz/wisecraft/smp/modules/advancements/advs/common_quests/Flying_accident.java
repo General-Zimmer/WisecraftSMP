@@ -12,7 +12,7 @@ import xyz.wisecraft.smp.modules.advancements.advs.AdvancementTabNamespaces;
 
 public class Flying_accident extends BaseAdvancement  {
 
-  public static AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.common_quests_NAMESPACE, "flying_accident");
+  public static final AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.common_quests_NAMESPACE, "flying_accident");
 
 
   public Flying_accident(Advancement parent, float x, float y) {

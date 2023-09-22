@@ -15,6 +15,7 @@ import xyz.wisecraft.smp.modulation.UtilModuleCommon;
 
 import java.util.ArrayList;
 
+@SuppressWarnings({"ALL", "EmptyMethod"})
 public class FindDependenciesTests {
 
     private final ArrayList<ModuleClass> modules = new ArrayList<>();

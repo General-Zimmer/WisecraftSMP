@@ -20,7 +20,7 @@ public abstract class UtilChat {
 	 */
 	public static void send(CommandSender sender, String message) {
 		String msg = config.getString("MESSAGES." + message);
-		if(msg.equals(""))
+		if(msg.isEmpty())
 			return;
 		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
 	}
@@ -33,7 +33,7 @@ public abstract class UtilChat {
 	 */
 	public static void send(CommandSender sender, String message, String argument) {
 		String msg = config.getString("MESSAGES." + message);
-		if(msg.equals(""))
+		if(msg.isEmpty())
 			return;
 		String output = msg.replaceAll("<argument>", argument);
 		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', output));
@@ -48,7 +48,7 @@ public abstract class UtilChat {
 	 */
 	public static void send(CommandSender sender, String message, String argument, Boolean pvpState) {
 		String msg = config.getString("MESSAGES." + message);
-		if(msg != null && msg.equals(""))
+		if(msg != null && msg.isEmpty())
 			return;
 		String output = msg.replaceAll("<argument>", argument);
 		if(pvpState) {

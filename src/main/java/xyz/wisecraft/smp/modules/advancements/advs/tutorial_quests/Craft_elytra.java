@@ -14,7 +14,7 @@ import static xyz.wisecraft.smp.modules.advancements.util.UtilAdv.IsCraftedItem;
 
 public class Craft_elytra extends BaseAdvancement implements VanillaVisibility {
 
-  public static AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.tutorial_quests_NAMESPACE, "craft_elytra");
+  public static final AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.tutorial_quests_NAMESPACE, "craft_elytra");
 
 
   public Craft_elytra(Advancement parent, float x, float y) {

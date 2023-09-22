@@ -9,7 +9,7 @@ import xyz.wisecraft.smp.modules.advancements.advs.AdvancementTabNamespaces;
 
 public class Cit_Dia_pick extends TaskAdvancement {
 
-  public static AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.legacy_NAMESPACE, "dia_pick");
+  public static final AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.legacy_NAMESPACE, "dia_pick");
 
 
   public Cit_Dia_pick(AbstractMultiTasksAdvancement multitask) {

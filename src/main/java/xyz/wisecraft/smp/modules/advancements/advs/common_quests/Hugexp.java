@@ -13,14 +13,12 @@ import xyz.wisecraft.smp.modules.advancements.util.UtilAdv;
 
 public class Hugexp extends BaseAdvancement implements VanillaVisibility {
 
-  public static AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.common_quests_NAMESPACE, "hugexp");
+  public static final AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.common_quests_NAMESPACE, "hugexp");
 
 
   public Hugexp(Advancement parent, float x, float y) {
     super(KEY.getKey(), new AdvancementDisplay(Material.EXPERIENCE_BOTTLE, "Huuge xp", AdvancementFrameType.CHALLENGE, true, true, x, y , "level 100 achieved!"), parent, 100);
 
-    registerEvent(PlayerLevelChangeEvent.class, e -> {
-      UtilAdv.advLvl(this, e);
-    });
+    registerEvent(PlayerLevelChangeEvent.class, e -> UtilAdv.advLvl(this, e));
   }
 }

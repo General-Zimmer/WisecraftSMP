@@ -10,6 +10,7 @@ import xyz.wisecraft.smp.WisecraftSMP;
 
 import java.io.File;
 
+@SuppressWarnings("EmptyMethod")
 public class ConfigTests {
 
     FileConfiguration moduleConfig = null;

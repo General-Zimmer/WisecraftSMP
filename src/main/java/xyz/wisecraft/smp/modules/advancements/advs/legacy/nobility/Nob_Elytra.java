@@ -9,7 +9,7 @@ import xyz.wisecraft.smp.modules.advancements.advs.AdvancementTabNamespaces;
 
 public class Nob_Elytra extends TaskAdvancement {
 
-  public static AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.legacy_NAMESPACE, "elytra");
+  public static final AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.legacy_NAMESPACE, "elytra");
 
 
   public Nob_Elytra(AbstractMultiTasksAdvancement multitask) {

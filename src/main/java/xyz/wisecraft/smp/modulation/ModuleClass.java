@@ -1,15 +1,18 @@
 package xyz.wisecraft.smp.modulation;
 
+import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import xyz.wisecraft.smp.WisecraftSMP;
+import xyz.wisecraft.smp.modulation.models.ModuleInfo;
 import xyz.wisecraft.smp.modulation.storage.ModulationStorage;
 import xyz.wisecraft.smp.modulation.storage.ModuleSettings;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+
+import static xyz.wisecraft.smp.modulation.storage.ModulationStorage.getCommands;
+import static xyz.wisecraft.smp.modulation.storage.ModulationStorage.getListeners;
 
 /**
  * This interface is used to create modules.
@@ -41,7 +44,7 @@ public interface ModuleClass extends Comparable<ModuleClass> {
     /**
      * This method should register all the commands for the module.
      */
-    default void registerCommands() {}
+    default ArrayList<BukkitCommand> registerCommands() {return new ArrayList<>();}
 
     /**
      * Sets up a dependency. This method gets an Object extending Plugin type.
@@ -100,27 +103,9 @@ public interface ModuleClass extends Comparable<ModuleClass> {
         return depends;
     }
 
-    /**
-     * Gets an instance of the module or null if it isn't loaded.
-     * @param clazz The class of the module.
-     * @return The module instance.
-     */
-    default ModuleClass getModule(Class<?> clazz) {
-        for (ModuleClass module : ModulationStorage.getModules().keySet()) {
-            if (module.getClass().equals(clazz))
-                return module;
-        }
-        return null;
-    }
 
-    default ArrayList<Listener> getListeners(Class<?> clazz) {
-        HashMap<ModuleClass, ArrayList<Listener>> yeet = ModulationStorage.getModules();
-        for (Map.Entry<ModuleClass, ArrayList<Listener>> module : yeet.entrySet()) {
-            if (module.getKey().getClass().equals(clazz))
-                return module.getValue();
-        }
-        return null;
-    }
+
+
 
     /**
      * Gets the module ID. Will return -1 if the id does not exist.
@@ -148,26 +133,24 @@ public interface ModuleClass extends Comparable<ModuleClass> {
 
     /**
      * Will register all necessary events and commands for the module's function to work.
-     * @return true if the module was enabled.
+     * @return ModuleInfo if the module was enabled or null if it wasn't.
      */
-    default boolean enableModule() {
+    default ModuleInfo enableModule() {
 
 
-        if (isModuleDisabled() || !hasAllHardDependencies()) return false;
+        if (isModuleDisabled() || !hasAllHardDependencies()) return null;
 
         onEnable();
-        registerListeners();
-        registerCommands();
-        return true;
+        return new ModuleInfo(getModuleName(), registerListeners(), registerCommands());
     }
 
     /**
      * This method is called when the module is shutting down.
      */
-    default void stopModule() {
+    default void disableModule() {
         onDisable();
         getListeners(this.getClass()).forEach(HandlerList::unregisterAll);
-
+        getCommands(this.getClass()).forEach(command -> command.unregister(plugin.getServer().getCommandMap()));
     }
 
     /**
@@ -180,7 +163,4 @@ public interface ModuleClass extends Comparable<ModuleClass> {
         return Long.compare(this.getModuleID(), module.getModuleID());
     }
 
-    default WisecraftSMP getPlugin() {
-        return plugin;
-    }
 }

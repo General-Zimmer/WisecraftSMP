@@ -11,7 +11,7 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
 
 public class Maxjob2 extends MultiTasksAdvancement implements ParentGrantedVisibility {
 
-  public static AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.common_quests_NAMESPACE, "maxjob2");
+  public static final AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.common_quests_NAMESPACE, "maxjob2");
 
 
   public Maxjob2(Advancement parent, float x, float y) {

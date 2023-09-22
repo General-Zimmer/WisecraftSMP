@@ -15,7 +15,7 @@ import java.util.Objects;
 
 public class Ledgehog extends BaseAdvancement implements VanillaVisibility {
 
-  public static AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.common_quests_NAMESPACE, "ledgehog");
+  public static final AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.common_quests_NAMESPACE, "ledgehog");
 
 
   public Ledgehog(Advancement parent, float x, float y) {

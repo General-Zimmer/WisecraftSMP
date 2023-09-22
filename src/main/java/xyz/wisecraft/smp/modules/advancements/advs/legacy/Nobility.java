@@ -14,7 +14,7 @@ import xyz.wisecraft.smp.modules.advancements.util.UtilAdv;
 
 public class Nobility extends MultiTasksAdvancement implements VanillaVisibility {
 
-  public static AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.legacy_NAMESPACE, "nobility");
+  public static final AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.legacy_NAMESPACE, "nobility");
 
 
   public Nobility(Advancement parent) {

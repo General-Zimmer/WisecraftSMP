@@ -15,7 +15,7 @@ import java.util.List;
 
 public class Maxjob2atonce extends BaseAdvancement  {
 
-  public static AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.common_quests_NAMESPACE, "maxjob2atonce");
+  public static final AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.common_quests_NAMESPACE, "maxjob2atonce");
 
 
   public Maxjob2atonce(Advancement parent, float x, float y) {

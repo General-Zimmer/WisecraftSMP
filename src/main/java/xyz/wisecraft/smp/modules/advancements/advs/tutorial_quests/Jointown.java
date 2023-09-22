@@ -12,7 +12,7 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
 
 public class Jointown extends BaseAdvancement  {
 
-  public static AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.tutorial_quests_NAMESPACE, "jointown");
+  public static final AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.tutorial_quests_NAMESPACE, "jointown");
 
 
   public Jointown(Advancement parent, float x, float y) {

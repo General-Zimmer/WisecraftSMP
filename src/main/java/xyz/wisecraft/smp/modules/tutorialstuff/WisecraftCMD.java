@@ -3,9 +3,8 @@ package xyz.wisecraft.smp.modules.tutorialstuff;
 import net.ess3.api.IEssentials;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabExecutor;
+import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.core.WisecraftCoreApi;
@@ -18,34 +17,57 @@ import java.util.List;
 /**
  * WisecraftCMD
  */
-public class WisecraftCMD implements TabExecutor {
+public class WisecraftCMD extends BukkitCommand {
 
     private final WisecraftCoreApi core;
     private final IEssentials ess;
-    private boolean isMultiverseEnabled;
+    private final boolean isMultiverseEnabled;
 
     /**
      * Constructor
      */
-    public WisecraftCMD(WisecraftCoreApi core, IEssentials ess, boolean isMultiverseEnabled) {
+    public WisecraftCMD(String name, WisecraftCoreApi core, IEssentials ess, boolean isMultiverseEnabled) {
+        super(name);
+        setDescription("used to change PvP state.");
+        setUsage("/wisecraft <parameter>");
+        setLabel(this.getName());
+        setPermission("wisecraft.manage");
+        setPermissionMessage("bad boi!");
+        setAliases(List.of("wshop"));
+
         this.core = core;
         this.ess = ess;
         this.isMultiverseEnabled = isMultiverseEnabled;
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
+    public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, @NotNull String[] args) throws IllegalArgumentException {
+        List<String> words = new ArrayList<>();
+        if (args.length == 1) {
+            words.add("shop");
+            words.add("tutorial");
+            if (sender.hasPermission("wisecraft.manage")) {
+                words.add("save");
+                words.add("load");
+            }
+        }
 
+
+        return words;
+    }
+
+    @Override
+    public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
         if ( !(sender instanceof Player)) return true;
         Player p = ((Player) sender).getPlayer();
         if (p == null) return true;
 
-        if (cmd.getName().equals("wshop")) {
+        if (commandLabel.equals("wshop")) {
             UtilRandom.tpworld(ess, Bukkit.getWorld("shop"), p, isMultiverseEnabled);
             return true;
         }
 
-        if (cmd.getName().equals("wisecraft")) {
+        if (commandLabel.equals(this.getName())) {
 
             if (args.length == 0) {
                 p.sendMessage(ChatColor.YELLOW + "You can choose to teleport to either shop or tutorial");
@@ -81,28 +103,4 @@ public class WisecraftCMD implements TabExecutor {
         }
         return true;
     }
-
-    @SuppressWarnings("SwitchStatementWithTooFewBranches")
-    @Override
-    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
-        List<String> words = new ArrayList<>();
-        switch (args.length) {
-            case 1 -> {
-                words.add("shop");
-                words.add("tutorial");
-                if (sender.hasPermission("wisecraft.manage")) {
-                    words.add("save");
-                    words.add("load");
-                }
-                return words;
-            }
-
-
-        }
-
-
-        return null;
-    }
-
-
 }

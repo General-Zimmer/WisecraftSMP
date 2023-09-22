@@ -15,7 +15,7 @@ import xyz.wisecraft.smp.modules.advancements.advs.AdvancementTabNamespaces;
 
 public class Veinmine extends BaseAdvancement implements VanillaVisibility {
 
-  public static AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.tutorial_quests_NAMESPACE, "veinmine");
+  public static final AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.tutorial_quests_NAMESPACE, "veinmine");
 
 
   public Veinmine(Advancement parent, float x, float y) {

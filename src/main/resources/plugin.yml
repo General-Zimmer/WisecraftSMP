@@ -7,22 +7,6 @@ softdepend: [Multiverse-Core, UltimateTimber, Essentials, WisecraftCore,
              LuckPerms, PlaceholderAPI, NametagEdit, VeinMiner, GriefPrevention,
              Towny, WorldGuard, Jobs]
 authors: [General_Zimmer]
-commands:
-  wisecraft:
-    usage: /wisecraft <parameter>
-  wshop:
-    description: Get to shop quickly
-    usage: /wshop
-  autoroles:
-    description: Used to manually save or load data
-    usage: /autoroles <save | load>
-    permission: Wisecraftadv.manage
-    permission-message: You don't have the wisecraftadv.manage permission node.
-  pvp:
-    description: used to change PvP state.
-    usage: /pvp
-    permission: pvptoggle.allow
-    permission-message: You don't have the pvptoggle.allow permission node.
 permission:
   wisecraft.manage:
     default: op

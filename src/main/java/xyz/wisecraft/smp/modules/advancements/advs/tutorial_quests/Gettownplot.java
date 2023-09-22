@@ -12,7 +12,7 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
 
 public class Gettownplot extends BaseAdvancement  {
 
-  public static AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.tutorial_quests_NAMESPACE, "gettownplot");
+  public static final AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.tutorial_quests_NAMESPACE, "gettownplot");
 
 
   public Gettownplot(Advancement parent, float x, float y) {

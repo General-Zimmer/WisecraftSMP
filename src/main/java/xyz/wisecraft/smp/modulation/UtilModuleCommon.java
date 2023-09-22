@@ -1,7 +1,6 @@
 package xyz.wisecraft.smp.modulation;
 
 import org.bukkit.command.Command;
-import org.bukkit.command.PluginCommand;
 import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -163,6 +162,7 @@ public abstract class UtilModuleCommon {
         return dependencyInstance;
     }
 
+    // todo remove these 2 if they aren't needed on next update.
     private static Object getPrivateField(Object object, String field) throws SecurityException,
             NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
         Class<?> clazz = object.getClass();
@@ -172,7 +172,7 @@ public abstract class UtilModuleCommon {
         objectField.setAccessible(false);
         return result;
     }
-    public static void unRegisterBukkitCommand(PluginCommand cmd) {
+    public static void unRegisterBukkitCommand(Command cmd) {
         try {
             Object result = getPrivateField(plugin.getServer().getPluginManager(), "commandMap");
             SimpleCommandMap commandMap = (SimpleCommandMap) result;

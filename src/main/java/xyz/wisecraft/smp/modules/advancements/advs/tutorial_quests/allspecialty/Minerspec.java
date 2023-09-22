@@ -10,7 +10,7 @@ import static xyz.wisecraft.smp.modules.advancements.util.UtilAdv.grantFirstSpec
 
 public class Minerspec extends TaskAdvancement {
 
-  public static AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.tutorial_quests_NAMESPACE, "minerspec");
+  public static final AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.tutorial_quests_NAMESPACE, "minerspec");
 
 
   public Minerspec(AbstractMultiTasksAdvancement multitask) {

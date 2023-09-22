@@ -14,7 +14,7 @@ import xyz.wisecraft.smp.modules.advancements.util.UtilAdv;
 
 public class Experiencedlumb extends BaseAdvancement implements VanillaVisibility {
 
-  public static AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.common_quests_NAMESPACE, "experiencedlumb");
+  public static final AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.common_quests_NAMESPACE, "experiencedlumb");
 
 
   public Experiencedlumb(Advancement parent, float x, float y) {

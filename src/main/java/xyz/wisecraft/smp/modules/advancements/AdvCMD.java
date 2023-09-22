@@ -2,7 +2,7 @@ package xyz.wisecraft.smp.modules.advancements;
 
 import net.luckperms.api.LuckPerms;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabExecutor;
+import org.bukkit.command.defaults.BukkitCommand;
 import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.core.WisecraftCoreApi;
 import xyz.wisecraft.smp.WisecraftSMP;
@@ -14,26 +14,29 @@ import java.util.List;
 /**
  * Command for managing the auto roles.
  */
-public class Command implements TabExecutor {
+public class AdvCMD extends BukkitCommand {
 
     private final WisecraftSMP plugin = WisecraftSMP.getInstance();
 
     private final WisecraftCoreApi core;
     private final LuckPerms luck;
 
-    public Command(WisecraftCoreApi core, LuckPerms luck) {
+    public AdvCMD(WisecraftCoreApi core, LuckPerms luck) {
+        super("autoroles");
+        setDescription("Used to manually save or load data");
+        setUsage("/autoroles <save | load>");
+        setLabel(this.getName());
+        setPermission("Wisecraftadv.manage");
+        setPermissionMessage("No, bad person!");
+
+
         this.core = core;
         this.luck = luck;
     }
 
     @Override
-    public boolean onCommand(CommandSender sender,
-                             @NotNull org.bukkit.command.Command cmd,
-                             @NotNull String label,
-                             @NotNull String[] args) {
-
-
-        if (sender.hasPermission("Wisecraftadv.manage") && cmd.getName().equalsIgnoreCase("autoroles")) {
+    public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
+        if (sender.hasPermission("Wisecraftadv.manage") && commandLabel.equalsIgnoreCase(this.getName())) {
             switch (args[0]) {
                 case "save" -> sender.sendMessage("Saving private Ryan");
                 case "load" -> sender.sendMessage("WOOO you tried to load");
@@ -47,28 +50,21 @@ public class Command implements TabExecutor {
         }
         else {return false;}
     }
-    @SuppressWarnings("SwitchStatementWithTooFewBranches")
-    @Override
-    public List<String> onTabComplete(@NotNull CommandSender sender,
-                                      org.bukkit.command.@NotNull Command cmd,
-                                      @NotNull String alias,
-                                      String[] args) {
-        List<String> cmds = new ArrayList<>();
-        
-        switch (args.length) {
-            case 1 -> {
-                if (sender.hasPermission("Wisecraftadv.manage")) {
-                    cmds.add("save");
-                    cmds.add("load");
-                    cmds.add("rank");
-                }
-                return cmds;
-            }
 
+    @Override
+    public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, @NotNull String[] args) throws IllegalArgumentException {
+
+        List<String> cmds = new ArrayList<>();
+        if (args.length == 1) {
+            if (sender.hasPermission("Wisecraftadv.manage")) {
+                cmds.add("save");
+                cmds.add("load");
+                cmds.add("rank");
+            }
+            return cmds;
         }
 
 
         return cmds;
     }
-
 }

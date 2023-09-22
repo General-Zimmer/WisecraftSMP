@@ -10,7 +10,7 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
 
 public class Firstspecialty extends BaseAdvancement  {
 
-  public static AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.tutorial_quests_NAMESPACE, "firstspecialty");
+  public static final AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.tutorial_quests_NAMESPACE, "firstspecialty");
 
 
   public Firstspecialty(Advancement parent, float x, float y) {

@@ -1,21 +1,21 @@
 package xyz.wisecraft.smp.modules.tutorialstuff;
 
 import net.ess3.api.IEssentials;
+import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.event.Listener;
 import xyz.wisecraft.core.WisecraftCoreApi;
 import xyz.wisecraft.smp.modules.tutorialstuff.listeners.ExtraListener;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 /**
  * This class is used to create modules.
  */
 public class TutorialStuffModule implements xyz.wisecraft.smp.modulation.ModuleClass {
 
-    IEssentials ess = setupDependency("Essentials", IEssentials.class);
-    WisecraftCoreApi core = setupDependency(WisecraftCoreApi.class);
-    boolean isMultiverseEnabled = setupDependency("Multiverse-Core");
+    final IEssentials ess = setupDependency("Essentials", IEssentials.class);
+    final WisecraftCoreApi core = setupDependency(WisecraftCoreApi.class);
+    final boolean isMultiverseEnabled = setupDependency("Multiverse-Core");
     @Override
     public void onEnable() {
 
@@ -29,10 +29,10 @@ public class TutorialStuffModule implements xyz.wisecraft.smp.modulation.ModuleC
     }
 
     @Override
-    public void registerCommands() {
-        WisecraftCMD wiseCMD = new WisecraftCMD(core, ess, isMultiverseEnabled);
-        Objects.requireNonNull(plugin.getCommand("wisecraft"), "command isn't registered").setExecutor(wiseCMD);
-        Objects.requireNonNull(plugin.getCommand("wshop"), "command isn't registered").setExecutor(wiseCMD);
+    public ArrayList<BukkitCommand> registerCommands() {
+        ArrayList<BukkitCommand> commands = new ArrayList<>();
+        commands.add(new WisecraftCMD("wisecraft", core, ess, isMultiverseEnabled));
+        return commands;
     }
 
 }

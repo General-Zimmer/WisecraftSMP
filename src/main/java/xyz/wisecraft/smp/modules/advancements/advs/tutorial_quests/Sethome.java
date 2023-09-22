@@ -12,7 +12,7 @@ import xyz.wisecraft.smp.modules.advancements.advs.AdvancementTabNamespaces;
 
 public class Sethome extends BaseAdvancement implements VanillaVisibility {
 
-  public static AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.tutorial_quests_NAMESPACE, "sethome");
+  public static final AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.tutorial_quests_NAMESPACE, "sethome");
 
 
   public Sethome(Advancement parent, float x, float y) {

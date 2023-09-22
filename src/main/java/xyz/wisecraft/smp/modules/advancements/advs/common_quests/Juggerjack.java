@@ -14,7 +14,7 @@ import xyz.wisecraft.smp.modules.advancements.util.UtilAdv;
 
 public class Juggerjack extends BaseAdvancement implements VanillaVisibility {
 
-  public static AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.common_quests_NAMESPACE, "juggerjack");
+  public static final AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.common_quests_NAMESPACE, "juggerjack");
 
 
   public Juggerjack(Advancement parent, float x, float y) {

@@ -1,6 +1,7 @@
 package xyz.wisecraft.smp.modules.togglepvp;
 
 import com.nametagedit.plugin.api.INametagApi;
+import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.event.Listener;
 import xyz.wisecraft.core.WisecraftCoreApi;
 import xyz.wisecraft.smp.modules.togglepvp.listeners.PVPTimberListener;
@@ -12,7 +13,6 @@ import xyz.wisecraft.smp.modules.togglepvp.utils.PlaceholderAPIHook;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Objects;
 
 /**
  * Module class for PVPToggle
@@ -54,9 +54,10 @@ public class PvPToggleModule implements xyz.wisecraft.smp.modulation.ModuleClass
     }
 
     @Override
-    public void registerCommands() {
-
-        Objects.requireNonNull(plugin.getCommand("pvp"), "command isn't registered").setExecutor(new PVPCMD());
+    public ArrayList<BukkitCommand> registerCommands() {
+        ArrayList<BukkitCommand> commands = new ArrayList<>();
+        commands.add(new PVPCMD());
+        return commands;
     }
 
     private void setupPAPI() {

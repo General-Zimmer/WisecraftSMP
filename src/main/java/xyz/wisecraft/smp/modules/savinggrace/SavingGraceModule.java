@@ -11,7 +11,7 @@ import java.util.ArrayList;
  */
 public class SavingGraceModule implements xyz.wisecraft.smp.modulation.ModuleClass {
 
-    IEssentials ess = setupDependency("Essentials", IEssentials.class);
+    final IEssentials ess = setupDependency("Essentials", IEssentials.class);
 
     @Override
     public void onEnable() {

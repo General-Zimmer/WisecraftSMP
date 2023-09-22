@@ -7,6 +7,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.reflections.Reflections;
 import xyz.wisecraft.smp.modulation.ModuleClass;
+import xyz.wisecraft.smp.modulation.models.ModuleInfo;
 import xyz.wisecraft.smp.modulation.storage.ModulationStorage;
 import xyz.wisecraft.smp.modulation.storage.ModuleSettings;
 import xyz.wisecraft.smp.storage.OtherStorage;
@@ -82,9 +83,9 @@ public class WisecraftSMP extends JavaPlugin {
 
         // Start/load modules
         sortedModules.forEach(module -> {
-            if (module.enableModule()) {
-                ModulationStorage.addModule(module, module.registerListeners());
-            }
+            ModuleInfo moduleInfo = module.enableModule();
+            if (moduleInfo != null)
+                ModulationStorage.addModule(module, moduleInfo);
         });
 
         try {
@@ -98,9 +99,7 @@ public class WisecraftSMP extends JavaPlugin {
     public void onDisable() {
         // Plugin shutdown logic
         // Me: We don't do that here
-        ModulationStorage.getModules().forEach((module, listeners) -> {
-            module.stopModule();
-        });
+        ModulationStorage.getModules().keySet().forEach(ModuleClass::disableModule);
     }
 
 

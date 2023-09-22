@@ -11,7 +11,7 @@ import static xyz.wisecraft.smp.modules.advancements.util.UtilAdv.isJobMaxed;
 
 public class Maxfarmer extends TaskAdvancement {
 
-  public static AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.common_quests_NAMESPACE, "maxfarmer");
+  public static final AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.common_quests_NAMESPACE, "maxfarmer");
 
 
   public Maxfarmer(AbstractMultiTasksAdvancement multitask) {

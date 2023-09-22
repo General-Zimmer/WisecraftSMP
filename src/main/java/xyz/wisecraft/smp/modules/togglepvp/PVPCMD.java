@@ -1,13 +1,11 @@
 package xyz.wisecraft.smp.modules.togglepvp;
 
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.command.TabExecutor;
+import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.modules.togglepvp.utils.UtilChat;
@@ -24,19 +22,46 @@ import java.util.UUID;
 /**
  * Command class for the /pvp command.
  */
-public class PVPCMD implements TabExecutor {
+public class PVPCMD extends BukkitCommand {
 
 	private final WisecraftSMP instance = WisecraftSMP.getInstance();
 	private final FileConfiguration config = instance.getConfig();
 	private final HashMap<UUID, Boolean> pvpPlayers = PVPStorage.getPVPPlayers();
-	private final String color = "&c";
+
+	protected PVPCMD() {
+		super("pvp");
+		setDescription("used to change PvP state.");
+		setUsage("/pvp");
+		setLabel(this.getName());
+		setPermission("pvptoggle.allow");
+		setPermissionMessage("You don't have the pvptoggle.allow permission node.");
+	}
 
 	@Override
-	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
+	public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, @NotNull String[] args) throws IllegalArgumentException {
+		List<String> words = new ArrayList<>();
+
+        if (args.length == 1) {
+            if (sender.hasPermission("pvptoggle.allow")) {
+                words.add("help");
+            }
+            if (sender.hasPermission("pvptoggle.reload")) {
+                words.add("reload");
+            }
+            if (sender.hasPermission("pvptoggle.others")) {
+                words.add("status");
+            }
+        }
+		return words;
+	}
+
+	@Override
+	public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
 
 
-		if (!cmd.getName().equalsIgnoreCase("pvp"))
+		if (!commandLabel.equalsIgnoreCase(this.getName()))
 			return true;
+		String color = "&c";
 		if (sender instanceof ConsoleCommandSender console)
 			PVPCMDUtil.consoleCase(console, args, color);
 
@@ -96,30 +121,4 @@ public class PVPCMD implements TabExecutor {
 		}
 		return true;
 	}
-
-	@SuppressWarnings("SwitchStatementWithTooFewBranches")
-	@Override
-	public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
-		List<String> words = new ArrayList<>();
-
-		switch (args.length) {
-			case 1 -> {
-				if (sender.hasPermission("pvptoggle.allow")) {
-					words.add("help");
-				}
-				if (sender.hasPermission("pvptoggle.reload")) {
-					words.add("reload");
-				}
-				if (sender.hasPermission("pvptoggle.others")) {
-					words.add("status");
-				}
-				return StringUtil.copyPartialMatches(args[0], words, new ArrayList<>());
-			}
-
-			//https://www.spigotmc.org/threads/tabcompleter-not-working.406512/
-		}
-		return null;
-
-	}
-
 }

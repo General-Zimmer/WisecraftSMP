@@ -7,7 +7,7 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.tasks.AbstractMultiTasksA
 
 public class Enchantspec extends TaskAdvancement {
 
-  public static AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.tutorial_quests_NAMESPACE, "enchantspec");
+  public static final AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.tutorial_quests_NAMESPACE, "enchantspec");
 
 
   public Enchantspec(AbstractMultiTasksAdvancement multitask) {

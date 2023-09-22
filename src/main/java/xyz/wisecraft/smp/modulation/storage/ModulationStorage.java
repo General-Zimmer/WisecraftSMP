@@ -1,16 +1,20 @@
 package xyz.wisecraft.smp.modulation.storage;
 
+import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.event.Listener;
+import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.modulation.ModuleClass;
+import xyz.wisecraft.smp.modulation.models.ModuleInfo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class ModulationStorage {
 
 
     private static final HashMap<String, Object> dependencies = new HashMap<>();
-    private static final HashMap<ModuleClass, ArrayList<Listener>> modules = new HashMap<>();
+    private static final HashMap<ModuleClass, ModuleInfo> modules = new HashMap<>();
 
     /**
      * Adds a dependency.
@@ -38,17 +42,51 @@ public class ModulationStorage {
     }
 
     /**
-     * Adds a module.
+     * Gets all the listeners for a module.
+     * @param clazz The class of the module.
+     * @return The listeners.
      */
-    public static void addModule(ModuleClass module, ArrayList<Listener> listener) {
-        modules.put(module, listener);
+    public static @NotNull ArrayList<Listener> getListeners(Class<?> clazz) {
+        for (Map.Entry<ModuleClass, ModuleInfo> module : modules.entrySet()) {
+            if (module.getKey().getClass().equals(clazz))
+                return new ArrayList<>(module.getValue().listeners());
+        }
+        return new ArrayList<>();
+    }
+
+    public static @NotNull ArrayList<BukkitCommand> getCommands(Class<?> clazz) {
+        for (Map.Entry<ModuleClass, ModuleInfo> module : modules.entrySet()) {
+            if (module.getKey().getClass().equals(clazz))
+                return new ArrayList<>(module.getValue().commands());
+        }
+        return new ArrayList<>();
     }
 
     /**
-     * Gets all modules in a new ArrayList.
+     * Gets an instance of the module or null if it isn't loaded.
+     * @param clazz The class of the module.
+     * @return The module instance or null if not found.
+     */
+    public static ModuleClass getModule(Class<?> clazz) {
+        for (ModuleClass module : ModulationStorage.getModules().keySet()) {
+            if (module.getClass().equals(clazz))
+                return module;
+        }
+        return null;
+    }
+
+    /**
+     * Adds a module.
+     */
+    public static void addModule(ModuleClass module, ModuleInfo moduleInfo) {
+        modules.put(module, moduleInfo);
+    }
+
+    /**
+     * Gets all modules and their info.
      * @return The modules.
      */
-    public static HashMap<ModuleClass, ArrayList<Listener>> getModules() {
+    public static HashMap<ModuleClass, ModuleInfo> getModules() {
         return new HashMap<>(modules);
     }
 
