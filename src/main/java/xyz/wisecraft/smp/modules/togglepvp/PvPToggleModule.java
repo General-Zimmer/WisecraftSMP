@@ -1,5 +1,6 @@
 package xyz.wisecraft.smp.modules.togglepvp;
 
+import com.nametagedit.plugin.NametagEdit;
 import com.nametagedit.plugin.api.INametagApi;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.event.Listener;
@@ -22,7 +23,7 @@ public class PvPToggleModule implements xyz.wisecraft.smp.modulation.ModuleClass
     private static PvPToggleModule module;
     private final boolean isTimberEnabled = setupDependency("UltimateTimber");
     private final boolean isPAPIEnabled = setupDependency("PlaceholderAPI");
-    private final INametagApi nametagAPI = setupDependency("NametagEdit", INametagApi.class);
+    private final INametagApi nametagAPI = setupDependency("NametagEdit") ? NametagEdit.getApi() : null;
     private final WisecraftCoreApi core = setupDependency(WisecraftCoreApi.class);
 
     public PvPToggleModule() {
