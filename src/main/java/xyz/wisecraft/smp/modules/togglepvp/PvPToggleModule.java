@@ -2,9 +2,13 @@ package xyz.wisecraft.smp.modules.togglepvp;
 
 import com.nametagedit.plugin.NametagEdit;
 import com.nametagedit.plugin.api.INametagApi;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.event.Listener;
+import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.core.WisecraftCoreApi;
+import xyz.wisecraft.smp.modulation.models.ModuleClass;
 import xyz.wisecraft.smp.modules.togglepvp.listeners.PVPTimberListener;
 import xyz.wisecraft.smp.modules.togglepvp.listeners.PlayerListener;
 import xyz.wisecraft.smp.modules.togglepvp.listeners.PvPListener;
@@ -13,20 +17,24 @@ import xyz.wisecraft.smp.modules.togglepvp.utils.PersistentData;
 import xyz.wisecraft.smp.modules.togglepvp.utils.PlaceholderAPIHook;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Module class for PVPToggle
  */
-public class PvPToggleModule implements xyz.wisecraft.smp.modulation.ModuleClass {
+public class PvPToggleModule extends ModuleClass {
 
+    @Getter
     private static PvPToggleModule module;
     private final boolean isTimberEnabled = setupDependency("UltimateTimber");
     private final boolean isPAPIEnabled = setupDependency("PlaceholderAPI");
+    @Getter
     private final INametagApi nametagAPI = setupDependency("NametagEdit") ? NametagEdit.getApi() : null;
     private final WisecraftCoreApi core = setupDependency(WisecraftCoreApi.class);
 
-    public PvPToggleModule() {
+    public PvPToggleModule(long ID) {
+        super(ID);
         module = this;
     }
 
@@ -44,8 +52,8 @@ public class PvPToggleModule implements xyz.wisecraft.smp.modulation.ModuleClass
     }
 
     @Override
-    public ArrayList<Listener> registerListeners() {
-        ArrayList<Listener> listeners = new ArrayList<>();
+    public @NotNull Set<Listener> registerListeners() {
+        HashSet<Listener> listeners = new HashSet<>();
         listeners.add(new PlayerListener());
         listeners.add(new PvPListener());
         if (isTimberEnabled && core != null) {
@@ -55,9 +63,9 @@ public class PvPToggleModule implements xyz.wisecraft.smp.modulation.ModuleClass
     }
 
     @Override
-    public ArrayList<BukkitCommand> registerCommands() {
-        ArrayList<BukkitCommand> commands = new ArrayList<>();
-        commands.add(new PVPCMD());
+    public @NotNull Set<BukkitCommand> registerCommands() {
+        HashSet<BukkitCommand> commands = new HashSet<>();
+        commands.add(new PVPCMD("togglepvp"));
         return commands;
     }
 
@@ -67,11 +75,4 @@ public class PvPToggleModule implements xyz.wisecraft.smp.modulation.ModuleClass
         }
     }
 
-    public INametagApi getNametagAPI() {
-        return nametagAPI;
-    }
-
-    public static PvPToggleModule getModule() {
-        return module;
-    }
 }

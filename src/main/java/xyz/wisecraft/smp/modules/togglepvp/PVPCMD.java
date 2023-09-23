@@ -28,11 +28,11 @@ public class PVPCMD extends BukkitCommand {
 	private final FileConfiguration config = instance.getConfig();
 	private final HashMap<UUID, Boolean> pvpPlayers = PVPStorage.getPVPPlayers();
 
-	protected PVPCMD() {
-		super("pvp");
+	protected PVPCMD(String name) {
+		super(name);
 		setDescription("used to change PvP state.");
 		setUsage("/pvp");
-		setLabel(this.getName());
+		setLabel("pvp");
 		setPermission("pvptoggle.allow");
 		setPermissionMessage("You don't have the pvptoggle.allow permission node.");
 	}

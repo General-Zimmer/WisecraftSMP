@@ -2,18 +2,17 @@ package xyz.wisecraft.smp.util;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import xyz.wisecraft.smp.modulation.ModuleClass;
 import xyz.wisecraft.smp.modulation.UtilModuleCommon;
+import xyz.wisecraft.smp.modulation.models.ModuleClass;
 import xyz.wisecraft.smp.modulation.storage.ModuleSettings;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+
+import static xyz.wisecraft.smp.modulation.UtilModuleCommon.getModuleName;
 
 public class UtilRandom {
 
-    public static void setupModulesFromConfig(FileConfiguration moduleConfig, ArrayList<ModuleClass> modules, boolean isModulesEnabledByDefault, String getModulePath) {
+    public static void setupModulesFromConfig(FileConfiguration moduleConfig, Set<Class<? extends ModuleClass>> modules, boolean isModulesEnabledByDefault, String getModulePath) {
         ConfigurationSection moduleSection = moduleConfig.getConfigurationSection(getModulePath);
         Set<String> map = (moduleSection != null) ? moduleSection.getKeys(false) : null;
 
@@ -41,16 +40,16 @@ public class UtilRandom {
         }
 
         // Getting missing modules
-        ArrayList<ModuleClass> modulesToBeAdded = new ArrayList<>();
+        ArrayList<Class<? extends ModuleClass>> modulesToBeAdded = new ArrayList<>();
         modules.forEach(module -> {
-            if (!modulesInConfig.contains(module.getModuleName())) {
+            if (!modulesInConfig.contains(getModuleName(module))) {
                 modulesToBeAdded.add(module);
             }
         });
 
 
         // Combining missing IDS and missing modules
-        HashMap<Long, ModuleClass> mapModulesToBeAdded = new HashMap<>();
+        HashMap<Long, Class<? extends ModuleClass>> mapModulesToBeAdded = new HashMap<>();
         for (int i = 0, j = 0; i < modulesToBeAdded.size(); i++) {
 
             if (i < missingIDS.size()) {
@@ -63,9 +62,9 @@ public class UtilRandom {
 
         }
         // Adding modules to config
-        for (Map.Entry<Long, ModuleClass> module : mapModulesToBeAdded.entrySet()) {
-            moduleConfig.set(UtilModuleCommon.getSetting(module.getValue(), ModuleSettings.ENABLED), isModulesEnabledByDefault);
-            moduleConfig.set(UtilModuleCommon.getSetting(module.getValue(), ModuleSettings.ID), module.getKey());
+        for (Map.Entry<Long, Class<? extends ModuleClass>> module : mapModulesToBeAdded.entrySet()) {
+            moduleConfig.set(UtilModuleCommon.getSetting(getModuleName(module.getValue()), ModuleSettings.ENABLED), isModulesEnabledByDefault);
+            moduleConfig.set(UtilModuleCommon.getSetting(getModuleName(module.getValue()), ModuleSettings.ID), module.getKey());
         }
 
         // Check if unused module configurations should be removed
@@ -74,8 +73,8 @@ public class UtilRandom {
         // Remove modules not present in the code
         ArrayList<String> modulesToBeRemoved = new ArrayList<>(modulesInConfig);
         modules.forEach(module -> {
-            if (modulesInConfig.contains(module.getModuleName())) {
-                modulesToBeRemoved.remove(module.getModuleName());
+            if (modulesInConfig.contains(getModuleName(module))) {
+                modulesToBeRemoved.remove(getModuleName(module));
             }
         });
 
@@ -85,12 +84,13 @@ public class UtilRandom {
 
     }
 
-    private static void setupModuleConfig(ArrayList<ModuleClass> modules, FileConfiguration moduleConfig, boolean isModulesEnabledByDefault) {
-        for (int i = 0; i < modules.size(); i++) {
-            ModuleClass module = modules.get(i);
+    private static void setupModuleConfig(Set<Class<? extends ModuleClass>> modules, FileConfiguration moduleConfig, boolean isModulesEnabledByDefault) {
+        Iterator<Class<? extends ModuleClass>> iterator = modules.iterator();
+        for (int i = 0; i < modules.size() && iterator.hasNext(); i++) {
+            Class<? extends ModuleClass> module = iterator.next();
 
-            moduleConfig.set(UtilModuleCommon.getSetting(module, ModuleSettings.ENABLED), isModulesEnabledByDefault);
-            moduleConfig.set(UtilModuleCommon.getSetting(module, ModuleSettings.ID), i);
+            moduleConfig.set(UtilModuleCommon.getSetting(getModuleName(module), ModuleSettings.ENABLED), isModulesEnabledByDefault);
+            moduleConfig.set(UtilModuleCommon.getSetting(getModuleName(module), ModuleSettings.ID), i);
         }
     }
 }

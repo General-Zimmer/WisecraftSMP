@@ -1,15 +1,25 @@
 package xyz.wisecraft.smp.modulation;
 
+import com.fren_gor.ultimateAdvancementAPI.exceptions.IllegalOperationException;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandMap;
+import org.bukkit.command.PluginCommand;
 import org.bukkit.command.SimpleCommandMap;
+import org.bukkit.command.defaults.BukkitCommand;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.WisecraftSMP;
+import xyz.wisecraft.smp.modulation.models.ModuleClass;
 import xyz.wisecraft.smp.modulation.storage.ModulationStorage;
 import xyz.wisecraft.smp.modulation.storage.ModuleSettings;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -22,7 +32,7 @@ public abstract class UtilModuleCommon {
      * @param setting The setting to get the path for.
      * @return The module setting path.
      */
-    public static String getSetting(ModuleClass module, ModuleSettings setting) {
+    public static String getSetting(Module module, ModuleSettings setting) {
         return plugin.getModulePath() + "." + module.getModuleName() + "." + setting.toString();
     }
 
@@ -77,13 +87,13 @@ public abstract class UtilModuleCommon {
      * @param modules The modules to trim.
      * @return The trimmed modules.
      */
-    public static ArrayList<ModuleClass> sortDependTrimmed(ArrayList<ModuleClass> modules) {
-        ArrayList<ModuleClass> sortedArray = sortModulesByTheirDependencies(modules);
-        ArrayList<ModuleClass> sortedArrayTrimmed = new ArrayList<>();
+    public static <T extends Module> ArrayList<T> sortDependTrimmed(ArrayList<T> modules) {
+        ArrayList<T> sortedArray = sortModulesByTheirDependencies(modules);
+        ArrayList<T> sortedArrayTrimmed = new ArrayList<>();
 
 
         do {
-            ModuleClass module = sortedArray.get(0);
+            T module = sortedArray.get(0);
 
             sortedArray.remove(module);
             if (!sortedArray.contains(module))
@@ -98,15 +108,15 @@ public abstract class UtilModuleCommon {
      * @param modules The modules to sort.
      * @return The sorted modules.
      */
-    private static ArrayList<ModuleClass> sortModulesByTheirDependencies(ArrayList<ModuleClass> modules) {
-        ArrayList<ModuleClass> allModules = new ArrayList<>(modules);
-        ArrayList<ModuleClass> unsortedModules = new ArrayList<>(modules);
-        ArrayList<ModuleClass> sortedModules = new ArrayList<>();
+    private static <T extends Module> ArrayList<T> sortModulesByTheirDependencies(ArrayList<T> modules) {
+        ArrayList<T> allModules = new ArrayList<>(modules);
+        ArrayList<T> unsortedModules = new ArrayList<>(modules);
+        ArrayList<T> sortedModules = new ArrayList<>();
 
 
         // Sort modules by dependencies
         do {
-            ArrayList<ModuleClass> tempList = findDependencies(unsortedModules.get(0), allModules);
+            ArrayList<T> tempList = findDependencies(unsortedModules.get(0), allModules);
             sortedModules.addAll(tempList);
             unsortedModules.removeAll(tempList);
         } while (!unsortedModules.isEmpty());
@@ -122,12 +132,12 @@ public abstract class UtilModuleCommon {
      * @param allModules All modules.
      * @return All dependencies of the module.
      */
-    private static ArrayList<ModuleClass> findDependencies(ModuleClass parentModule, ArrayList<ModuleClass> allModules) {
-        ArrayList<ModuleClass> dependencies = new ArrayList<>();
+    private static <T extends Module> ArrayList<T> findDependencies(T parentModule, ArrayList<T> allModules) {
+        ArrayList<T> dependencies = new ArrayList<>();
         dependencies.add(parentModule);
         parentModule.getModuleDepends().forEach(dependency -> {
 
-            ModuleClass dependencyInstance = getModuleInstanceFromClass(parentModule, allModules, dependency);
+            T dependencyInstance = getModuleInstanceFromClass(parentModule, allModules, dependency);
 
             dependencies.addAll(findDependencies(dependencyInstance, allModules));
         });
@@ -142,10 +152,10 @@ public abstract class UtilModuleCommon {
      * @param dependency The dependency class.
      * @return The module instance.
      */
-    private static @NotNull ModuleClass getModuleInstanceFromClass(ModuleClass parentModule, ArrayList<ModuleClass> allModules, Class<? extends ModuleClass> dependency) {
-        ModuleClass dependencyInstance = null;
+    private static <T extends Module> @NotNull T getModuleInstanceFromClass(Module parentModule, ArrayList<T> allModules, Class<? extends Module> dependency) {
+        T dependencyInstance = null;
 
-        for (ModuleClass module : allModules) {
+        for (T module : allModules) {
             if (module.getClass().equals(dependency)) {
                 dependencyInstance = module;
                 break; // Mikael, du kan ikke see denne linje
@@ -156,38 +166,62 @@ public abstract class UtilModuleCommon {
             throw new RuntimeException("Module: " + parentModule.getClass().getSimpleName() + " or doesn't exist.");
         }
         if (dependencyInstance.getModuleDepends().contains(parentModule.getClass())) {
-            throw new RuntimeException("Direct circular dependency detected!");
+            throw new UnsupportedOperationException("Direct circular dependency detected!");
         }
 
         return dependencyInstance;
     }
 
-    // todo remove these 2 if they aren't needed on next update.
-    private static Object getPrivateField(Object object, String field) throws SecurityException,
-            NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-        Class<?> clazz = object.getClass();
-        Field objectField = clazz.getDeclaredField(field);
-        objectField.setAccessible(true);
-        Object result = objectField.get(object);
-        objectField.setAccessible(false);
-        return result;
+    public static void unregisterBukkitCommand(BukkitCommand cmd) {
+        Bukkit.getCommandMap().getKnownCommands().remove(cmd.getName());
+        cmd.unregister(Bukkit.getCommandMap());
     }
-    public static void unRegisterBukkitCommand(Command cmd) {
+
+    public static void registerListener(Listener listener) {
+        plugin.getServer().getPluginManager().registerEvents(listener, plugin);
+    }
+
+    public static void registerCommand(BukkitCommand cmd) {
         try {
-            Object result = getPrivateField(plugin.getServer().getPluginManager(), "commandMap");
-            SimpleCommandMap commandMap = (SimpleCommandMap) result;
-            Object map = getPrivateField(commandMap, "knownCommands");
-            @SuppressWarnings("unchecked")
-            HashMap<String, Command> knownCommands = (HashMap<String, Command>) map;
-            knownCommands.remove(cmd.getName());
-            for (String alias : cmd.getAliases()){
-                if(knownCommands.containsKey(alias) && knownCommands.get(alias).toString().contains(plugin.getName())){
-                    knownCommands.remove(alias);
-                }
-            }
-        } catch (Exception e) {
-            plugin.getLogger().log(java.util.logging.Level.SEVERE, "Failed to unregister command " + cmd.getName(), e);
+            final Field bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
+
+            bukkitCommandMap.setAccessible(true);
+            CommandMap commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
+
+            commandMap.register(cmd.getName(), cmd);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            plugin.getLogger().warning("Failed to register command");
         }
+    }
+
+    public static void refreshTabcompletion() {
+        try {
+            Class<?> serverClass = Bukkit.getServer().getClass();
+            Method method = getMethod(serverClass, "syncCommands");
+            method.setAccessible(true);
+            method.invoke(Bukkit.getServer());
+            method.setAccessible(false);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            plugin.getLogger().log(java.util.logging.Level.SEVERE, "Could not refresh tab completion", e);
+        }
+
+    }
+
+    private static Method getMethod(Class<?> clazz, String methodName) throws NoSuchMethodException {
+        try {
+            return clazz.getDeclaredMethod(methodName);
+        } catch (NoSuchMethodException e) {
+            Class<?> superClass = clazz.getSuperclass();
+            if (superClass == null) {
+                throw e;
+            } else {
+                return getMethod(superClass, methodName);
+            }
+        }
+    }
+
+    public static String getModuleName(Class<? extends Module> clazz) {
+        return clazz.getSimpleName().split("Module")[0];
     }
 
 }

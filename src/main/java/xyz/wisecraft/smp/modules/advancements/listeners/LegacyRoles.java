@@ -33,8 +33,8 @@ public class LegacyRoles implements Listener {
 
         Player p = e.getPlayer();
 
-        Advancement advCitizen = plugin.getAdv().getAdvancement(Citizen.KEY);
-        Advancement advNoble = plugin.getAdv().getAdvancement(Nobility.KEY);
+        Advancement advCitizen = plugin.getAdvapi().getAdvancement(Citizen.KEY);
+        Advancement advNoble = plugin.getAdvapi().getAdvancement(Nobility.KEY);
 
         if (advCitizen != null)
             UtilAdv.fixRole_AdvMismatch(p, advCitizen, "citizen");

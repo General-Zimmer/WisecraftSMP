@@ -1,4 +1,4 @@
-package modulationTests.config;
+package modulation_tests.config;
 
 import be.seeseemelk.mockbukkit.MockBukkit;
 import be.seeseemelk.mockbukkit.ServerMock;
@@ -22,7 +22,7 @@ public class ConfigTests {
     public void setUp() {
         server = MockBukkit.mock();
         plugin = MockBukkit.load(WisecraftSMP.class, true);
-        moduleConfigFile = new File(plugin.getDataFolder() + "modulationTests/config/configs", "modules.yml");
+        moduleConfigFile = new File(plugin.getDataFolder() + "modulation_tests/config/configs", "modules.yml");
         moduleConfig = WisecraftSMP.createModuleConfig(plugin, moduleConfigFile);
     }
 
@@ -34,6 +34,6 @@ public class ConfigTests {
 
     @AfterEach
     public void tearDown() {
-
+        MockBukkit.unmock();
     }
 }

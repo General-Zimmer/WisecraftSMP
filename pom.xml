@@ -137,7 +137,7 @@
                         <goals>
                             <goal>deploy</goal>
                         </goals>
-                        <configuration><skip>true</skip></configuration>
+                        <configuration><skip>true</skip></configuration> <!-- skip default deploy to prevent double deploy -->
                     </execution>
                 </executions>
             </plugin>
@@ -199,6 +199,12 @@
     </repositories>
 
     <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.30</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>

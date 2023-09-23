@@ -1,17 +1,21 @@
-package modulationTests.findDependenciesTests;
+package modulation_tests.findDependenciesTests;
 
-import modulationTests.findDependenciesTests.testmodules.circular.CircularTest1;
-import modulationTests.findDependenciesTests.testmodules.circular.CircularTest2;
-import modulationTests.findDependenciesTests.testmodules.generic.GenericTest1;
-import modulationTests.findDependenciesTests.testmodules.generic.GenericTest2;
-import modulationTests.findDependenciesTests.testmodules.generic.GenericTest3;
-import modulationTests.findDependenciesTests.testmodules.longdepend.*;
+import be.seeseemelk.mockbukkit.MockBukkit;
+import be.seeseemelk.mockbukkit.ServerMock;
+import modulation_tests.findDependenciesTests.testmodules.circular.CircularTest1;
+import modulation_tests.findDependenciesTests.testmodules.circular.CircularTest2;
+import modulation_tests.findDependenciesTests.testmodules.generic.GenericTest1;
+import modulation_tests.findDependenciesTests.testmodules.generic.GenericTest2;
+import modulation_tests.findDependenciesTests.testmodules.generic.GenericTest3;
+import modulation_tests.findDependenciesTests.testmodules.longdepend.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import xyz.wisecraft.smp.modulation.ModuleClass;
+import xyz.wisecraft.smp.WisecraftSMP;
+import xyz.wisecraft.smp.modulation.Module;
 import xyz.wisecraft.smp.modulation.UtilModuleCommon;
+import xyz.wisecraft.smp.modulation.models.ModuleClass;
 
 import java.util.ArrayList;
 
@@ -20,9 +24,13 @@ public class FindDependenciesTests {
 
     private final ArrayList<ModuleClass> modules = new ArrayList<>();
 
+    WisecraftSMP plugin;
+    ServerMock server;
+
     @BeforeEach
     public void setUp() {
-
+        server = MockBukkit.mock();
+        plugin = MockBukkit.load(WisecraftSMP.class, true);
     }
 
     @Test
@@ -35,7 +43,7 @@ public class FindDependenciesTests {
         ArrayList<ModuleClass> sortedModules = UtilModuleCommon.sortDependTrimmed(modules);
 
         for (int i = sortedModules.size(); i > 0; i--) {
-            ModuleClass module = sortedModules.get(i-1);
+            Module module = sortedModules.get(i-1);
 
             strings.add(module.getClass().getSimpleName());
         }
@@ -61,7 +69,7 @@ public class FindDependenciesTests {
         ArrayList<ModuleClass> sortedModules = UtilModuleCommon.sortDependTrimmed(modules);
 
         for (int i = sortedModules.size(); i > 0; i--) {
-            ModuleClass module = sortedModules.get(i-1);
+            Module module = sortedModules.get(i-1);
 
             module.getModuleDepends().forEach(dependency -> {
                 if (!strings.contains(dependency.getSimpleName()))
@@ -91,7 +99,7 @@ public class FindDependenciesTests {
         modules.add(new CircularTest1());
         modules.add(new CircularTest2());
 
-        Exception exception = Assertions.assertThrows(RuntimeException.class,
+        Exception exception = Assertions.assertThrows(UnsupportedOperationException.class,
                 () -> UtilModuleCommon.sortDependTrimmed(modules));
 
         Assertions.assertArrayEquals("Direct circular dependency detected!".toCharArray(),
@@ -102,5 +110,6 @@ public class FindDependenciesTests {
     @AfterEach
     public void tearDown() {
         modules.clear();
+        MockBukkit.unmock();
     }
 }
