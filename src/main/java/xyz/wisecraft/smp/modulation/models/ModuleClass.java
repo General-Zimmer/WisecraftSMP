@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.modulation.Module;
 import xyz.wisecraft.smp.modulation.UtilModuleCommon;
 import xyz.wisecraft.smp.modulation.exceptions.MissingDependencyException;
+import xyz.wisecraft.smp.modulation.storage.ModuleSettings;
 
 import static xyz.wisecraft.smp.modulation.UtilModuleCommon.*;
 import static xyz.wisecraft.smp.modulation.storage.ModulationStorage.getCommands;
@@ -26,7 +27,7 @@ import static xyz.wisecraft.smp.modulation.storage.ModulationStorage.getListener
 public abstract class ModuleClass implements Module {
 
 
-    private boolean isModuleEnabled = false;
+    private boolean isModuleEnabled = plugin.getModuleConfig().getBoolean(getSetting(this, ModuleSettings.ENABLED), false);
     /**
      * The ID of the module. This is used to identify the module.
      * <p>
@@ -41,6 +42,8 @@ public abstract class ModuleClass implements Module {
             throw new RuntimeException("Module class name must end with \"Module\"!");
         }
         this.ID = id;
+        if (!isModuleEnabled)
+            return;
     }
 
     public ModuleClass() {
@@ -64,11 +67,10 @@ public abstract class ModuleClass implements Module {
      * @return ModuleInfo if the module was enabled or null if it wasn't.
      */
     @Override
-    public @NotNull ModuleInfo enableModule() {
+    public ModuleInfo enableModule() {
 
-        if (isModuleEnabled())
-            throw new IllegalStateException("Module " + getModuleName() + " is already enabled!");
-        isModuleEnabled = true;
+        if (!isModuleEnabled())
+            return null;
         if (!hasAllHardDependencies())
             throw new MissingDependencyException("Module " + getModuleName() + " does not have all hard dependencies!");
 

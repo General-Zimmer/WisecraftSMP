@@ -65,7 +65,7 @@ public class PvPToggleModule extends ModuleClass {
     @Override
     public @NotNull Set<BukkitCommand> registerCommands() {
         HashSet<BukkitCommand> commands = new HashSet<>();
-        commands.add(new PVPCMD("togglepvp"));
+        commands.add(new PVPCMD("pvp"));
         return commands;
     }
 

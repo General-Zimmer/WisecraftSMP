@@ -82,6 +82,12 @@ public class WisecraftSMP extends JavaPlugin {
         moduleConfig = createModuleConfig(this, moduleConfigFile);
         boolean isModulesEnabledByDefault = moduleConfig.getBoolean("IsModulesEnabledByDefault", false);
         setupModulesFromConfig(moduleConfig, moduleClazzes, isModulesEnabledByDefault, getModulePath()); // todo prevent comments from being removed
+        // Save config
+        try {
+            moduleConfig.save(moduleConfigFile);
+        } catch (IOException e) {
+            this.getLogger().log(java.util.logging.Level.SEVERE, "Could not save config to " + moduleConfigFile, e);
+        }
 
         // Initialize modules
         ArrayList<ModuleClass> unsortedModules = setupModules(moduleClazzes);
@@ -93,18 +99,14 @@ public class WisecraftSMP extends JavaPlugin {
         sortedModules.forEach(module -> {
             try {
                 ModuleInfo moduleInfo = module.enableModule();
+                if (moduleInfo == null) return;
                 ModulationStorage.addModule(module, moduleInfo);
             } catch (MissingDependencyException | IllegalStateException e) {
                 this.getLogger().log(java.util.logging.Level.SEVERE, "Could not enable module " + module.getClass().getName(), e);
             }
         });
 
-        // Save config
-        try {
-            moduleConfig.save(moduleConfigFile);
-        } catch (IOException e) {
-            this.getLogger().log(java.util.logging.Level.SEVERE, "Could not save config to " + moduleConfigFile, e);
-        }
+
     }
 
     @Override

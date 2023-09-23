@@ -37,23 +37,6 @@ public class PVPCMD extends BukkitCommand {
 		setPermissionMessage("You don't have the pvptoggle.allow permission node.");
 	}
 
-	@Override
-	public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, @NotNull String[] args) throws IllegalArgumentException {
-		List<String> words = new ArrayList<>();
-
-        if (args.length == 1) {
-            if (sender.hasPermission("pvptoggle.allow")) {
-                words.add("help");
-            }
-            if (sender.hasPermission("pvptoggle.reload")) {
-                words.add("reload");
-            }
-            if (sender.hasPermission("pvptoggle.others")) {
-                words.add("status");
-            }
-        }
-		return words;
-	}
 
 	@Override
 	public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
@@ -120,5 +103,25 @@ public class PVPCMD extends BukkitCommand {
 			}
 		}
 		return true;
+	}
+
+
+	// todo rename pvptoggle to togglepvp
+	@Override
+	public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, @NotNull String[] args) throws IllegalArgumentException {
+		List<String> words = new ArrayList<>();
+
+		if (args.length == 1) {
+			if (sender.hasPermission("pvptoggle.allow")) {
+				words.add("help");
+			}
+			if (sender.hasPermission("pvptoggle.reload")) {
+				words.add("reload");
+			}
+			if (sender.hasPermission("pvptoggle.others")) {
+				words.add("status");
+			}
+		}
+		return words;
 	}
 }
