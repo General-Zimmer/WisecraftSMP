@@ -100,7 +100,7 @@ public class WisecraftSMP extends JavaPlugin {
             try {
                 ModuleInfo moduleInfo = module.enableModule();
                 if (moduleInfo == null) return;
-                ModulationStorage.addModule(module, moduleInfo);
+                ModulationStorage.addModule(module);
             } catch (MissingDependencyException | IllegalStateException e) {
                 this.getLogger().log(java.util.logging.Level.SEVERE, "Could not enable module " + module.getClass().getName(), e);
             }
@@ -113,7 +113,7 @@ public class WisecraftSMP extends JavaPlugin {
     public void onDisable() {
         // Plugin shutdown logic
         // Me: We don't do that here
-        ModulationStorage.getModules().keySet().forEach(Module::disableModule);
+        ModulationStorage.getModules().forEach(Module::disableModule);
     }
 
 

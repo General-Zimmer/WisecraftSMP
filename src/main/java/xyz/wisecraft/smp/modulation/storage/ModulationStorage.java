@@ -4,6 +4,7 @@ import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.modulation.Module;
+import xyz.wisecraft.smp.modulation.models.ModuleClass;
 import xyz.wisecraft.smp.modulation.models.ModuleInfo;
 
 import java.util.*;
@@ -12,7 +13,7 @@ public class ModulationStorage {
 
 
     private static final HashMap<String, Object> dependencies = new HashMap<>();
-    private static final LinkedHashMap<Module, ModuleInfo> modules = new LinkedHashMap<>();
+    private static final Set<ModuleClass> modules = new HashSet<>();
 
     /**
      * Adds a dependency.
@@ -44,20 +45,20 @@ public class ModulationStorage {
      * @param clazz The class of the module.
      * @return The listeners.
      */
-    public static @NotNull List<Listener> getListeners(Class<?> clazz) {
-        for (Map.Entry<Module, ModuleInfo> module : modules.entrySet()) {
-            if (module.getKey().getClass().equals(clazz))
-                return new ArrayList<>(module.getValue().getListeners());
+    public static @NotNull Set<Listener> getListeners(Class<?> clazz) {
+        for (ModuleClass module : modules) {
+            if (module.getClass().equals(clazz))
+                return new HashSet<>(module.getModuleInfo().getListeners());
         }
-        return new ArrayList<>();
+        return new HashSet<>();
     }
 
-    public static @NotNull List<BukkitCommand> getCommands(Class<?> clazz) {
-        for (Map.Entry<Module, ModuleInfo> module : modules.entrySet()) {
-            if (module.getKey().getClass().equals(clazz))
-                return new ArrayList<>(module.getValue().getCommands());
+    public static @NotNull Set<BukkitCommand> getCommands(Class<?> clazz) {
+        for (ModuleClass module : modules) {
+            if (module.getClass().equals(clazz))
+                return new HashSet<>(module.getModuleInfo().getCommands());
         }
-        return new ArrayList<>();
+        return new HashSet<>();
     }
 
     /**
@@ -66,7 +67,7 @@ public class ModulationStorage {
      * @return The module instance or null if not found.
      */
     public static Module getModule(Class<?> clazz) {
-        for (Module module : ModulationStorage.getModules().keySet()) {
+        for (Module module : modules) {
             if (module.getClass().equals(clazz))
                 return module;
         }
@@ -76,16 +77,16 @@ public class ModulationStorage {
     /**
      * Adds a module.
      */
-    public static void addModule(Module module, ModuleInfo moduleInfo) {
-        modules.put(module, moduleInfo);
+    public static void addModule(ModuleClass module) {
+        modules.add(module);
     }
 
     /**
      * Gets all modules and their info.
      * @return The modules.
      */
-    public static Map<Module, ModuleInfo> getModules() {
-        return new LinkedHashMap<>(modules);
+    public static Set<ModuleClass> getModules() {
+        return new HashSet<>(modules);
     }
 
 
