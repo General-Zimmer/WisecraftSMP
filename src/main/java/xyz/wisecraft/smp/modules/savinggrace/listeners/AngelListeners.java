@@ -11,7 +11,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import xyz.wisecraft.smp.modules.savinggrace.Angel;
+import xyz.wisecraft.smp.modules.savinggrace.models.Angel;
 import xyz.wisecraft.smp.storage.OtherStorage;
 
 import java.util.HashMap;

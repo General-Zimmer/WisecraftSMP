@@ -2,7 +2,7 @@ package xyz.wisecraft.smp.storage;
 
 import lombok.Getter;
 import org.bukkit.Material;
-import xyz.wisecraft.smp.modules.savinggrace.Angel;
+import xyz.wisecraft.smp.modules.savinggrace.models.Angel;
 
 import java.util.ArrayList;
 import java.util.HashMap;

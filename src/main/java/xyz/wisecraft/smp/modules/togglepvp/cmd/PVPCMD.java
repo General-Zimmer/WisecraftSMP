@@ -1,4 +1,4 @@
-package xyz.wisecraft.smp.modules.togglepvp;
+package xyz.wisecraft.smp.modules.togglepvp.cmd;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;

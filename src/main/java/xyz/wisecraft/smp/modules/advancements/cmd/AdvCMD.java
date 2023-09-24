@@ -1,4 +1,4 @@
-package xyz.wisecraft.smp.modules.advancements;
+package xyz.wisecraft.smp.modules.advancements.cmd;
 
 import net.luckperms.api.LuckPerms;
 import org.bukkit.command.CommandSender;

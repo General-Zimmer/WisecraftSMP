@@ -1,4 +1,4 @@
-package xyz.wisecraft.smp.modules.savinggrace;
+package xyz.wisecraft.smp.modules.savinggrace.models;
 
 import com.earth2me.essentials.Kit;
 import com.earth2me.essentials.User;

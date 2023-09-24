@@ -31,6 +31,7 @@ import xyz.wisecraft.smp.modules.advancements.advs.legacy.nobility.Nob_block_pla
 import xyz.wisecraft.smp.modules.advancements.advs.legacy.nobility.Nob_time;
 import xyz.wisecraft.smp.modules.advancements.advs.tutorial_quests.*;
 import xyz.wisecraft.smp.modules.advancements.advs.tutorial_quests.allspecialty.*;
+import xyz.wisecraft.smp.modules.advancements.cmd.AdvCMD;
 import xyz.wisecraft.smp.modules.advancements.listeners.LegacyRoles;
 import xyz.wisecraft.smp.modules.advancements.listeners.TimberListeners;
 import xyz.wisecraft.smp.modules.advancements.threads.GibRoles;
