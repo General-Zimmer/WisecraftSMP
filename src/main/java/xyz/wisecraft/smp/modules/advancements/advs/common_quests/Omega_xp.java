@@ -13,12 +13,12 @@ import xyz.wisecraft.smp.modules.advancements.util.UtilAdv;
 
 public class Omega_xp extends BaseAdvancement implements VanillaVisibility {
 
-  public static final AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.common_quests_NAMESPACE, "omega_xp");
+    public static final AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.common_quests_NAMESPACE, "omega_xp");
 
 
-  public Omega_xp(Advancement parent, float x, float y) {
-    super(KEY.getKey(), new AdvancementDisplay(Material.EXPERIENCE_BOTTLE, "OMEEEEEEGA XP!", AdvancementFrameType.CHALLENGE, true, true, x, y , "Level 1000 aquired"), parent, 1000);
+    public Omega_xp(Advancement parent, float x, float y) {
+        super(KEY.getKey(), new AdvancementDisplay(Material.EXPERIENCE_BOTTLE, "OMEEEEEEGA XP!", AdvancementFrameType.CHALLENGE, true, true, x, y, "Level 1000 aquired"), parent, 1000);
 
-    registerEvent(PlayerLevelChangeEvent.class, e -> UtilAdv.advLvl(this, e));
-  }
+        registerEvent(PlayerLevelChangeEvent.class, e -> UtilAdv.advLvl(this, e));
+    }
 }

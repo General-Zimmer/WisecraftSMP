@@ -10,6 +10,7 @@ import org.reflections.Reflections;
 import xyz.wisecraft.smp.modulation.Module;
 import xyz.wisecraft.smp.modulation.UtilModuleCommon;
 import xyz.wisecraft.smp.modulation.cmd.ManageModules;
+import xyz.wisecraft.smp.modulation.enums.ModuleState;
 import xyz.wisecraft.smp.modulation.exceptions.MissingDependencyException;
 import xyz.wisecraft.smp.modulation.models.ModuleClass;
 import xyz.wisecraft.smp.modulation.storage.ModulationStorage;
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.logging.Level;
 
 import static xyz.wisecraft.smp.modulation.UtilModuleCommon.*;
 import static xyz.wisecraft.smp.util.UtilRandom.setupModulesFromConfig;
@@ -64,7 +66,7 @@ public class WisecraftSMP extends JavaPlugin {
         if (getIsTesting()) return; // Prevents the plugin from loading if it's in testing mode
 
 
-        registerCommand(new ManageModules(ManageModules.class.getSimpleName().toLowerCase()));
+        registerCommand(new ManageModules(ManageModules.class.getSimpleName().toLowerCase()), "WisecraftSMP");
 
         // Fetching modules classes
         Reflections reflections = new Reflections("xyz.wisecraft.smp.modules");
@@ -100,7 +102,11 @@ public class WisecraftSMP extends JavaPlugin {
                 if (module.enableModule())
                     ModulationStorage.addModule(module);
             } catch (MissingDependencyException | IllegalStateException e) {
-                this.getLogger().log(java.util.logging.Level.SEVERE, "Could not enable module " + module.getClass().getName(), e);
+                if (module.isErrorMessage(e.getMessage(), ModuleState.DISABLED)) {
+                    this.getLogger().log(Level.INFO, module.getModuleName() + " was not enabled");
+                } else {
+                    this.getLogger().log(java.util.logging.Level.SEVERE, "Could not enable module " + module.getClass().getName(), e);
+                }
             }
         });
 
@@ -113,8 +119,6 @@ public class WisecraftSMP extends JavaPlugin {
         // Me: We don't do that here
         ModulationStorage.getModules().forEach(Module::disableModule);
     }
-
-
 
     private ArrayList<ModuleClass> setupModules(Set<Class<? extends ModuleClass>> moduleClazzes) {
 

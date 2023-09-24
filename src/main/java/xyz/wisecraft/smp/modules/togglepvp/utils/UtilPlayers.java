@@ -7,7 +7,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.wisecraft.smp.WisecraftSMP;
-import xyz.wisecraft.smp.modules.togglepvp.PvPToggleModule;
+import xyz.wisecraft.smp.modules.togglepvp.TogglePVPModule;
 import xyz.wisecraft.smp.modules.togglepvp.events.PlayerChangedPVPStateEvent;
 import xyz.wisecraft.smp.modules.togglepvp.storage.PVPStorage;
 
@@ -137,7 +137,7 @@ public abstract class UtilPlayers {
 	 * @param color Color to change nametag to
 	 */
 	public static void ChangeNametag(Player p, String color) {
-		INametagApi nameAPI = PvPToggleModule.getModule().getNametagAPI();
+		INametagApi nameAPI = TogglePVPModule.getModule().getNametagAPI();
 		if(nameAPI == null) {return;}
 
 		if(color.equals("reset")) {

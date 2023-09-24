@@ -22,10 +22,10 @@ import java.util.Set;
 /**
  * Module class for PVPToggle
  */
-public class PvPToggleModule extends ModuleClass {
+public class TogglePVPModule extends ModuleClass {
 
     @Getter
-    private static PvPToggleModule module;
+    private static TogglePVPModule module;
     private final boolean isTimberEnabled = setupDependency("UltimateTimber");
     private final boolean isPAPIEnabled = setupDependency("PlaceholderAPI");
     @Getter
@@ -33,7 +33,7 @@ public class PvPToggleModule extends ModuleClass {
     private final WisecraftCoreApi core = setupDependency(WisecraftCoreApi.class);
 
     @SuppressWarnings("unused")
-    public PvPToggleModule(long ID) {
+    public TogglePVPModule(long ID) {
         super(ID);
         module = this;
     }

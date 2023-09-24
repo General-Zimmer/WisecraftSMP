@@ -12,6 +12,7 @@ import java.util.*;
 public class ModulationStorage {
 
 
+    private static final Object lockModule = new Object();
     private static final HashMap<String, Object> dependencies = new HashMap<>();
     private static final Set<ModuleClass> modules = new HashSet<>();
 
@@ -74,11 +75,20 @@ public class ModulationStorage {
         return null;
     }
 
+     public static void removeModule(Class<?> clazz) {
+        synchronized (lockModule) {
+            modules.removeIf(module -> module.getClass().equals(clazz));
+        }
+
+    }
+
     /**
      * Adds a module.
      */
-    public static void addModule(ModuleClass module) {
-        modules.add(module);
+     public static void addModule(@NotNull ModuleClass module) {
+        synchronized (lockModule) {
+            modules.add(module);
+        }
     }
 
     /**

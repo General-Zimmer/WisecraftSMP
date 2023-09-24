@@ -43,6 +43,7 @@ import java.util.Set;
 /**
  * This class is the module class for the Advancements module.
  */
+@SuppressWarnings("unused")
 public class AdvancementsModule extends ModuleClass {
 
     @Getter
@@ -59,6 +60,11 @@ public class AdvancementsModule extends ModuleClass {
     private final boolean isVeinMinerEnabled = setupDependency("VeinMiner");
     private final boolean isJobsEnabled = setupDependency("Jobs");
     private final boolean isTownyEnabled = setupDependency("Towny");
+
+    public AdvancementsModule(long id) {
+        super(id);
+        module = this;
+    }
 
     @Override
     public void onEnable() {

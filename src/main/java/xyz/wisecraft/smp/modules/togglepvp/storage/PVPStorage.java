@@ -17,7 +17,6 @@ public abstract class PVPStorage {
     /**
      * -- GETTER --
      *  Get the blocked worlds
-     *
      */
     @Getter
     private static List<String> blockedWorlds;
@@ -25,22 +24,18 @@ public abstract class PVPStorage {
      * False is pvp on. True is pvp off
      * -- GETTER --
      *  Get the PVPPlayers
-     *
-
      */
     @Getter
     private static final HashMap<UUID,Boolean> PVPPlayers = new HashMap<>();
     /**
      * -- GETTER --
      *  Get the cooldowns
-     *
      */
     @Getter
     private static final HashMap<UUID, Date> cooldowns = new HashMap<>();
     /**
      * -- GETTER --
      *  Get the PVPDataUtils
-     *
      */
     @Getter
     private static PersistentData PVPDataUtils;

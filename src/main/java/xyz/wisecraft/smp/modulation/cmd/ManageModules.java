@@ -37,26 +37,31 @@ public class ManageModules extends BukkitCommand {
                 return true;
             }
 
-            if (args[0].equalsIgnoreCase("enable")) {
-                modules.forEach(module -> {
+            switch (args[0]) {
+                case ("enable") -> modules.forEach(module -> {
 
-                    if (module.getModuleState() == ModuleState.ENABLED) {
+                    if (module.getModuleState() != ModuleState.ENABLED) {
                         module.reenableModule();
                         sender.sendMessage("Module " + module.getModuleName() + " was enabled.");
                     } else {
                         sender.sendMessage("Module " + module.getModuleName() + " was already enabled.");
                     }
                 });
-            } else if (args[0].equalsIgnoreCase("disable")) {
-                modules.forEach(module -> {
-                    if (module.getModuleState() == ModuleState.DISABLED) {
-                        sender.sendMessage("Module " + module.getModuleName() + " was already disabled.");
+                case "disable" -> modules.forEach(module -> {
+                    if (module.getModuleState() != ModuleState.DISABLED) {
                         module.disableModule();
-                    } else {
                         sender.sendMessage("Module " + module.getModuleName() + " was disabled.");
+                    } else {
+                        sender.sendMessage("Module " + module.getModuleName() + " was already disabled.");
                     }
                 });
+                case "reload" -> modules.forEach(module -> {
+                    module.reloadModule();
+                    sender.sendMessage("Module " + module.getModuleName() + " was reloaded.");
+                });
+                default -> sender.sendMessage("Invalid argument.");
             }
+
         }
         return true;
     }
@@ -74,7 +79,7 @@ public class ManageModules extends BukkitCommand {
         if (args.length == 1) {
             names.add("disable");
             names.add("enable");
-
+            names.add("reload");
         }
 
         return names;

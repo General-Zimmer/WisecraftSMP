@@ -47,8 +47,8 @@ public abstract class UtilChat {
 	 * @param pvpState The state of the player
 	 */
 	public static void send(CommandSender sender, String message, String argument, Boolean pvpState) {
-		String msg = config.getString("MESSAGES." + message);
-		if(msg == null || msg.isEmpty())
+		String msg = config.getString("MESSAGES." + message, "");
+		if(msg.isEmpty())
 			return;
 		String output = msg.replaceAll("<argument>", argument);
 		if(pvpState) {

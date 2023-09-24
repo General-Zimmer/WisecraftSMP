@@ -23,8 +23,8 @@ public abstract class PVPCMDUtil {
     /**
      * I don't know exactly what this does. Your guess is as good as mine.
      * @param sender The sender
-     * @param p The player
-     * @param args The arguments
+     * @param p      The player
+     * @param args   The arguments
      */
     public static void status(CommandSender sender, Player p, String[] args) {
         if (!sender.hasPermission("pvptoggle.others")) {
@@ -44,8 +44,7 @@ public abstract class PVPCMDUtil {
     }
 
     /**
-     *
-     * @param p The player
+     * @param p     The player
      * @param color The color
      */
     public static void zeroArg(Player p, String color) {
@@ -98,8 +97,8 @@ public abstract class PVPCMDUtil {
     /**
      * The console case
      * @param console The console
-     * @param args The arguments of the command
-     * @param color The color of the nametag
+     * @param args    The arguments of the command
+     * @param color   The color of the nametag
      */
     // This is a fucking mess, too bad!
     public static void consoleCase(ConsoleCommandSender console, String[] args, String color) {

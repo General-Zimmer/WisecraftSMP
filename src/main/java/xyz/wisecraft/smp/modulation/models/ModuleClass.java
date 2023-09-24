@@ -2,11 +2,15 @@ package xyz.wisecraft.smp.modulation.models;
 
 import lombok.Getter;
 import org.bukkit.event.HandlerList;
+import org.bukkit.scheduler.BukkitRunnable;
 import xyz.wisecraft.smp.modulation.Module;
 import xyz.wisecraft.smp.modulation.UtilModuleCommon;
 import xyz.wisecraft.smp.modulation.enums.ModuleState;
 import xyz.wisecraft.smp.modulation.exceptions.MissingDependencyException;
+import xyz.wisecraft.smp.modulation.storage.ModulationStorage;
 import xyz.wisecraft.smp.modulation.storage.ModuleSettings;
+
+import java.lang.reflect.InvocationTargetException;
 
 import static xyz.wisecraft.smp.modulation.UtilModuleCommon.*;
 import static xyz.wisecraft.smp.modulation.storage.ModulationStorage.getCommands;
@@ -28,9 +32,7 @@ public abstract class ModuleClass implements Module {
 
     /**
      * -- GETTER --
-     *  Gets the module state.
-     *
-     *
+     * Gets the module state.
      */
     @Getter
     private ModuleState moduleState = plugin.getModuleConfig().getBoolean(getSetting(this, ModuleSettings.ENABLED), false)
@@ -60,26 +62,26 @@ public abstract class ModuleClass implements Module {
 
     /**
      * Will register all necessary events and commands for the module's function to work.
+     * <p>
+     *     Note: This method should only be called in the initialization of the module.
      * @return ModuleInfo if the module was enabled or null if it wasn't.
      */
     public boolean enableModule() {
 
-        if (getModuleState() == ModuleState.DISABLED | getModuleState() == ModuleState.ENABLED)
+        if (getModuleState() == ModuleState.DISABLED || getModuleState() == ModuleState.ENABLED)
             throw new IllegalStateException(getErrorMessage());
         if (!hasAllHardDependencies())
             throw new MissingDependencyException("Module " + getModuleName() + " does not have all hard dependencies!");
 
-
-        onEnable();
+        onEnable(); // THIS BEFORE INFO. OTHERWISE DIS NO WORKIE!!!!!
         this.moduleInfo = new ModuleInfo(getModuleName(), registerListeners(), registerCommands());
-
         reenableModule();
         return true;
     }
 
     // todo prevent disabling modules that are required by other modules.
     /**
-     * This method is called when the module is shutting down.
+     * This method is called when the module is being disabled.
      */
     @Override
     public void disableModule() {
@@ -92,9 +94,10 @@ public abstract class ModuleClass implements Module {
         }
 
         onDisable();
-        getListeners(this.getClass()).forEach(HandlerList::unregisterAll);
-        getCommands(this.getClass()).forEach(UtilModuleCommon::unregisterBukkitCommand);
-        moduleState = ModuleState.DISABLED;
+        moduleInfo.getListeners().forEach(HandlerList::unregisterAll);
+        moduleInfo.getCommands().forEach(UtilModuleCommon::unregisterBukkitCommand);
+        if (moduleState != ModuleState.SHUTDOWN)
+            moduleState = ModuleState.DISABLED;
         refreshTabcompletion();
     }
 
@@ -102,9 +105,32 @@ public abstract class ModuleClass implements Module {
         if (getModuleState() == ModuleState.ENABLED) {
             throw new IllegalStateException(getErrorMessage());
         }
-        moduleInfo.getCommands().forEach(UtilModuleCommon::registerCommand);
+        moduleInfo.getCommands().forEach(UtilModuleCommon -> registerCommand(UtilModuleCommon, this.getModuleName()));
         moduleInfo.getListeners().forEach(UtilModuleCommon::registerListener);
         moduleState = ModuleState.ENABLED;
+        refreshTabcompletion();
+    }
+
+    public void reloadModule() {
+        moduleState = ModuleState.SHUTDOWN;
+        disableModule();
+        moduleInfo = null;
+        Class<? extends ModuleClass> clazz = this.getClass();
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+
+                try {
+                    ModulationStorage.removeModule(clazz);
+                    ModuleClass module = clazz.getConstructor(Long.TYPE).newInstance(ID);
+                    module.enableModule();
+                    ModulationStorage.addModule(module);
+                } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                         NoSuchMethodException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }.runTaskAsynchronously(plugin);
         refreshTabcompletion();
     }
 
@@ -117,6 +143,15 @@ public abstract class ModuleClass implements Module {
         if (getModuleState() == ModuleState.INITIAL)
             return "Module " + getModuleName() + " have not been initialized!";
         else
-            return "Module " + getModuleName() + " is already " + moduleState +"!";
+            return "Module " + getModuleName() + " is already " + moduleState + "!";
     }
+
+    public boolean isErrorMessage(String message, ModuleState moduleState) {
+        if (moduleState == ModuleState.INITIAL)
+            return ("Module " + getModuleName() + " have not been initialized!").equalsIgnoreCase(message);
+        else
+            return ("Module " + getModuleName() + " is already " + moduleState + "!").equalsIgnoreCase(message);
+    }
+
+
 }

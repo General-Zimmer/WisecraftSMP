@@ -14,23 +14,19 @@ import java.util.UUID;
 public abstract class OtherStorage {
     /**
      * Tools used to harvest crops
-      */
+     */
     private static final HashMap<Material, String> tools = new HashMap<>();
     /**
      * The name of the server
      * -- GETTER --
-     *  Get the server name
-     *
-
+     * Get the server name
      */
     @Getter
     private static String server_name;
     /**
      * Angels for saving grace
      * -- GETTER --
-     *  Get the angels
-     *
-
+     * Get the angels
      */
     @Getter
     private static final HashMap<UUID, Angel> angels = new HashMap<>();

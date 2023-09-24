@@ -1,7 +1,7 @@
 package xyz.wisecraft.smp.modulation;
 
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandMap;
+import org.bukkit.command.Command;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
@@ -11,10 +11,10 @@ import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.modulation.storage.ModulationStorage;
 import xyz.wisecraft.smp.modulation.storage.ModuleSettings;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Map;
 
 public abstract class UtilModuleCommon {
 
@@ -166,7 +166,9 @@ public abstract class UtilModuleCommon {
     }
 
     public static void unregisterBukkitCommand(BukkitCommand cmd) {
-        Bukkit.getCommandMap().getKnownCommands().remove(cmd.getName());
+        Map<String, Command> knownCommands = Bukkit.getCommandMap().getKnownCommands();
+        knownCommands.remove(cmd.getName());
+        cmd.getAliases().forEach(knownCommands::remove);
         cmd.unregister(Bukkit.getCommandMap());
     }
 
@@ -174,18 +176,8 @@ public abstract class UtilModuleCommon {
         plugin.getServer().getPluginManager().registerEvents(listener, plugin);
     }
 
-    public static void registerCommand(BukkitCommand cmd) {
-        try {
-            final Field bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
-
-            bukkitCommandMap.setAccessible(true);
-            CommandMap commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
-
-            commandMap.register(cmd.getName(), cmd);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            plugin.getLogger().warning("Failed to register command");
-        }
-        Bukkit.getCommandMap().getKnownCommands().remove(cmd.getName()+":"+cmd.getName());
+    public static void registerCommand(BukkitCommand cmd, String prefix) {
+        Bukkit.getServer().getCommandMap().register(prefix, cmd);
     }
 
     public static void refreshTabcompletion() {

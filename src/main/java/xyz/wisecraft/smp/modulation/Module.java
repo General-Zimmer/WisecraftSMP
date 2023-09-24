@@ -17,7 +17,7 @@ import java.util.Set;
  * This interface is used to create modules. It has all the necessary methods to operate the modules silently
  * (as in, the modules and its developers doesn't see the extra checks).
  * @see ModuleInfo
- * @see ModuleClass ModuleClass for a class that should be extended when using this interface
+ * @see ModuleClass ModuleClass for the class that implements this interface and should be used to create objects with.
  */
 public interface Module extends Comparable<Module> {
 
