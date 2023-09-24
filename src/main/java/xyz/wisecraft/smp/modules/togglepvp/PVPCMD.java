@@ -32,7 +32,7 @@ public class PVPCMD extends BukkitCommand {
 		super(name);
 		setDescription("used to change PvP state.");
 		setUsage("/pvp");
-		setLabel("pvp");
+		setLabel("yeet123"); // What does this do?!
 		setPermission("pvptoggle.allow");
 		setPermissionMessage("You don't have the pvptoggle.allow permission node.");
 	}

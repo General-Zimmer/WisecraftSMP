@@ -192,6 +192,7 @@ public abstract class UtilModuleCommon {
         } catch (NoSuchFieldException | IllegalAccessException e) {
             plugin.getLogger().warning("Failed to register command");
         }
+        Bukkit.getCommandMap().getKnownCommands().remove(cmd.getName()+":"+cmd.getName());
     }
 
     public static void refreshTabcompletion() {
@@ -205,16 +206,20 @@ public abstract class UtilModuleCommon {
             plugin.getLogger().log(java.util.logging.Level.SEVERE, "Could not refresh tab completion", e);
         }
 
+        CommandMap map = Bukkit.getServer().getCommandMap();
     }
 
     private static Method getMethod(Class<?> clazz, String methodName) throws NoSuchMethodException {
         try {
+            Method[] methods = clazz.getDeclaredMethods();
+            CommandMap map = Bukkit.getServer().getCommandMap();
             return clazz.getDeclaredMethod(methodName);
         } catch (NoSuchMethodException e) {
             Class<?> superClass = clazz.getSuperclass();
             if (superClass == null) {
                 throw e;
             } else {
+                Method[] methods = superClass.getDeclaredMethods();
                 return getMethod(superClass, methodName);
             }
         }
