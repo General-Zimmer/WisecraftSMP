@@ -28,7 +28,7 @@ public class PVPCMD extends BukkitCommand {
 	private final FileConfiguration config = instance.getConfig();
 	private final HashMap<UUID, Boolean> pvpPlayers = PVPStorage.getPVPPlayers();
 
-	protected PVPCMD(String name) {
+	public PVPCMD(String name) {
 		super(name);
 		setDescription("used to change PvP state.");
 		setUsage("/pvp");
