@@ -1,6 +1,6 @@
 package modulation_tests.findDependenciesTests.testmodules.generic;
 
-import xyz.wisecraft.smp.modulation.models.ModuleClass;
+import xyz.wisecraft.smp.modulation.ModuleClass;
 
 public class GenericTest1 extends ModuleClass {
     @Override

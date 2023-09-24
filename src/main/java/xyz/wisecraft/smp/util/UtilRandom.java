@@ -3,7 +3,7 @@ package xyz.wisecraft.smp.util;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import xyz.wisecraft.smp.modulation.UtilModuleCommon;
-import xyz.wisecraft.smp.modulation.models.ModuleClass;
+import xyz.wisecraft.smp.modulation.ModuleClass;
 import xyz.wisecraft.smp.modulation.storage.ModuleSettings;
 
 import java.util.*;

@@ -3,7 +3,7 @@ package xyz.wisecraft.smp.modules.savinggrace;
 import net.ess3.api.IEssentials;
 import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
-import xyz.wisecraft.smp.modulation.models.ModuleClass;
+import xyz.wisecraft.smp.modulation.ModuleClass;
 import xyz.wisecraft.smp.modules.savinggrace.listeners.AngelListeners;
 
 import java.util.HashSet;

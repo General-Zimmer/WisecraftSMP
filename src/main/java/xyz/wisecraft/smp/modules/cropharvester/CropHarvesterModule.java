@@ -4,7 +4,7 @@ import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
-import xyz.wisecraft.smp.modulation.models.ModuleClass;
+import xyz.wisecraft.smp.modulation.ModuleClass;
 import xyz.wisecraft.smp.modules.cropharvester.listener.CropTrampleListener;
 import xyz.wisecraft.smp.modules.cropharvester.listener.HarvestListener;
 import xyz.wisecraft.smp.storage.OtherStorage;

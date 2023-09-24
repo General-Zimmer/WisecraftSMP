@@ -3,9 +3,9 @@ package xyz.wisecraft.smp.modulation.cmd;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.jetbrains.annotations.NotNull;
-import xyz.wisecraft.smp.modulation.Module;
+import xyz.wisecraft.smp.modulation.interfaces.Module;
 import xyz.wisecraft.smp.modulation.enums.ModuleState;
-import xyz.wisecraft.smp.modulation.models.ModuleClass;
+import xyz.wisecraft.smp.modulation.ModuleClass;
 import xyz.wisecraft.smp.modulation.storage.ModulationStorage;
 
 import java.util.ArrayList;

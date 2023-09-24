@@ -13,9 +13,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import xyz.wisecraft.smp.WisecraftSMP;
-import xyz.wisecraft.smp.modulation.Module;
+import xyz.wisecraft.smp.modulation.interfaces.Module;
 import xyz.wisecraft.smp.modulation.UtilModuleCommon;
-import xyz.wisecraft.smp.modulation.models.ModuleClass;
+import xyz.wisecraft.smp.modulation.ModuleClass;
 
 import java.util.ArrayList;
 

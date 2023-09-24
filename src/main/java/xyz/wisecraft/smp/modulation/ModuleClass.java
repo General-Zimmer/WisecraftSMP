@@ -1,20 +1,18 @@
-package xyz.wisecraft.smp.modulation.models;
+package xyz.wisecraft.smp.modulation;
 
 import lombok.Getter;
 import org.bukkit.event.HandlerList;
 import org.bukkit.scheduler.BukkitRunnable;
-import xyz.wisecraft.smp.modulation.Module;
-import xyz.wisecraft.smp.modulation.UtilModuleCommon;
 import xyz.wisecraft.smp.modulation.enums.ModuleState;
 import xyz.wisecraft.smp.modulation.exceptions.MissingDependencyException;
+import xyz.wisecraft.smp.modulation.interfaces.Module;
+import xyz.wisecraft.smp.modulation.models.ModuleInfo;
 import xyz.wisecraft.smp.modulation.storage.ModulationStorage;
 import xyz.wisecraft.smp.modulation.storage.ModuleSettings;
 
 import java.lang.reflect.InvocationTargetException;
 
 import static xyz.wisecraft.smp.modulation.UtilModuleCommon.*;
-import static xyz.wisecraft.smp.modulation.storage.ModulationStorage.getCommands;
-import static xyz.wisecraft.smp.modulation.storage.ModulationStorage.getListeners;
 
 /**
  * This class is used to create modules. All classes inhereting this class must end with "Module".

@@ -3,8 +3,8 @@ package xyz.wisecraft.smp.modulation.storage;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
-import xyz.wisecraft.smp.modulation.Module;
-import xyz.wisecraft.smp.modulation.models.ModuleClass;
+import xyz.wisecraft.smp.modulation.interfaces.Module;
+import xyz.wisecraft.smp.modulation.ModuleClass;
 
 import java.util.*;
 

@@ -1,8 +1,8 @@
 package modulation_tests.findDependenciesTests.testmodules.longdepend;
 
 import modulation_tests.findDependenciesTests.testmodules.generic.GenericTest1;
-import xyz.wisecraft.smp.modulation.Module;
-import xyz.wisecraft.smp.modulation.models.ModuleClass;
+import xyz.wisecraft.smp.modulation.interfaces.Module;
+import xyz.wisecraft.smp.modulation.ModuleClass;
 
 import java.util.ArrayList;
 
