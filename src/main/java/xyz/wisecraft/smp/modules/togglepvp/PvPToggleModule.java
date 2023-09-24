@@ -3,7 +3,6 @@ package xyz.wisecraft.smp.modules.togglepvp;
 import com.nametagedit.plugin.NametagEdit;
 import com.nametagedit.plugin.api.INametagApi;
 import lombok.Getter;
-import lombok.Setter;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;

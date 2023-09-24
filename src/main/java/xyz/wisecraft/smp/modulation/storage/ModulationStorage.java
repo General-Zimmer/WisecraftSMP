@@ -5,7 +5,6 @@ import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.modulation.Module;
 import xyz.wisecraft.smp.modulation.models.ModuleClass;
-import xyz.wisecraft.smp.modulation.models.ModuleInfo;
 
 import java.util.*;
 

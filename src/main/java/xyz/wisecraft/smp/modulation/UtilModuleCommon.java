@@ -1,19 +1,13 @@
 package xyz.wisecraft.smp.modulation;
 
-import com.fren_gor.ultimateAdvancementAPI.exceptions.IllegalOperationException;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
-import org.bukkit.command.PluginCommand;
-import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.command.defaults.BukkitCommand;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.WisecraftSMP;
-import xyz.wisecraft.smp.modulation.models.ModuleClass;
 import xyz.wisecraft.smp.modulation.storage.ModulationStorage;
 import xyz.wisecraft.smp.modulation.storage.ModuleSettings;
 
@@ -21,7 +15,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public abstract class UtilModuleCommon {
 
@@ -205,21 +198,16 @@ public abstract class UtilModuleCommon {
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             plugin.getLogger().log(java.util.logging.Level.SEVERE, "Could not refresh tab completion", e);
         }
-
-        CommandMap map = Bukkit.getServer().getCommandMap();
     }
 
     private static Method getMethod(Class<?> clazz, String methodName) throws NoSuchMethodException {
         try {
-            Method[] methods = clazz.getDeclaredMethods();
-            CommandMap map = Bukkit.getServer().getCommandMap();
             return clazz.getDeclaredMethod(methodName);
         } catch (NoSuchMethodException e) {
             Class<?> superClass = clazz.getSuperclass();
             if (superClass == null) {
                 throw e;
             } else {
-                Method[] methods = superClass.getDeclaredMethods();
                 return getMethod(superClass, methodName);
             }
         }

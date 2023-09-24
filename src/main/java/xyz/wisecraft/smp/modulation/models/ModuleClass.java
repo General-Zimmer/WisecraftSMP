@@ -2,8 +2,6 @@ package xyz.wisecraft.smp.modulation.models;
 
 import lombok.Getter;
 import org.bukkit.event.HandlerList;
-import org.checkerframework.framework.qual.InheritedAnnotation;
-import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.modulation.Module;
 import xyz.wisecraft.smp.modulation.UtilModuleCommon;
 import xyz.wisecraft.smp.modulation.exceptions.MissingDependencyException;

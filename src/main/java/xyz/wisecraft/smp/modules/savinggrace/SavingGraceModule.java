@@ -6,7 +6,6 @@ import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.modulation.models.ModuleClass;
 import xyz.wisecraft.smp.modules.savinggrace.listeners.AngelListeners;
 
-import java.lang.annotation.Inherited;
 import java.util.HashSet;
 import java.util.Set;
 
