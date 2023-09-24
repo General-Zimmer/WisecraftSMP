@@ -4,6 +4,7 @@ import lombok.Getter;
 import org.bukkit.event.HandlerList;
 import xyz.wisecraft.smp.modulation.Module;
 import xyz.wisecraft.smp.modulation.UtilModuleCommon;
+import xyz.wisecraft.smp.modulation.enums.ModuleState;
 import xyz.wisecraft.smp.modulation.exceptions.MissingDependencyException;
 import xyz.wisecraft.smp.modulation.storage.ModuleSettings;
 
@@ -25,7 +26,15 @@ import static xyz.wisecraft.smp.modulation.storage.ModulationStorage.getListener
 public abstract class ModuleClass implements Module {
 
 
-    private boolean isModuleEnabled = plugin.getModuleConfig().getBoolean(getSetting(this, ModuleSettings.ENABLED), false);
+    /**
+     * -- GETTER --
+     *  Gets the module state.
+     *
+     *
+     */
+    @Getter
+    private ModuleState moduleState = plugin.getModuleConfig().getBoolean(getSetting(this, ModuleSettings.ENABLED), false)
+            ? ModuleState.INITIAL : ModuleState.DISABLED;
     /**
      * The ID of the module. This is used to identify the module.
      * <p>
@@ -40,46 +49,32 @@ public abstract class ModuleClass implements Module {
             throw new RuntimeException("Module class name must end with \"Module\"!");
         }
         this.ID = id;
-        if (!isModuleEnabled)
-            return;
     }
 
     public ModuleClass() {
         this.ID = -10;
         if (!plugin.getIsTesting())
             throw new RuntimeException("Module was initalized without an ID in production!");
-
-    }
-
-    /**
-     * Gets the module enabled status.
-     * @return The module enabled status.
-     */
-    @Override
-    public boolean isModuleEnabled() {
-        return isModuleEnabled;
+        moduleState = ModuleState.TESTING;
     }
 
     /**
      * Will register all necessary events and commands for the module's function to work.
      * @return ModuleInfo if the module was enabled or null if it wasn't.
      */
-    @Override
-    public ModuleInfo enableModule() {
+    public boolean enableModule() {
 
-        if (!isModuleEnabled())
-            return null;
+        if (getModuleState() == ModuleState.DISABLED | getModuleState() == ModuleState.ENABLED)
+            throw new IllegalStateException(getErrorMessage());
         if (!hasAllHardDependencies())
             throw new MissingDependencyException("Module " + getModuleName() + " does not have all hard dependencies!");
 
 
         onEnable();
-        ModuleInfo moduleInfo = new ModuleInfo(getModuleName(), registerListeners(), registerCommands());
-        this.moduleInfo = moduleInfo;
+        this.moduleInfo = new ModuleInfo(getModuleName(), registerListeners(), registerCommands());
 
-        moduleInfo.getCommands().forEach(UtilModuleCommon::registerCommand);
-        moduleInfo.getListeners().forEach(UtilModuleCommon::registerListener);
-        return moduleInfo;
+        reenableModule();
+        return true;
     }
 
     // todo prevent disabling modules that are required by other modules.
@@ -89,27 +84,39 @@ public abstract class ModuleClass implements Module {
     @Override
     public void disableModule() {
 
-        if (!isModuleEnabled()) {
-            throw new IllegalStateException("Module " + getModuleName() + " is already disabled!");
+        if (getModuleState() == ModuleState.DISABLED) {
+            throw new IllegalStateException(getErrorMessage());
+        }
+        if (getModuleState() == ModuleState.INITIAL) {
+            throw new IllegalStateException(getErrorMessage());
         }
 
         onDisable();
         getListeners(this.getClass()).forEach(HandlerList::unregisterAll);
         getCommands(this.getClass()).forEach(UtilModuleCommon::unregisterBukkitCommand);
-        isModuleEnabled = false;
+        moduleState = ModuleState.DISABLED;
         refreshTabcompletion();
     }
 
-    @Override
     public void reenableModule() {
+        if (getModuleState() == ModuleState.ENABLED) {
+            throw new IllegalStateException(getErrorMessage());
+        }
         moduleInfo.getCommands().forEach(UtilModuleCommon::registerCommand);
         moduleInfo.getListeners().forEach(UtilModuleCommon::registerListener);
-        isModuleEnabled = true;
+        moduleState = ModuleState.ENABLED;
         refreshTabcompletion();
     }
 
     @Override
     public long getModuleID() {
         return ID;
+    }
+
+    private String getErrorMessage() {
+        if (getModuleState() == ModuleState.INITIAL)
+            return "Module " + getModuleName() + " have not been initialized!";
+        else
+            return "Module " + getModuleName() + " is already " + moduleState +"!";
     }
 }

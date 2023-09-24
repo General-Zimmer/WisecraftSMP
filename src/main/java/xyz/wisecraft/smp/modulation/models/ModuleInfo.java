@@ -10,6 +10,7 @@ import java.util.Set;
 /**
  * This record is used to store information about a module.
  */
+@SuppressWarnings({"unused", "ClassCanBeRecord"})
 @Data
 public class ModuleInfo {
 

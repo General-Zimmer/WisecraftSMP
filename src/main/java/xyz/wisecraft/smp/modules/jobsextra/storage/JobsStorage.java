@@ -16,6 +16,7 @@ public abstract class JobsStorage {
         elytraDrop.put(uuid, date);
     }
 
+    @SuppressWarnings("unused")
     public static void removeElytraDrop(UUID uuid) {
         elytraDrop.remove(uuid);
     }

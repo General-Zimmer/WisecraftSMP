@@ -1,5 +1,6 @@
 package xyz.wisecraft.smp.modules.cropharvester;
 
+import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
@@ -17,6 +18,7 @@ public class CropHarvesterModule extends ModuleClass {
     private final boolean isGriefpreventionEnabled = setupDependency("GriefPrevention");
     private final boolean isWorldGuardEnabled = setupDependency("WorldGuard");
     private final boolean isTownyEnabled = setupDependency("Towny");
+    @Getter
     static CropHarvesterModule instance;
 
     public CropHarvesterModule(long ID) {
@@ -46,10 +48,6 @@ public class CropHarvesterModule extends ModuleClass {
             listeners.add(new CropTrampleListener());
         }
         return listeners;
-    }
-
-    public static CropHarvesterModule getInstance() {
-        return instance;
     }
 
     public boolean isGriefpreventionEnabled() {

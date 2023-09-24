@@ -1,5 +1,6 @@
 package xyz.wisecraft.smp.modules.cropharvester.events;
 
+import lombok.Getter;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Cancellable;
@@ -12,6 +13,7 @@ public class CropTrampleEvent extends Event implements Cancellable {
     private boolean cancelled;
     private static final HandlerList handlers = new HandlerList();
     private final Entity trampler;
+    @Getter
     private final TrampleCause cause;
     private final Block block;
 
@@ -40,14 +42,12 @@ public class CropTrampleEvent extends Event implements Cancellable {
         return handlers;
     }
 
-    public TrampleCause getCause() {
-        return this.cause;
-    }
-
+    @SuppressWarnings("unused")
     public Entity getTrampler() {
         return this.trampler;
     }
 
+    @SuppressWarnings("unused")
     public Block getBlock() {
         return this.block;
     }

@@ -8,6 +8,7 @@ import xyz.wisecraft.smp.modulation.models.ModuleClass;
 
 import java.util.*;
 
+@SuppressWarnings("unused")
 public class ModulationStorage {
 
 
@@ -81,7 +82,7 @@ public class ModulationStorage {
     }
 
     /**
-     * Gets all modules and their info.
+     * Gets all modules in a new Set.
      * @return The modules.
      */
     public static Set<ModuleClass> getModules() {

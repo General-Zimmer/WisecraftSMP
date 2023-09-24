@@ -12,6 +12,7 @@ import java.util.Set;
 /**
  * Module class for SavingGrace
  */
+@SuppressWarnings("unused")
 public class SavingGraceModule extends ModuleClass {
 
     final IEssentials ess = setupDependency("Essentials", IEssentials.class);

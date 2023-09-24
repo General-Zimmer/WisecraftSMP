@@ -2,6 +2,7 @@ package xyz.wisecraft.smp.modules.savinggrace;
 
 import com.earth2me.essentials.Kit;
 import com.earth2me.essentials.User;
+import lombok.Getter;
 import net.ess3.api.IEssentials;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -25,8 +26,26 @@ import static xyz.wisecraft.smp.modules.tutorialstuff.util.UtilRandom.getToolTyp
 public class Angel {
 
     private boolean hasGraceResetTimer = false;
+    /**
+     * -- GETTER --
+     *  Gets the armor that was saved
+     *
+     */
+    @Getter
     private ItemStack[] armor = null;
+    /**
+     * -- GETTER --
+     *  Get tools
+     *
+     */
+    @Getter
     private List<ItemStack> tools = null;
+    /**
+     * -- GETTER --
+     *  Gets graces
+     *
+     */
+    @Getter
     private int graces;
     private boolean hasDied = false;
     private final WisecraftSMP plugin;
@@ -186,22 +205,6 @@ public class Angel {
     }
 
     /**
-     * Gets the armor that was saved
-     * @return The armor that was saved
-     */
-    public ItemStack[] getArmor() {
-        return this.armor;
-    }
-
-    /**
-     * Get tools
-     * @return The tools that were saved
-     */
-    public List<ItemStack> getTools() {
-        return this.tools;
-    }
-
-    /**
      * Reset graces for a player
      * @param hasPerm Whether or not the player has the donator permission
      */
@@ -211,12 +214,6 @@ public class Angel {
         else
             this.graces = 1;
     }
-
-    /**
-     * Gets graces
-     * @return The amount of graces a player has
-     */
-    public int getGraces() {return this.graces;}
 
     /**
      * Decrease the amount of graces a player has

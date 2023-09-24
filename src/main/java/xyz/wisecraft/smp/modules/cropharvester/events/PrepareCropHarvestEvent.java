@@ -38,6 +38,7 @@ public class PrepareCropHarvestEvent extends PlayerEvent implements Cancellable 
         this.cancelled = cancelState;
     }
 
+    @SuppressWarnings("unused")
     public Ageable getBlock() {
         return block;
     }

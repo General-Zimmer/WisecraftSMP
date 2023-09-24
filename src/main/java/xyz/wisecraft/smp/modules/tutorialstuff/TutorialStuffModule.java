@@ -14,6 +14,7 @@ import java.util.Set;
 /**
  * This class is used to create modules.
  */
+@SuppressWarnings("unused")
 public class TutorialStuffModule extends ModuleClass {
 
     final IEssentials ess = setupDependency("Essentials", IEssentials.class);

@@ -4,6 +4,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.modulation.Module;
+import xyz.wisecraft.smp.modulation.enums.ModuleState;
 import xyz.wisecraft.smp.modulation.models.ModuleClass;
 import xyz.wisecraft.smp.modulation.storage.ModulationStorage;
 
@@ -31,21 +32,33 @@ public class ManageModules extends BukkitCommand {
 
             modules.removeIf(module -> !module.getModuleName().equalsIgnoreCase(args[1]));
 
-            if (modules.isEmpty()) return false;
+            if (modules.isEmpty()) {
+                sender.sendMessage("Module " + args[1] + " does not exist.");
+                return true;
+            }
 
             if (args[0].equalsIgnoreCase("enable")) {
                 modules.forEach(module -> {
-                    module.reenableModule();
-                    sender.sendMessage("Module " + module.getModuleName() + " was enabled.");
+
+                    if (module.getModuleState() == ModuleState.ENABLED) {
+                        module.reenableModule();
+                        sender.sendMessage("Module " + module.getModuleName() + " was enabled.");
+                    } else {
+                        sender.sendMessage("Module " + module.getModuleName() + " was already enabled.");
+                    }
                 });
             } else if (args[0].equalsIgnoreCase("disable")) {
                 modules.forEach(module -> {
-                    module.disableModule();
-                    sender.sendMessage("Module " + module.getModuleName() + " was disabled.");
+                    if (module.getModuleState() == ModuleState.DISABLED) {
+                        sender.sendMessage("Module " + module.getModuleName() + " was already disabled.");
+                        module.disableModule();
+                    } else {
+                        sender.sendMessage("Module " + module.getModuleName() + " was disabled.");
+                    }
                 });
             }
         }
-        return false;
+        return true;
     }
 
     @Override

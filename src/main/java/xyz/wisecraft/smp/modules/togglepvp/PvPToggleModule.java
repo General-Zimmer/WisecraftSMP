@@ -32,6 +32,7 @@ public class PvPToggleModule extends ModuleClass {
     private final INametagApi nametagAPI = setupDependency("NametagEdit") ? NametagEdit.getApi() : null;
     private final WisecraftCoreApi core = setupDependency(WisecraftCoreApi.class);
 
+    @SuppressWarnings("unused")
     public PvPToggleModule(long ID) {
         super(ID);
         module = this;

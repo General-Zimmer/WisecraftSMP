@@ -33,8 +33,6 @@ public interface Module extends Comparable<Module> {
      */
     default void onDisable() {}
 
-    void reenableModule();
-
     /**
      * This method should register all the events for the module.
      */
@@ -119,22 +117,11 @@ public interface Module extends Comparable<Module> {
     }
 
     /**
-     * Gets the module enabled status.
-     * @return The module enabled status.
-     */
-    boolean isModuleEnabled();
-
-    /**
-     * Will register all necessary events and commands for the module's function to work.
-     * @return ModuleInfo if the module was enabled or null if it wasn't.
-     */
-    ModuleInfo enableModule();
-
-    /**
      * This method is called when the module is shutting down.
      */
     void disableModule();
 
+    @SuppressWarnings("unused")
     default WisecraftSMP getPlugin(){
         return WisecraftSMP.getInstance();
     }

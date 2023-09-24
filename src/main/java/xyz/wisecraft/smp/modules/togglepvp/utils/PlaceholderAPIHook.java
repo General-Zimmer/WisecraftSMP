@@ -15,7 +15,7 @@ import java.util.UUID;
  */
 public class PlaceholderAPIHook extends PlaceholderExpansion {
 
-	private final WisecraftSMP instance = WisecraftSMP.getInstance();
+	private final WisecraftSMP plugin = WisecraftSMP.getInstance();
 	private final HashMap<UUID, Boolean> pvpPlayers = PVPStorage.getPVPPlayers();
 
 	@Override
@@ -48,7 +48,7 @@ public class PlaceholderAPIHook extends PlaceholderExpansion {
 
 	@Override
 	public @NotNull String getVersion() {
-		return instance.getDescription().getVersion();
+		return plugin.getDescription().getVersion();
 	}
 
 }

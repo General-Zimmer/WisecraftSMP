@@ -19,6 +19,7 @@ import java.util.Set;
 /**
  * This class is used to create modules.
  */
+@SuppressWarnings("unused")
 public class JobsExtrasModule extends ModuleClass {
     private final boolean jobs = setupDependency("Jobs");
     BukkitTask removeOldElytraDrops;

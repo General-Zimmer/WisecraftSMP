@@ -60,11 +60,6 @@ public class AdvancementsModule extends ModuleClass {
     private final boolean isJobsEnabled = setupDependency("Jobs");
     private final boolean isTownyEnabled = setupDependency("Towny");
 
-    public AdvancementsModule(long ID) {
-        super(ID);
-        module = this;
-    }
-
     @Override
     public void onEnable() {
 

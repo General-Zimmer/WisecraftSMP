@@ -12,7 +12,6 @@ import xyz.wisecraft.smp.modulation.UtilModuleCommon;
 import xyz.wisecraft.smp.modulation.cmd.ManageModules;
 import xyz.wisecraft.smp.modulation.exceptions.MissingDependencyException;
 import xyz.wisecraft.smp.modulation.models.ModuleClass;
-import xyz.wisecraft.smp.modulation.models.ModuleInfo;
 import xyz.wisecraft.smp.modulation.storage.ModulationStorage;
 import xyz.wisecraft.smp.modulation.storage.ModuleSettings;
 import xyz.wisecraft.smp.storage.OtherStorage;
@@ -98,9 +97,8 @@ public class WisecraftSMP extends JavaPlugin {
         // Start/load modules
         sortedModules.forEach(module -> {
             try {
-                ModuleInfo moduleInfo = module.enableModule();
-                if (moduleInfo == null) return;
-                ModulationStorage.addModule(module);
+                if (module.enableModule())
+                    ModulationStorage.addModule(module);
             } catch (MissingDependencyException | IllegalStateException e) {
                 this.getLogger().log(java.util.logging.Level.SEVERE, "Could not enable module " + module.getClass().getName(), e);
             }
