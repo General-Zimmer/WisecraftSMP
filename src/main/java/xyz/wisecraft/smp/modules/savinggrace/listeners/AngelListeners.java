@@ -1,6 +1,7 @@
 package xyz.wisecraft.smp.modules.savinggrace.listeners;
 
 import net.ess3.api.IEssentials;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -11,9 +12,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import xyz.wisecraft.smp.modulation.storage.storagehelpers.StorageHelperMaps;
 import xyz.wisecraft.smp.modules.savinggrace.models.Angel;
 import xyz.wisecraft.smp.modules.savinggrace.storage.AngelStorage;
+import xyz.wisecraft.smp.storage.OtherStorage;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,13 +26,18 @@ import java.util.UUID;
 public class AngelListeners implements Listener {
 
     private final IEssentials ess;
-    private final StorageHelperMaps<HashMap<UUID, Angel>, UUID, Angel> angels;
+    private final HashMap<UUID, Angel> angels;
     /**
      * Constructor for the class.
      */
     public AngelListeners(IEssentials ess) {
         this.ess = ess;
         this.angels = AngelStorage.getAngels();
+        angels.clear();
+        Bukkit.getOnlinePlayers().forEach(p -> {
+            Angel angel = new Angel(p.hasPermission("wisecraft.donator"));
+            angels.put(p.getUniqueId(), angel);
+        });
     }
 
     /**
@@ -58,7 +64,7 @@ public class AngelListeners implements Listener {
 
         Angel angel = angels.get(UUID);
 
-        //todo Prevent items from being destroyed after leaving
+        // Prevent items from being destroyed after leaving
         if (angel.hasDied())
             angel.safeDelete(UUID);
         else if (!angel.hasDied())

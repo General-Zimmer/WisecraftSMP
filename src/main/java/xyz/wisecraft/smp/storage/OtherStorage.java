@@ -1,12 +1,17 @@
 package xyz.wisecraft.smp.storage;
 
 import lombok.Getter;
+import org.bukkit.Material;
+import xyz.wisecraft.smp.modules.savinggrace.models.Angel;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
 
 /**
  * Storage for the plugin to store data in RAM.
  */
 public abstract class OtherStorage {
-
     /**
      * The name of the server
      * -- GETTER --
@@ -14,6 +19,7 @@ public abstract class OtherStorage {
      */
     @Getter
     private static String server_name;
+
 
     /**
      * Set the server name

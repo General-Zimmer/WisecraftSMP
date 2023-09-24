@@ -13,6 +13,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.modules.savinggrace.storage.AngelStorage;
 import xyz.wisecraft.smp.modules.tutorialstuff.util.UtilRandom;
+import xyz.wisecraft.smp.storage.OtherStorage;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -49,6 +50,7 @@ public class Angel {
     private int graces;
     private boolean hasDied = false;
     private final WisecraftSMP plugin;
+    private final HashMap<UUID, Angel> angels = AngelStorage.getAngels();
 
     /**
      * Get the amount of graces the player has left
@@ -119,7 +121,7 @@ public class Angel {
             p.sendMessage("You have been granted some new items.");
         }
 
-        AngelStorage.getAngels().get(p.getUniqueId()).clear();
+        angels.get(p.getUniqueId()).clear();
         p.sendMessage(ChatColor.BLUE + "You didn't /sethome or place a bed!");
     }
 
@@ -234,11 +236,11 @@ public class Angel {
                 public void run() {
                     Player player = Bukkit.getPlayer(UUID);
                     if (player == null) {
-                        AngelStorage.getAngels().remove(UUID);
+                        angels.remove(UUID);
                         return;
                     }
 
-                    Angel angel = AngelStorage.getAngels().get(UUID);
+                    Angel angel = angels.get(UUID);
 
                     angel.resetGrace(player.hasPermission("wisecraft.donator"));
                     angel.setGraceActive(false);
@@ -248,7 +250,7 @@ public class Angel {
 
 
             }.runTaskLater(plugin, 20*30);
-            //}.runTaskLater(plugin, 20*60*60*2); // 2 hour
+            // }.runTaskLater(plugin, 20*60*60); // 1 hour
             Logger.getLogger("WisecraftSMP").log(Level.INFO, "Grace timer started for: " + Bukkit.getPlayer(UUID));
             this.setGraceActive(true);
         }

@@ -31,6 +31,7 @@ public class JobsExtrasModule extends ModuleClass {
 
     @Override
     public void onEnable() {
+        JobsStorage.clearBlacksmithCrafts();
 
         JobsStorage.setBlacksmithCrafts(this);
 

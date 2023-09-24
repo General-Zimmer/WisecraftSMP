@@ -2,16 +2,11 @@ package xyz.wisecraft.smp.modules.savinggrace;
 
 import net.ess3.api.IEssentials;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.modulation.ModuleClass;
-import xyz.wisecraft.smp.modulation.storage.storagehelpers.StorageHelperMaps;
 import xyz.wisecraft.smp.modules.savinggrace.listeners.AngelListeners;
-import xyz.wisecraft.smp.modules.savinggrace.models.Angel;
-import xyz.wisecraft.smp.modules.savinggrace.storage.AngelStorage;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,12 +24,8 @@ public class SavingGraceModule extends ModuleClass {
 
     @Override
     public void onEnable() {
-        AngelStorage.setAngels(new StorageHelperMaps<>(this, "angels", new HashMap<>()));
+        // todo Take all online players and give them an Angel in case of a reload
 
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            Angel angel = new Angel(player.hasPermission("wisecraft.donator"));
-            AngelStorage.getAngels().put(player.getUniqueId(), angel);
-        }
     }
 
     @Override
