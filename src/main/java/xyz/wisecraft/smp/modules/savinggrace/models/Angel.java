@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.wisecraft.smp.WisecraftSMP;
+import xyz.wisecraft.smp.modules.savinggrace.storage.AngelStorage;
 import xyz.wisecraft.smp.modules.tutorialstuff.util.UtilRandom;
 import xyz.wisecraft.smp.storage.OtherStorage;
 
@@ -49,7 +50,7 @@ public class Angel {
     private int graces;
     private boolean hasDied = false;
     private final WisecraftSMP plugin;
-    private final HashMap<UUID, Angel> angels = OtherStorage.getAngels();
+    private final HashMap<UUID, Angel> angels = AngelStorage.getAngels();
 
     /**
      * Get the amount of graces the player has left

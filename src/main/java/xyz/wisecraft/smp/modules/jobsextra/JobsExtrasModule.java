@@ -10,6 +10,7 @@ import xyz.wisecraft.smp.modulation.ModuleClass;
 import xyz.wisecraft.smp.modules.cropharvester.CropHarvesterModule;
 import xyz.wisecraft.smp.modules.jobsextra.listeners.ExplorerListener;
 import xyz.wisecraft.smp.modules.jobsextra.listeners.JobsFeatureListener;
+import xyz.wisecraft.smp.modules.jobsextra.storage.JobsStorage;
 import xyz.wisecraft.smp.modules.jobsextra.threads.RemoveOldElytraDrops;
 
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ public class JobsExtrasModule extends ModuleClass {
 
     @Override
     public void onEnable() {
+        JobsStorage.clearBlacksmithCrafts();
 
         removeOldElytraDrops = new RemoveOldElytraDrops().runTaskTimerAsynchronously(plugin, 20*60*5, 20*60*5);
     }

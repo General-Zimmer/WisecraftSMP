@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.modulation.ModuleClass;
 import xyz.wisecraft.smp.modules.cropharvester.listener.CropTrampleListener;
 import xyz.wisecraft.smp.modules.cropharvester.listener.HarvestListener;
+import xyz.wisecraft.smp.modules.savinggrace.storage.AngelStorage;
 import xyz.wisecraft.smp.storage.OtherStorage;
 
 import java.util.*;
@@ -35,7 +36,7 @@ public class CropHarvesterModule extends ModuleClass {
         for (String material: tools) {
             String[] string = material.split(" ");
             Material material1 = Material.getMaterial(string[1]);
-            OtherStorage.addTool(material1, string[0]);
+            AngelStorage.addTool(material1, string[0]);
         }
     }
 

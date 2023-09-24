@@ -1,6 +1,7 @@
 package xyz.wisecraft.smp.modules.savinggrace;
 
 import net.ess3.api.IEssentials;
+import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.modulation.ModuleClass;
@@ -24,6 +25,7 @@ public class SavingGraceModule extends ModuleClass {
     @Override
     public void onEnable() {
         // todo Take all online players and give them an Angel in case of a reload
+
     }
 
     @Override
