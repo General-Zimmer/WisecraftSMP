@@ -26,6 +26,7 @@ public class PrepareCropHarvestEvent extends PlayerEvent implements Cancellable 
         return handlers;
     }
 
+    @SuppressWarnings("unused")
     public static HandlerList getHandlerList() {return handlers;}
     @Override
     public boolean isCancelled() {
@@ -37,6 +38,7 @@ public class PrepareCropHarvestEvent extends PlayerEvent implements Cancellable 
         this.cancelled = cancelState;
     }
 
+    @SuppressWarnings("unused")
     public Ageable getBlock() {
         return block;
     }

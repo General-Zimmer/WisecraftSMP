@@ -10,8 +10,8 @@ import xyz.wisecraft.smp.WisecraftSMP;
  */
 public abstract class UtilChat {
 
-	private static final WisecraftSMP instance = WisecraftSMP.getInstance();
-	private static final FileConfiguration config = instance.getConfig();
+	private static final WisecraftSMP plugin = WisecraftSMP.getInstance();
+	private static final FileConfiguration config = plugin.getConfig();
 
 	/**
 	 * sends message
@@ -19,8 +19,8 @@ public abstract class UtilChat {
 	 * @param message The message to send
 	 */
 	public static void send(CommandSender sender, String message) {
-		String msg = config.getString("MESSAGES." + message);
-		if(msg.equals(""))
+		String msg = config.getString("MESSAGES." + message, "");
+		if(msg.isEmpty())
 			return;
 		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
 	}
@@ -32,8 +32,8 @@ public abstract class UtilChat {
 	 * @param argument The argument to replace argument with
 	 */
 	public static void send(CommandSender sender, String message, String argument) {
-		String msg = config.getString("MESSAGES." + message);
-		if(msg.equals(""))
+		String msg = config.getString("MESSAGES." + message, "");
+		if(msg.isEmpty())
 			return;
 		String output = msg.replaceAll("<argument>", argument);
 		sender.sendMessage(ChatColor.translateAlternateColorCodes('&', output));
@@ -47,8 +47,8 @@ public abstract class UtilChat {
 	 * @param pvpState The state of the player
 	 */
 	public static void send(CommandSender sender, String message, String argument, Boolean pvpState) {
-		String msg = config.getString("MESSAGES." + message);
-		if(msg != null && msg.equals(""))
+		String msg = config.getString("MESSAGES." + message, "");
+		if(msg.isEmpty())
 			return;
 		String output = msg.replaceAll("<argument>", argument);
 		if(pvpState) {

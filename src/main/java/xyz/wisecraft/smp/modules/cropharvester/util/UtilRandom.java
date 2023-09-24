@@ -36,17 +36,17 @@ public abstract class UtilRandom {
 
     /**
      * Type what this does and relevent information
+     *
      * @param mainLocation Location of the block that was interacted with
-     * @param x X coordinate
-     * @param y Y coordinate
-     * @param z Z coordinate
-     * @param item Item used to break block naturally
-     * @param player Player to get mainhand item from
+     * @param x            X coordinate
+     * @param z            Z coordinate
+     * @param item         Item used to break block naturally
+     * @param player       Player to get mainhand item from
      */
-    private static void farmCropWithHoe(Location mainLocation, int x, int y, int z, ItemStack item, Player player) {
+    private static void farmCropWithHoe(Location mainLocation, int x, int z, ItemStack item, Player player) {
         boolean blockWasBroken = false;
         Location checkLocation = new Location(mainLocation.getWorld(),
-                (mainLocation.getX() + x), mainLocation.getY() + y, mainLocation.getZ() + z);
+                (mainLocation.getX() + x), mainLocation.getY() + 0, mainLocation.getZ() + z);
         Block currentBlock = checkLocation.getBlock();
 
         if (!(currentBlock.getBlockData() instanceof Ageable)) { // This can be put into getAgeAbleFromBlock
@@ -84,14 +84,14 @@ public abstract class UtilRandom {
 
         int size = width / (-2);
         if (width == 0) {
-            farmCropWithHoe(mainLocation, 0, 0, 0, item, player);
+            farmCropWithHoe(mainLocation, 0, 0, item, player);
             return;
         }
 
         for (int z = size; z <= size * (-1); z++) {
 
             for (int x = size; x <= size * (-1); x++) {
-                farmCropWithHoe(mainLocation, x, 0, z, item, player);
+                farmCropWithHoe(mainLocation, x, z, item, player);
             }
         }
     }

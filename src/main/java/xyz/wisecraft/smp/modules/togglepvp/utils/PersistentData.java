@@ -14,8 +14,8 @@ import java.util.UUID;
  * Class for handling persistent data.
  */
 public class PersistentData {
-	private final WisecraftSMP instance = WisecraftSMP.getInstance();
-	private final FileConfiguration config = instance.getConfig();
+	private final WisecraftSMP plugin = WisecraftSMP.getInstance();
+	private final FileConfiguration config = plugin.getConfig();
 	private final HashMap<UUID, Boolean> pvpPlayers = PVPStorage.getPVPPlayers();
 	private final File dir;
 
@@ -24,6 +24,7 @@ public class PersistentData {
 	 * @param file The file.
 	 */
 	public PersistentData(File file) {
+		//noinspection ResultOfMethodCallIgnored
 		file.mkdir();
 		this.dir = file;
 	}
@@ -42,7 +43,7 @@ public class PersistentData {
 				playerData.set("PvPState", config.getBoolean("SETTINGS.DEFAULT_PVP_OFF"));
 				playerData.save(file);
 			} catch (Exception e) {
-				e.printStackTrace();
+				plugin.getLogger().log(java.util.logging.Level.SEVERE, "Could not create player data file for " + p.getName() + "!", e);
 			}
 		}
 	}
@@ -58,7 +59,7 @@ public class PersistentData {
 			playerData.set("PvPState", pvpPlayers.get(p.getUniqueId()));
 			playerData.save(file);
 		} catch (Exception e) {
-			e.printStackTrace();
+			plugin.getLogger().log(java.util.logging.Level.SEVERE, "Could not save player data file for " + p.getName() + "!", e);
 		}
 	}
 

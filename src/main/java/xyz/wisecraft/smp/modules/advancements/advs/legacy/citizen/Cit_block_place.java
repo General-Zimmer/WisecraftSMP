@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public class Cit_block_place extends TaskAdvancement {
 
-  public static AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.legacy_NAMESPACE, "cit_block_place");
+  public static final AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.legacy_NAMESPACE, "cit_block_place");
 
 
   public Cit_block_place(AbstractMultiTasksAdvancement multitask) {

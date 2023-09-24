@@ -16,7 +16,7 @@ import java.util.List;
 
 public class Regenworlds extends BaseAdvancement implements VanillaVisibility {
 
-  public static AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.tutorial_quests_NAMESPACE, "regenworlds");
+  public static final AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.tutorial_quests_NAMESPACE, "regenworlds");
 
 
   public Regenworlds(Advancement parent, float x, float y) {

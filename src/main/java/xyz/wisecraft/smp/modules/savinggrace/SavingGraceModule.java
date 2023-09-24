@@ -1,14 +1,25 @@
 package xyz.wisecraft.smp.modules.savinggrace;
 
 import net.ess3.api.IEssentials;
+import org.bukkit.event.Listener;
+import org.jetbrains.annotations.NotNull;
+import xyz.wisecraft.smp.modulation.ModuleClass;
 import xyz.wisecraft.smp.modules.savinggrace.listeners.AngelListeners;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Module class for SavingGrace
  */
-public class SavingGraceModule implements xyz.wisecraft.smp.modulation.ModuleClass {
+@SuppressWarnings("unused")
+public class SavingGraceModule extends ModuleClass {
 
-    IEssentials ess = setupDependency("Essentials", IEssentials.class);
+    final IEssentials ess = setupDependency("Essentials", IEssentials.class);
+
+    public SavingGraceModule(long id) {
+        super(id);
+    }
 
     @Override
     public void onEnable() {
@@ -16,8 +27,10 @@ public class SavingGraceModule implements xyz.wisecraft.smp.modulation.ModuleCla
     }
 
     @Override
-    public void registerEvents() {
-        plugin.getServer().getPluginManager().registerEvents(new AngelListeners(ess), plugin);
+    public @NotNull Set<Listener> registerListeners() {
+        HashSet<Listener> listeners = new HashSet<>();
+        listeners.add(new AngelListeners(ess));
+        return listeners;
     }
 
 }

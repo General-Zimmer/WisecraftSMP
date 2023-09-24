@@ -1,169 +1,155 @@
 package xyz.wisecraft.smp.modulation;
 
-import org.bukkit.plugin.Plugin;
-import xyz.wisecraft.smp.WisecraftSMP;
+import lombok.Getter;
+import org.bukkit.event.HandlerList;
+import org.bukkit.scheduler.BukkitRunnable;
+import xyz.wisecraft.smp.modulation.enums.ModuleState;
+import xyz.wisecraft.smp.modulation.exceptions.MissingDependencyException;
+import xyz.wisecraft.smp.modulation.interfaces.Module;
+import xyz.wisecraft.smp.modulation.models.ModuleInfo;
 import xyz.wisecraft.smp.modulation.storage.ModulationStorage;
 import xyz.wisecraft.smp.modulation.storage.ModuleSettings;
 
-import java.util.ArrayList;
+import java.lang.reflect.InvocationTargetException;
+
+import static xyz.wisecraft.smp.modulation.UtilModuleCommon.*;
 
 /**
- * This interface is used to create modules.
+ * This class is used to create modules. All classes inhereting this class must end with "Module".
+ * <p>
+ *     Modulation was created to enable adding extensive features within one singular plugin and to divide and conquer
+ *     the code so different developers doesn't need to know or see every feature in the plugin and can focus on their own module.
+ *     This makes it easier to maintain the code and to add new features and helps new developers get into
+ *     this framework and old developers will not have a hard time getting into this since modules are intended to
+ *     seem like a standalone plugin.
+ * @see Module
+ * @see ModuleInfo
  */
-public interface ModuleClass extends Comparable<ModuleClass> {
+public abstract class ModuleClass implements Module {
+
 
     /**
-     * The plugin instance.
+     * -- GETTER --
+     * Gets the module state.
      */
-    WisecraftSMP plugin = WisecraftSMP.getInstance();
-
+    @Getter
+    private ModuleState moduleState = plugin.getModuleConfig().getBoolean(getSetting(this, ModuleSettings.ENABLED), false)
+            ? ModuleState.INITIAL : ModuleState.DISABLED;
     /**
-     * This method should have all the startup code for the module.
+     * The ID of the module. This is used to identify the module.
+     * <p>
+     *     Note: When the ID is -10, the module is in testing mode.
      */
-    void onEnable();
+    private final long ID;
+    @Getter
+    private ModuleInfo moduleInfo;
 
-    /**
-     * This method should have all the shutdown code for the module.
-     */
-    default void onDisable() {}
-
-    /**
-     * This method should register all the events for the module.
-     */
-    default void registerEvents() {}
-
-    /**
-     * This method should register all the commands for the module.
-     */
-    default void registerCommands() {}
-
-    /**
-     * Sets up a dependency. This method gets an Object extending Plugin type.
-     * @param pluginName The name of the dependency.
-     * @param clazz The class of the dependency.
-     * @return The dependency.
-     * @param <T> The type of the dependency.
-     */
-    default <T> T setupDependency(String pluginName, Class<T> clazz) {
-        T dependency = ModulationStorage.getDependency(pluginName, clazz);
-        if (dependency != null) return dependency;
-
-        return UtilModuleCommon.setupDependency(pluginName, clazz);
-    }
-
-    /**
-     * Sets up a dependency. This method only validates if the plugin is enabled.
-     * @param pluginName The name of the plugin.
-     * @return true if the plugin is enabled.
-     */
-    default boolean setupDependency(String pluginName) {
-        Plugin setupPlugin = plugin.getServer().getPluginManager().getPlugin(pluginName);
-        if (setupPlugin == null) {return false;}
-        return setupPlugin.isEnabled();
-    }
-
-    /**
-     * Sets up a dependency. This method gets the registered service provider by the plugin.
-     * @param clazz The class of the dependency.
-     * @return The dependency.
-     * @param <T> The type of the dependency.
-     */
-    default <T> T setupDependency(Class<T> clazz) {
-
-        T dependency = ModulationStorage.getDependency(clazz.getName(), clazz);
-        if (dependency != null) return dependency;
-
-        return UtilModuleCommon.setupDependency(clazz);
-    }
-
-    /**
-     * Checks if the module has all the hard dependencies. All dependencies needs to be setup in the constructor.
-     * @return true if the module has all the hard dependencies.
-     */
-    default boolean hasAllHardDependencies() {
-        return true;
-    }
-
-    /**
-     * Gets the module dependencies of other modules. This method should be overridden if the module has dependencies.
-     * @return The module dependencies.
-     */
-    @SuppressWarnings("UnnecessaryLocalVariable")
-    default ArrayList<Class<? extends ModuleClass>> getModuleDepends() {
-        ArrayList<Class<? extends ModuleClass>> depends = new ArrayList<>();
-        return depends;
-    }
-
-    /**
-     * Gets an instance of the module or null if it isn't loaded.
-     * @param clazz The class of the module.
-     * @return The module instance.
-     */
-    default ModuleClass getModule(Class<?> clazz) {
-        for (ModuleClass module : plugin.getModules()) {
-            if (module.getClass().equals(clazz))
-                return module;
+    public ModuleClass(long id) {
+        if (!this.getClass().getSimpleName().endsWith("Module")) {
+            throw new RuntimeException("Module class name must end with \"Module\"!");
         }
-        return null;
+        this.ID = id;
+    }
+
+    public ModuleClass() {
+        this.ID = -10;
+        if (!plugin.getIsTesting())
+            throw new RuntimeException("Module was initalized without an ID in production!");
+        moduleState = ModuleState.TESTING;
     }
 
     /**
-     * Gets the module ID. Will return -1 if the id does not exist.
-     * @return The module ID.
+     * Will register all necessary events and commands for the module's function to work.
+     * <p>
+     *     Note: This method should only be called in the initialization of the module.
+     * @return ModuleInfo if the module was enabled or null if it wasn't.
      */
-    default long getModuleID() {
-        return plugin.getModuleConfig().getLong(UtilModuleCommon.getSetting(this, ModuleSettings.ID), -1);
-    }
+    public boolean enableModule() {
 
-    /**
-     * Gets the module name. All ModuleClass implementations should be named as [name]Module.
-     * @return The module name.
-     */
-    default String getModuleName() {
-        return this.getClass().getSimpleName().split("Module")[0];
-    }
+        if (getModuleState() == ModuleState.DISABLED || getModuleState() == ModuleState.ENABLED)
+            throw new IllegalStateException(getErrorMessage());
+        if (!hasAllHardDependencies())
+            throw new MissingDependencyException("Module " + getModuleName() + " does not have all hard dependencies!");
 
-    /**
-     * Gets the module enabled status.
-     * @return The module enabled status.
-     */
-    default boolean isModuleDisabled() {
-        return !plugin.getModuleConfig().getBoolean(UtilModuleCommon.getSetting(this, ModuleSettings.ENABLED), false);
-    }
-
-    /**
-     * This method is called when the module is starting up.
-     * @return true if the module was enabled.
-     */
-    default boolean startModule() {
-
-
-        if (isModuleDisabled() || !hasAllHardDependencies()) return false;
-
-        onEnable();
-        registerEvents();
-        registerCommands();
+        onEnable(); // THIS BEFORE INFO. OTHERWISE DIS NO WORKIE!!!!!
+        this.moduleInfo = new ModuleInfo(getModuleName(), registerListeners(), registerCommands());
+        reenableModule();
         return true;
     }
 
+    // todo prevent disabling modules that are required by other modules.
     /**
-     * This method is called when the module is shutting down.
-     */
-    default void stopModule() {
-        onDisable();
-    }
-
-    /**
-     * Compares the module ID of this module to another module.
-     * @param module The module to compare to.
-     * @return 0 if they're equal, -1 if the other module is higher, and 1 if this method is higher.
+     * This method is called when the module is being disabled.
      */
     @Override
-    default int compareTo(ModuleClass module) {
-        return Long.compare(this.getModuleID(), module.getModuleID());
+    public void disableModule() {
+
+        if (getModuleState() == ModuleState.DISABLED) {
+            throw new IllegalStateException(getErrorMessage());
+        }
+        if (getModuleState() == ModuleState.INITIAL) {
+            throw new IllegalStateException(getErrorMessage());
+        }
+
+        onDisable();
+        moduleInfo.getListeners().forEach(HandlerList::unregisterAll);
+        moduleInfo.getCommands().forEach(UtilModuleCommon::unregisterBukkitCommand);
+        if (moduleState != ModuleState.SHUTDOWN)
+            moduleState = ModuleState.DISABLED;
+        refreshTabcompletion();
     }
 
-    default WisecraftSMP getPlugin() {
-        return plugin;
+    public void reenableModule() {
+        if (getModuleState() == ModuleState.ENABLED) {
+            throw new IllegalStateException(getErrorMessage());
+        }
+        moduleInfo.getCommands().forEach(UtilModuleCommon -> registerCommand(UtilModuleCommon, this.getModuleName()));
+        moduleInfo.getListeners().forEach(UtilModuleCommon::registerListener);
+        moduleState = ModuleState.ENABLED;
+        refreshTabcompletion();
     }
+
+    public void reloadModule() {
+        moduleState = ModuleState.SHUTDOWN;
+        disableModule();
+        moduleInfo = null;
+        Class<? extends ModuleClass> clazz = this.getClass();
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+
+                try {
+                    ModulationStorage.removeModule(clazz);
+                    ModuleClass module = clazz.getConstructor(Long.TYPE).newInstance(ID);
+                    module.enableModule();
+                    ModulationStorage.addModule(module);
+                } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
+                         NoSuchMethodException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }.runTaskAsynchronously(plugin);
+        refreshTabcompletion();
+    }
+
+    @Override
+    public long getModuleID() {
+        return ID;
+    }
+
+    private String getErrorMessage() {
+        if (getModuleState() == ModuleState.INITIAL)
+            return "Module " + getModuleName() + " have not been initialized!";
+        else
+            return "Module " + getModuleName() + " is already " + moduleState + "!";
+    }
+
+    public boolean isErrorMessage(String message, ModuleState moduleState) {
+        if (moduleState == ModuleState.INITIAL)
+            return ("Module " + getModuleName() + " have not been initialized!").equalsIgnoreCase(message);
+        else
+            return ("Module " + getModuleName() + " is already " + moduleState + "!").equalsIgnoreCase(message);
+    }
+
+
 }

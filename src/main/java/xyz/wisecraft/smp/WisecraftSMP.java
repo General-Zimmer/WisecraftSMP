@@ -1,13 +1,19 @@
 package xyz.wisecraft.smp;
 
 import com.fren_gor.ultimateAdvancementAPI.AdvancementMain;
+import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.reflections.Reflections;
-import xyz.wisecraft.smp.modulation.ModuleClass;
+import xyz.wisecraft.smp.modulation.interfaces.Module;
 import xyz.wisecraft.smp.modulation.UtilModuleCommon;
+import xyz.wisecraft.smp.modulation.cmd.ManageModules;
+import xyz.wisecraft.smp.modulation.enums.ModuleState;
+import xyz.wisecraft.smp.modulation.exceptions.MissingDependencyException;
+import xyz.wisecraft.smp.modulation.ModuleClass;
+import xyz.wisecraft.smp.modulation.storage.ModulationStorage;
 import xyz.wisecraft.smp.modulation.storage.ModuleSettings;
 import xyz.wisecraft.smp.storage.OtherStorage;
 
@@ -16,7 +22,9 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Set;
+import java.util.logging.Level;
 
+import static xyz.wisecraft.smp.modulation.UtilModuleCommon.*;
 import static xyz.wisecraft.smp.util.UtilRandom.setupModulesFromConfig;
 
 /**
@@ -24,12 +32,14 @@ import static xyz.wisecraft.smp.util.UtilRandom.setupModulesFromConfig;
  */
 public class WisecraftSMP extends JavaPlugin {
 
+    @Getter
     private static WisecraftSMP instance;
+    @Getter
     private AdvancementMain advapi;
+    @Getter
     private FileConfiguration moduleConfig;
-
-    private final ArrayList<ModuleClass> modules = new ArrayList<>();
-
+    @Getter
+    private final Boolean isTesting;
     /**
      * Production Constructor for WisecraftSMP
      */
@@ -45,9 +55,6 @@ public class WisecraftSMP extends JavaPlugin {
         instance = this;
     }
 
-    private final Boolean isTesting;
-
-
     @Override
     public void onLoad() {
         if (isTesting) return;
@@ -56,57 +63,62 @@ public class WisecraftSMP extends JavaPlugin {
     }
     @Override
     public void onEnable() {
+        if (getIsTesting()) return; // Prevents the plugin from loading if it's in testing mode
 
-        // todo implement a way for config variables to only be added if they're enabled. Don't remove config variables
-        //  ever. The check will use bit addition.
 
+        registerCommand(new ManageModules(ManageModules.class.getSimpleName().toLowerCase()), "WisecraftSMP");
+
+        // Fetching modules classes
+        Reflections reflections = new Reflections("xyz.wisecraft.smp.modules");
+        Set<Class<? extends ModuleClass>> moduleClazzes = reflections.getSubTypesOf(ModuleClass.class);
 
         // Config stuff
+
         this.saveDefaultConfig();
 
-        File moduleConfigFile = new File(this.getDataFolder().toString(), "modules.yml");
-        moduleConfig = createModuleConfig(this, moduleConfigFile);
         OtherStorage.setServer_name(this.getConfig().getString("server_name"));
 
+        // Module config stuff
+        File moduleConfigFile = new File(this.getDataFolder().toString(), "modules.yml");
+        moduleConfig = createModuleConfig(this, moduleConfigFile);
         boolean isModulesEnabledByDefault = moduleConfig.getBoolean("IsModulesEnabledByDefault", false);
-
-        // Fetching modules
-        Reflections reflections = new Reflections("xyz.wisecraft.smp.modules");
-
-        // Initialize modules
-        ArrayList<ModuleClass> unsortedModules = setupModules(reflections.getSubTypesOf(ModuleClass.class));
-
-        // setup modules
-        ArrayList<ModuleClass> sortedModules = UtilModuleCommon.sortDependTrimmed(unsortedModules);
-        setupModulesFromConfig(moduleConfig, sortedModules, isModulesEnabledByDefault, getModulePath()); // todo prevent comments from being removed
-
-
-        // Start/load modules
-        for (int i = sortedModules.size(); i > 0; i--) {
-            ModuleClass module = sortedModules.get(i-1);
-
-            if (module.startModule())
-                modules.add(module);
-        }
-
+        setupModulesFromConfig(moduleConfig, moduleClazzes, isModulesEnabledByDefault, getModulePath()); // todo prevent comments from being removed
+        // Save config
         try {
             moduleConfig.save(moduleConfigFile);
         } catch (IOException e) {
             this.getLogger().log(java.util.logging.Level.SEVERE, "Could not save config to " + moduleConfigFile, e);
         }
+
+        // Initialize modules
+        ArrayList<ModuleClass> unsortedModules = setupModules(moduleClazzes);
+
+        // setup modules
+        ArrayList<ModuleClass> sortedModules = sortDependTrimmed(unsortedModules);
+
+        // Start/load modules
+        sortedModules.forEach(module -> {
+            try {
+                if (module.enableModule())
+                    ModulationStorage.addModule(module);
+            } catch (MissingDependencyException | IllegalStateException e) {
+                if (module.isErrorMessage(e.getMessage(), ModuleState.DISABLED)) {
+                    this.getLogger().log(Level.INFO, module.getModuleName() + " was not enabled");
+                } else {
+                    this.getLogger().log(java.util.logging.Level.SEVERE, "Could not enable module " + module.getClass().getName(), e);
+                }
+            }
+        });
+
+
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
         // Me: We don't do that here
-
-        for (ModuleClass module : this.modules)
-            module.stopModule();
-
+        ModulationStorage.getModules().forEach(Module::disableModule);
     }
-
-
 
     private ArrayList<ModuleClass> setupModules(Set<Class<? extends ModuleClass>> moduleClazzes) {
 
@@ -114,7 +126,7 @@ public class WisecraftSMP extends JavaPlugin {
 
         for (Class<? extends ModuleClass> moduleClass : moduleClazzes) {
             try {
-                ModuleClass module = moduleClass.getConstructor().newInstance();
+                ModuleClass module = moduleClass.getConstructor(Long.TYPE).newInstance(moduleConfig.getLong(UtilModuleCommon.getSetting(getModuleName(moduleClass), ModuleSettings.ID), -1));
 
                 modules.add(module); // This is on a seperate line so it's easier to debug and
                 // to make sure it's not added to the array in case of failure
@@ -122,17 +134,12 @@ public class WisecraftSMP extends JavaPlugin {
                      IllegalAccessException |
                      NoSuchMethodException |
                      InvocationTargetException e) {
-                this.getLogger().log(java.util.logging.Level.SEVERE, "Could not instantiate module " + moduleClass.getName(), e);
+                this.getLogger().log(java.util.logging.Level.SEVERE, "Could not instantiate module " + moduleClass.getSimpleName(), e);
             }
         }
         return modules;
     }
 
-
-
-    public FileConfiguration getModuleConfig() {
-        return this.moduleConfig;
-    }
 
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public static FileConfiguration createModuleConfig(Plugin plugin, File moduleConfigFile) {
@@ -143,10 +150,6 @@ public class WisecraftSMP extends JavaPlugin {
         return YamlConfiguration.loadConfiguration(moduleConfigFile);
     }
 
-    public AdvancementMain getAdv() {
-        return advapi;
-    }
-
     /**
      * Returns the module path for config.
      * @return module path for config.
@@ -155,19 +158,4 @@ public class WisecraftSMP extends JavaPlugin {
         return ModuleSettings.PATH.toString();
     }
 
-    /**
-     * Returns the WisecraftSMP instance.
-     * @return WisecraftSMP instance.
-     */
-    public static WisecraftSMP getInstance() {
-        return instance;
-    }
-
-    public Boolean getIsTesting() {
-        return isTesting;
-    }
-
-    public ArrayList<ModuleClass> getModules() {
-        return new ArrayList<>(modules);
-    }
 }

@@ -26,10 +26,10 @@ public class Roles extends BukkitRunnable {
 
     /**
      * Constructor
-     * @param plugin The plugin
-     * @param infom The infom
+     * @param plugin  The plugin
+     * @param infom   The infom
      * @param players The players
-     * @param luck The luck
+     * @param luck    The luck
      */
     public Roles(WisecraftSMP plugin, ConcurrentHashMap<UUID, Infop> infom, ArrayList<Player> players, LuckPerms luck) {
         this.players = players;

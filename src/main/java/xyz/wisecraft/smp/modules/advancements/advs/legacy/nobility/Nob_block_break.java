@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public class Nob_block_break extends TaskAdvancement {
 
-  public static AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.legacy_NAMESPACE, "nob_block_break");
+  public static final AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.legacy_NAMESPACE, "nob_block_break");
 
 
   public Nob_block_break(AbstractMultiTasksAdvancement multitask) {

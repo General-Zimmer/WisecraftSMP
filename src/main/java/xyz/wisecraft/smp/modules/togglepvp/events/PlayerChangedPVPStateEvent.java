@@ -29,5 +29,6 @@ public class PlayerChangedPVPStateEvent extends PlayerEvent implements Cancellab
         return handlers;
     }
 
+    @SuppressWarnings("unused")
     public static HandlerList getHandlerList() {return handlers;}
 }

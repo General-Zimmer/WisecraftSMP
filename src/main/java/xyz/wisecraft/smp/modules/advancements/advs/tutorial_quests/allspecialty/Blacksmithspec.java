@@ -15,7 +15,7 @@ import static xyz.wisecraft.smp.modules.advancements.util.UtilAdv.grantFirstSpec
 
 public class Blacksmithspec extends TaskAdvancement {
 
-  public static AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.tutorial_quests_NAMESPACE, "blacksmithspec");
+  public static final AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.tutorial_quests_NAMESPACE, "blacksmithspec");
 
 
   public Blacksmithspec(AbstractMultiTasksAdvancement multitask) {

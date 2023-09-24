@@ -1,5 +1,6 @@
 package xyz.wisecraft.smp.modules.togglepvp.storage;
 
+import lombok.Getter;
 import xyz.wisecraft.smp.modules.togglepvp.utils.PersistentData;
 
 import java.util.Date;
@@ -13,12 +14,30 @@ import java.util.UUID;
 public abstract class PVPStorage {
 
 
+    /**
+     * -- GETTER --
+     *  Get the blocked worlds
+     */
+    @Getter
     private static List<String> blockedWorlds;
     /**
      * False is pvp on. True is pvp off
+     * -- GETTER --
+     *  Get the PVPPlayers
      */
+    @Getter
     private static final HashMap<UUID,Boolean> PVPPlayers = new HashMap<>();
+    /**
+     * -- GETTER --
+     *  Get the cooldowns
+     */
+    @Getter
     private static final HashMap<UUID, Date> cooldowns = new HashMap<>();
+    /**
+     * -- GETTER --
+     *  Get the PVPDataUtils
+     */
+    @Getter
     private static PersistentData PVPDataUtils;
 
 
@@ -36,38 +55,6 @@ public abstract class PVPStorage {
      */
     public static void setBlockedWorlds(List<String> blockedWorlds) {
         PVPStorage.blockedWorlds = blockedWorlds;
-    }
-
-    /**
-     * Get the blocked worlds
-     * @return List of blocked worlds
-     */
-    public static List<String> getBlockedWorlds() {
-        return blockedWorlds;
-    }
-
-    /**
-     * Get the PVPPlayers
-     * @return HashMap of PVPPlayers
-     */
-    public static HashMap<UUID, Boolean> getPVPPlayers() {
-        return PVPPlayers;
-    }
-
-    /**
-     * Get the cooldowns
-     * @return HashMap of cooldowns
-     */
-    public static HashMap<UUID, Date> getCooldowns() {
-        return cooldowns;
-    }
-
-    /**
-     * Get the PVPDataUtils
-     * @return PersistentData
-     */
-    public static PersistentData getPVPDataUtils() {
-        return PVPDataUtils;
     }
 
 }

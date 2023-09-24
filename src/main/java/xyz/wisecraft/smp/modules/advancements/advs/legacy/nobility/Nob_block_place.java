@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public class Nob_block_place extends TaskAdvancement {
 
-  public static AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.legacy_NAMESPACE, "nob_block_place");
+  public static final AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.legacy_NAMESPACE, "nob_block_place");
 
 
   public Nob_block_place(AbstractMultiTasksAdvancement multitask) {

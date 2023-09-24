@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public class Nob_time extends TaskAdvancement {
 
-  public static AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.legacy_NAMESPACE, "nob_time");
+  public static final AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.legacy_NAMESPACE, "nob_time");
 
 
   public Nob_time(AbstractMultiTasksAdvancement multitask) {

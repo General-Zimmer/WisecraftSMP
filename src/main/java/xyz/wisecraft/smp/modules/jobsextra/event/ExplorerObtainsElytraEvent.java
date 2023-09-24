@@ -18,6 +18,7 @@ public class ExplorerObtainsElytraEvent extends PlayerEvent implements Cancellab
         return handlers;
     }
 
+    @SuppressWarnings("unused")
     public static HandlerList getHandlerList() {return handlers;}
     @Override
     public boolean isCancelled() {

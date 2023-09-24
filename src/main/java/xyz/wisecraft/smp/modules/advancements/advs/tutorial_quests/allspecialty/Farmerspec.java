@@ -11,7 +11,7 @@ import static xyz.wisecraft.smp.modules.advancements.util.UtilAdv.grantFirstSpec
 
 public class Farmerspec extends TaskAdvancement {
 
-  public static AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.tutorial_quests_NAMESPACE, "farmerspec");
+  public static final AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.tutorial_quests_NAMESPACE, "farmerspec");
 
 
   public Farmerspec(AbstractMultiTasksAdvancement multitask) {

@@ -12,7 +12,7 @@ import xyz.wisecraft.smp.modules.togglepvp.events.PlayerChangedPVPStateEvent;
 
 public class Trypvp extends BaseAdvancement  {
 
-  public static AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.tutorial_quests_NAMESPACE, "trypvp");
+  public static final AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.tutorial_quests_NAMESPACE, "trypvp");
 
 
   public Trypvp(Advancement parent, float x, float y) {

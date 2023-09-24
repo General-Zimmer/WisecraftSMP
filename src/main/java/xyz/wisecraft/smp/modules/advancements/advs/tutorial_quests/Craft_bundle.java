@@ -14,7 +14,7 @@ import static xyz.wisecraft.smp.modules.advancements.util.UtilAdv.IsCraftedItem;
 
 public class Craft_bundle extends BaseAdvancement implements VanillaVisibility {
 
-  public static AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.tutorial_quests_NAMESPACE, "craft_bundle");
+  public static final AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.tutorial_quests_NAMESPACE, "craft_bundle");
 
 
   public Craft_bundle(Advancement parent, float x, float y) {

@@ -12,7 +12,7 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
 
 public class Gettingjob extends BaseAdvancement  {
 
-  public static AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.tutorial_quests_NAMESPACE, "gettingjob");
+  public static final AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.tutorial_quests_NAMESPACE, "gettingjob");
 
 
   public Gettingjob(Advancement parent, float x, float y) {

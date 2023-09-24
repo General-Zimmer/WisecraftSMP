@@ -1,22 +1,28 @@
 package xyz.wisecraft.smp.modules.cropharvester;
 
+import lombok.Getter;
 import org.bukkit.Material;
+import org.bukkit.event.Listener;
+import org.jetbrains.annotations.NotNull;
+import xyz.wisecraft.smp.modulation.ModuleClass;
 import xyz.wisecraft.smp.modules.cropharvester.listener.CropTrampleListener;
 import xyz.wisecraft.smp.modules.cropharvester.listener.HarvestListener;
 import xyz.wisecraft.smp.storage.OtherStorage;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * CropHarvesterModule
  */
-public class CropHarvesterModule implements xyz.wisecraft.smp.modulation.ModuleClass {
+public class CropHarvesterModule extends ModuleClass {
     private final boolean isGriefpreventionEnabled = setupDependency("GriefPrevention");
     private final boolean isWorldGuardEnabled = setupDependency("WorldGuard");
     private final boolean isTownyEnabled = setupDependency("Towny");
+    @Getter
     static CropHarvesterModule instance;
 
-    public CropHarvesterModule() {
+    public CropHarvesterModule(long ID) {
+        super(ID);
         instance = this;
     }
 
@@ -34,16 +40,14 @@ public class CropHarvesterModule implements xyz.wisecraft.smp.modulation.ModuleC
     }
 
     @Override
-    public void registerEvents() {
-        plugin.getServer().getPluginManager().registerEvents(new HarvestListener(), plugin);
+    public @NotNull Set<Listener> registerListeners() {
+        HashSet<Listener> listeners = new HashSet<>();
+        listeners.add(new HarvestListener());
 
         if (plugin.getConfig().getBoolean("SETTINGS.ANTI_TRAMPLE_CROPS", false)) {
-            plugin.getServer().getPluginManager().registerEvents(new CropTrampleListener(), plugin);
+            listeners.add(new CropTrampleListener());
         }
-    }
-
-    public static CropHarvesterModule getInstance() {
-        return instance;
+        return listeners;
     }
 
     public boolean isGriefpreventionEnabled() {

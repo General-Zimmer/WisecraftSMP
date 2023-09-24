@@ -36,6 +36,13 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
+                    <annotationProcessorPaths>
+                        <annotationProcessorPath>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>1.18.30</version>
+                        </annotationProcessorPath>
+                    </annotationProcessorPaths>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                 </configuration>
@@ -137,7 +144,7 @@
                         <goals>
                             <goal>deploy</goal>
                         </goals>
-                        <configuration><skip>true</skip></configuration>
+                        <configuration><skip>true</skip></configuration> <!-- skip default deploy to prevent double deploy -->
                     </execution>
                 </executions>
             </plugin>
@@ -199,6 +206,12 @@
     </repositories>
 
     <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.30</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>

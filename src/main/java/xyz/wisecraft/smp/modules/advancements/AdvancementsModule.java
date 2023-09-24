@@ -8,10 +8,14 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDispla
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
 import com.fren_gor.ultimateAdvancementAPI.util.AdvancementKey;
 import com.fren_gor.ultimateAdvancementAPI.util.CoordAdapter;
+import lombok.Getter;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Material;
+import org.bukkit.command.defaults.BukkitCommand;
+import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.core.WisecraftCoreApi;
+import xyz.wisecraft.smp.modulation.ModuleClass;
 import xyz.wisecraft.smp.modules.advancements.advs.AdvancementTabNamespaces;
 import xyz.wisecraft.smp.modules.advancements.advs.common_quests.*;
 import xyz.wisecraft.smp.modules.advancements.advs.common_quests.maxjob2.*;
@@ -27,6 +31,7 @@ import xyz.wisecraft.smp.modules.advancements.advs.legacy.nobility.Nob_block_pla
 import xyz.wisecraft.smp.modules.advancements.advs.legacy.nobility.Nob_time;
 import xyz.wisecraft.smp.modules.advancements.advs.tutorial_quests.*;
 import xyz.wisecraft.smp.modules.advancements.advs.tutorial_quests.allspecialty.*;
+import xyz.wisecraft.smp.modules.advancements.cmd.AdvCMD;
 import xyz.wisecraft.smp.modules.advancements.listeners.LegacyRoles;
 import xyz.wisecraft.smp.modules.advancements.listeners.TimberListeners;
 import xyz.wisecraft.smp.modules.advancements.threads.GibRoles;
@@ -34,46 +39,38 @@ import xyz.wisecraft.smp.storage.OtherStorage;
 
 import java.io.File;
 import java.util.HashSet;
-import java.util.Objects;
+import java.util.Set;
 
 /**
  * This class is the module class for the Advancements module.
  */
-public class AdvancementsModule implements xyz.wisecraft.smp.modulation.ModuleClass {
+@SuppressWarnings("unused")
+public class AdvancementsModule extends ModuleClass {
 
-    private static AdvancementsModule module = null;
+    @Getter
+    private static AdvancementsModule module;
     private UltimateAdvancementAPI api;
     private AdvancementTab tutorial_quests;
     private AdvancementTab common_quests;
     private AdvancementTab legacy;
     private final boolean isTimberEnabled = setupDependency("UltimateTimber");
+    @Getter
     private final LuckPerms luck = setupDependency(LuckPerms.class);
+    @Getter
     private final WisecraftCoreApi core = setupDependency(WisecraftCoreApi.class);
     private final boolean isVeinMinerEnabled = setupDependency("VeinMiner");
     private final boolean isJobsEnabled = setupDependency("Jobs");
     private final boolean isTownyEnabled = setupDependency("Towny");
 
-
-    public AdvancementsModule() {
+    public AdvancementsModule(long id) {
+        super(id);
         module = this;
-    }
-
-    @Override
-    public boolean startModule() {
-
-
-        if (isModuleDisabled() || !hasAllHardDependencies() || plugin.getIsTesting()) return false;
-
-        onEnable();
-        registerEvents();
-        registerCommands();
-        return true;
     }
 
     @Override
     public void onEnable() {
 
-        plugin.getAdv().enableSQLite(new File(plugin.getServer().getWorldContainer().getAbsolutePath() + "/world", "advancements.db"));
+        plugin.getAdvapi().enableSQLite(new File(plugin.getServer().getWorldContainer().getAbsolutePath() + "/world", "advancements.db"));
         api = UltimateAdvancementAPI.getInstance(plugin);
         initializeTabs();
 
@@ -87,34 +84,38 @@ public class AdvancementsModule implements xyz.wisecraft.smp.modulation.ModuleCl
     }
 
     @Override
-    public void registerEvents() {
+    public @NotNull Set<Listener> registerListeners() {
+        HashSet<Listener> listeners = new HashSet<>();
         if (isTimberEnabled && core != null)
-            plugin.getServer().getPluginManager().registerEvents(new TimberListeners(core), plugin);
+            listeners.add(new TimberListeners(core));
 
 
-        if (luck == null)
-            return;
+
+        if (luck == null) return listeners;
 
         // Check for new citizens. This is async right after this step.
         String servName = OtherStorage.getServer_name();
         if (servName.equalsIgnoreCase("l-gp1")  || servName.equalsIgnoreCase("legacy")) {
             new GibRoles(core, luck).runTaskTimer(plugin, 20*60*10, 20*60*10);
-            plugin.getServer().getPluginManager().registerEvents(new LegacyRoles(), plugin);
+            listeners.add(new LegacyRoles());
             legacy.automaticallyShowToPlayers();
             legacy.automaticallyGrantRootAdvancement();
         }
 
+        return listeners;
     }
 
     @Override
     public void onDisable() {
-        plugin.getAdv().disable();
+        plugin.getAdvapi().disable();
     }
 
     @Override
-    public void registerCommands() {
-        Objects.requireNonNull(plugin.getCommand("autoroles"), "command autoroles isn't registered").setExecutor(new Command(core, luck));
+    public @NotNull Set<BukkitCommand> registerCommands() {
+        HashSet<BukkitCommand> commands = new HashSet<>(1);
+        commands.add(new AdvCMD(core, luck));
 
+        return commands;
     }
 
     public void initializeTabs() {
@@ -271,21 +272,13 @@ public class AdvancementsModule implements xyz.wisecraft.smp.modulation.ModuleCl
     }
 
 
-
-    public static AdvancementsModule getModule() {
-        return module;
+    @Override
+    public boolean hasAllHardDependencies() {
+        return !plugin.getIsTesting();
     }
 
     public boolean isTimberEnabled() {
         return isTimberEnabled;
-    }
-
-    public LuckPerms getLuck() {
-        return luck;
-    }
-
-    public WisecraftCoreApi getCore() {
-        return core;
     }
 
     public boolean isVeinMinerEnabled() {

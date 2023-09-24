@@ -13,7 +13,7 @@ import static xyz.wisecraft.smp.modules.advancements.util.UtilAdv.isJobMaxed;
 
 public class Maxjob extends BaseAdvancement  {
 
-  public static AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.common_quests_NAMESPACE, "maxjob");
+  public static final AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.common_quests_NAMESPACE, "maxjob");
 
 
   public Maxjob(Advancement parent, float x, float y) {

@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public class Cit_time extends TaskAdvancement {
 
-  public static AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.legacy_NAMESPACE, "cit_time");
+  public static final AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.legacy_NAMESPACE, "cit_time");
 
 
   public Cit_time(AbstractMultiTasksAdvancement multitask) {

@@ -10,7 +10,7 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
 
 public class Allspecialty extends MultiTasksAdvancement  {
 
-  public static AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.tutorial_quests_NAMESPACE, "allspecialty");
+  public static final AdvancementKey KEY = new AdvancementKey(AdvancementTabNamespaces.tutorial_quests_NAMESPACE, "allspecialty");
 
 
   public Allspecialty(Advancement parent, float x, float y) {

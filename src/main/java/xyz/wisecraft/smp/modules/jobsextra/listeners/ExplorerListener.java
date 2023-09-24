@@ -29,9 +29,9 @@ public class ExplorerListener implements Listener {
     private final Job explorer;
 
     public ExplorerListener(JobsExtrasModule module) {
-        int defaultLevel = module.getPlugin().getConfig().getInt("JOBS_SETTINGS.DEFAULT_ABILITY_LEVEL");
+        int defaultLevel = module.plugin.getConfig().getInt("JOBS_SETTINGS.DEFAULT_ABILITY_LEVEL");
         this.explorer = module.getSpecificJob("Explorer");
-        jobLevels.put(explorer, module.getPlugin().getConfig().getInt("JOBS_SETTINGS.EXPLORER_ABILITY_LEVEL", defaultLevel));
+        jobLevels.put(explorer, module.plugin.getConfig().getInt("JOBS_SETTINGS.EXPLORER_ABILITY_LEVEL", defaultLevel));
     }
 
     @EventHandler

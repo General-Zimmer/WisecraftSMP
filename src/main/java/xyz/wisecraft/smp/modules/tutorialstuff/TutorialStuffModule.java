@@ -1,34 +1,48 @@
 package xyz.wisecraft.smp.modules.tutorialstuff;
 
 import net.ess3.api.IEssentials;
+import org.bukkit.command.defaults.BukkitCommand;
+import org.bukkit.event.Listener;
+import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.core.WisecraftCoreApi;
+import xyz.wisecraft.smp.modulation.ModuleClass;
+import xyz.wisecraft.smp.modules.tutorialstuff.cmd.WisecraftCMD;
 import xyz.wisecraft.smp.modules.tutorialstuff.listeners.ExtraListener;
 
-import java.util.Objects;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * This class is used to create modules.
  */
-public class TutorialStuffModule implements xyz.wisecraft.smp.modulation.ModuleClass {
+@SuppressWarnings("unused")
+public class TutorialStuffModule extends ModuleClass {
 
-    IEssentials ess = setupDependency("Essentials", IEssentials.class);
-    WisecraftCoreApi core = setupDependency(WisecraftCoreApi.class);
-    boolean isMultiverseEnabled = setupDependency("Multiverse-Core");
+    final IEssentials ess = setupDependency("Essentials", IEssentials.class);
+    final WisecraftCoreApi core = setupDependency(WisecraftCoreApi.class);
+    final boolean isMultiverseEnabled = setupDependency("Multiverse-Core");
+
+    public TutorialStuffModule(long id) {
+        super(id);
+    }
+
     @Override
     public void onEnable() {
 
     }
 
     @Override
-    public void registerEvents() {
-        plugin.getServer().getPluginManager().registerEvents(new ExtraListener(isMultiverseEnabled), plugin);
+    public @NotNull Set<Listener> registerListeners() {
+        HashSet<Listener> listeners = new HashSet<>();
+        listeners.add(new ExtraListener(isMultiverseEnabled));
+        return listeners;
     }
 
     @Override
-    public void registerCommands() {
-        WisecraftCMD wiseCMD = new WisecraftCMD(core, ess, isMultiverseEnabled);
-        Objects.requireNonNull(plugin.getCommand("wisecraft"), "command isn't registered").setExecutor(wiseCMD);
-        Objects.requireNonNull(plugin.getCommand("wshop"), "command isn't registered").setExecutor(wiseCMD);
+    public @NotNull Set<BukkitCommand> registerCommands() {
+        HashSet<BukkitCommand> commands = new HashSet<>();
+        commands.add(new WisecraftCMD("wisecraft", core, ess, isMultiverseEnabled));
+        return commands;
     }
 
 }
