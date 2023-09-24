@@ -42,7 +42,7 @@ public abstract class UtilPlayers {
 
 
 	/**
-	 * Set the state of the player.
+	 * Set the state of the player used directly from the plugin.
 	 * @param uuid The UUID of the player to set
 	 * @param state The state to set the player to
 	 */
@@ -51,7 +51,7 @@ public abstract class UtilPlayers {
 	}
 
 	/**
-	 * Set the PVP state of the player.
+	 * Set the PVP state of the player from player commands.
 	 * @param player The player to check
 	 * @param state The state to set the player to
 	 * @param caller The command sender that called the method
