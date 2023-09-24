@@ -14,6 +14,8 @@ permission:
     default: op
   Wisecraftadv.manage:
     default: op
+  wisecraftsmp.admin:
+    default: op
   pvptoggle.allow:
     description: allows player to change pvp state
     default: true

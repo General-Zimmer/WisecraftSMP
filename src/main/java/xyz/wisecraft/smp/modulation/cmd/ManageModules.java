@@ -17,7 +17,7 @@ public class ManageModules extends BukkitCommand {
         super(name);
         setDescription("It does something veri useful");
         setLabel("WEEEEEEEEEEEEEEEE");
-        setPermission("wisecraft.admin");
+        setPermission("wisecraftsmp.admin");
         setPermissionMessage("No, bad person!");
         setUsage("You test ze code");
     }
@@ -25,7 +25,12 @@ public class ManageModules extends BukkitCommand {
     @Override
     public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
 
-        if (!commandLabel.equalsIgnoreCase(this.getName())) return false;
+        if (args.length < 2) {
+            sender.sendMessage("This command is used to manage modules. Use /managemodules <enable | disable | reload> <module>");
+            return true;
+        }
+
+
 
         if (args.length == 2) {
             Set<ModuleClass> modules = ModulationStorage.getModules();
@@ -70,8 +75,8 @@ public class ManageModules extends BukkitCommand {
     public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, @NotNull String[] args) throws IllegalArgumentException {
         Set<ModuleClass> modules = ModulationStorage.getModules();
         List<String> names = new ArrayList<>();
-
         if (args.length == 2) {
+            modules.removeIf(module -> !module.getModuleName().toLowerCase().startsWith(args[1].toLowerCase()));
             for (Module module : modules) {
                 names.add(module.getModuleName());
             }
