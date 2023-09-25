@@ -11,6 +11,7 @@ import xyz.wisecraft.smp.modulation.storage.ModulationStorage;
 import xyz.wisecraft.smp.modulation.storage.ModuleSettings;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 
 import static xyz.wisecraft.smp.modulation.UtilModuleCommon.*;
 
@@ -43,6 +44,9 @@ public abstract class ModuleClass implements Module {
     private final long ID;
     @Getter
     private ModuleInfo moduleInfo;
+
+    @Getter
+    private final HashMap<String, Object> collections = new HashMap<>();
 
     public ModuleClass(long id) {
         if (!this.getClass().getSimpleName().endsWith("Module")) {
