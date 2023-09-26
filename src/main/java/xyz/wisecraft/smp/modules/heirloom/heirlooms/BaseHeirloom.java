@@ -52,7 +52,7 @@ public abstract class BaseHeirloom {
         itemMeta.getPersistentDataContainer().set(BaseHeirloom.getHeirloomLVLKey(), PersistentDataType.INTEGER, 0);
         itemMeta.getPersistentDataContainer().set(BaseHeirloom.getHeirloomIDKey(), PersistentDataType.STRING, uuid.toString());
         item.setItemMeta(itemMeta);
-        HeirloomStorage.addHeirloom(uuid, clazz.getConstructor(Integer.class, Float.class, Date.class, UUID.class, UUID.class).newInstance(0, 0F, new Date(), uuid, playerID));
+        HeirloomStorage.addHeirloom(uuid, clazz.getConstructor(Integer.TYPE, Float.TYPE, Date.class, UUID.class, UUID.class).newInstance(0, 0F, new Date(), uuid, playerID));
     }
 
     /**

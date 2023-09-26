@@ -6,10 +6,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.modules.heirloom.heirlooms.BaseHeirloom;
+import xyz.wisecraft.smp.modules.heirloom.heirlooms.BowHeirloom;
 import xyz.wisecraft.smp.modules.heirloom.heirlooms.HeirloomType;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static xyz.wisecraft.smp.modulation.ModuleClass.plugin;
 
 public class CmdSetup extends BukkitCommand {
 
@@ -30,7 +34,14 @@ public class CmdSetup extends BukkitCommand {
         if (commandLabel.equalsIgnoreCase(this.getName())) {
             if(sender instanceof Player p) {
                 ItemStack item = p.getInventory().getItemInMainHand();
-                BaseHeirloom.createHeirLoom(item, HeirloomType.BOWHEIRLOOM);
+                try {
+                    BaseHeirloom.createHeirLoom(item, HeirloomType.BOWHEIRLOOM, BowHeirloom.class, ((Player) sender).getUniqueId());
+                } catch (NoSuchMethodException  |
+                         InstantiationException |
+                         InvocationTargetException |
+                        IllegalAccessException e) {
+                    plugin.getLogger().log(java.util.logging.Level.SEVERE, "Heirloom creation failed", e);
+                }
                 return true;
             }
         }

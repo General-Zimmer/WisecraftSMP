@@ -47,7 +47,7 @@ public abstract class UtilRandom {
     public static void createBowHeirLoom(Player player) {
         ItemStack heirloomBow = checkMainHandForBow(player);
         if (heirloomBow != null) {
-            BaseHeirloom.createHeirLoom(heirloomBow, HeirloomType.BOWHEIRLOOM);
+            // BaseHeirloom.createHeirLoom(heirloomBow, HeirloomType.BOWHEIRLOOM);
         }
     }
 }
