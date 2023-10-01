@@ -4,10 +4,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import xyz.wisecraft.smp.modules.jobsextra.storage.JobsStorage;
 import xyz.wisecraft.smp.util.UtilCommon;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class RemoveOldElytraDrops extends BukkitRunnable {
     @Override
@@ -15,11 +12,13 @@ public class RemoveOldElytraDrops extends BukkitRunnable {
         HashMap<UUID, Date> elytraDrops = JobsStorage.getElytraDrop();
 
 
-        for (Map.Entry<UUID, Date> entry : elytraDrops.entrySet()) {
-            UUID uuid = entry.getKey();
+        int timeToKeep = 60 * 60 * 2;
+        Iterator<Map.Entry<UUID, Date>> ite = elytraDrops.entrySet().iterator();
+        while (ite.hasNext()) {
+            Map.Entry<UUID, Date> entry = ite.next();
             Date dropDate = entry.getValue();
-            if (UtilCommon.calcCurrentSeconds(dropDate) < 60 * 5) {
-                elytraDrops.remove(uuid);
+            if (UtilCommon.calcCurrentSeconds(dropDate) > timeToKeep) {
+                ite.remove();
             }
         }
 

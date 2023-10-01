@@ -87,18 +87,19 @@ public class ExplorerListener implements Listener {
     @EventHandler
     public void onElytraCraft(CraftItemEvent e) {
         Player p = e.getInventory().getHolder() instanceof Player ? (Player) e.getInventory().getHolder() : null;
+        Material craftType = e.getRecipe().getResult().getType();
 
-        if (p == null) return;
+        if (p == null || !craftType.equals(Material.ELYTRA)) return;
 
         JobsPlayer pJobs = Jobs.getPlayerManager().getJobsPlayer(p);
-        Material craftType = e.getRecipe().getResult().getType();
+
         boolean isInJob = pJobs.isInJob(explorer);
 
-        if (craftType.equals(Material.ELYTRA) && !isInJob) {
-            e.setCancelled(true);
-            p.sendMessage("You need to have the job \"explorer\" to craft elytras!");
-        } else if (pJobs.getJobProgression(explorer).getLevel() >= jobLevels.get(explorer)) {
+        if (isInJob && pJobs.getJobProgression(explorer).getLevel() >= jobLevels.get(explorer)) {
             callElytraObtainedEvent(e, p);
+        } else {
+            e.setCancelled(true);
+            p.sendMessage("You need to have the job \"explorer\" and be level " + jobLevels.get(explorer) + " to craft elytras!");
         }
     }
 

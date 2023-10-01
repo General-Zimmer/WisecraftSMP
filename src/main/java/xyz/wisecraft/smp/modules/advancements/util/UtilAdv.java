@@ -170,13 +170,13 @@ public abstract class UtilAdv {
 
         Player player = e.getPlayer().getPlayer();
 
-        if (adv.incrementProgression(player) < adv.getMaxProgression() && e.getLevel() >= e.getJob().getMaxLevel()) {
+        if (adv.getProgression(player) < adv.getMaxProgression() && e.getLevel() >= e.getJob().getMaxLevel()) {
             adv.incrementProgression(player);
         }
     }
 
     public static void isJobMaxed(JobsLevelUpEvent e, BaseAdvancement adv, Job job) {
-        if (job != e.getJob()) return;
+        if (!job.equals(e.getJob())) return;
 
         isJobMaxed(e, adv);
     }

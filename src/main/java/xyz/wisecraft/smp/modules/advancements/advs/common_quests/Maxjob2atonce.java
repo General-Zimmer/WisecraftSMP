@@ -33,13 +33,14 @@ public class Maxjob2atonce extends BaseAdvancement  {
       }
 
       int jobsMaxed = 0;
+      int jobsChecks = 0;
       do {
         JobProgression job = jobs.get(jobsMaxed);
         if (job.getLevel() >= job.getJob().getMaxLevel()) {
           jobsMaxed++;
         }
-
-      } while (jobsMaxed < jobs.size() && jobsMaxed <= 2);
+        jobsChecks++;
+      } while (jobsChecks < jobs.size() && jobsMaxed <= 2);
 
       if (jobsMaxed >= 2) {
         grant(player);

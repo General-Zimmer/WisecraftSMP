@@ -57,7 +57,7 @@ public class AngelListeners implements Listener {
 
         Angel angel = angels.get(UUID);
 
-        // Prevent items from being destroyed after leaving
+        //todo Prevent items from being destroyed after leaving
         if (angel.hasDied())
             angel.safeDelete(UUID);
         else if (!angel.hasDied())
