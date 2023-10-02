@@ -16,7 +16,7 @@ public class Gettingjob extends BaseAdvancement  {
 
 
   public Gettingjob(Advancement parent, float x, float y) {
-    super(KEY.getKey(), new AdvancementDisplay(Material.FLETCHING_TABLE, "Get a job (hippie!)", AdvancementFrameType.TASK, true, false, x, y , "Join a job by /jobs browse"), parent, 1);
+    super(KEY.getKey(), new AdvancementDisplay(Material.FLETCHING_TABLE, "Get a job (hippie!)", AdvancementFrameType.TASK, true, false, x, y , "Join a job by /jobs browse. \nNote: Leaving will make you lose a portion of your job level"), parent, 1);
 
     registerEvent(JobsJoinEvent.class, e -> {
       if (e.isCancelled()) return;
