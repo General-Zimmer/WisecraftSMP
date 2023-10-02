@@ -1,36 +1,29 @@
-package xyz.wisecraft.smp.modulation.models;
+package xyz.wisecraft.smp.modulation.storage.storagehelpers;
 
 import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.modulation.ModuleClass;
 
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
 @SuppressWarnings({"unchecked", "unused"})
 public class StorageHelperGeneric<T> {
 
-    private final Set<String> keys = new HashSet<>();
+    protected final String key;
     private final HashMap<String, Object> storage;
 
-    public StorageHelperGeneric(ModuleClass module) {
+    public StorageHelperGeneric(ModuleClass module, String key) {
         this.storage = module.getCollections();
+        this.key = key;
     }
 
-    public T add(String key, @NotNull T value) {
-        if (keys.add(key))
-            storage.put(key, value);
-
-        return value;
+    public T add(@NotNull T value) {
+        return (T) storage.put(key, value);
     }
 
-    public T get(String key) {
-        if (!keys.contains(key))
-            return null;
+    public T get() {
         return (T) storage.get(key);
     }
 
-    public T remove(String key) {
-        keys.remove(key);
+    public T remove() {
         return (T) storage.remove(key);
     }
 
@@ -38,4 +31,7 @@ public class StorageHelperGeneric<T> {
         return storage.containsValue(value);
     }
 
+    public void clear() {
+        storage.remove(key);
+    }
 }

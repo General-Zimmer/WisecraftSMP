@@ -1,4 +1,4 @@
-package xyz.wisecraft.smp.modulation.models;
+package xyz.wisecraft.smp.modulation.storage;
 
 import java.util.HashMap;
 
