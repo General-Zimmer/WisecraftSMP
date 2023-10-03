@@ -9,14 +9,11 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
 import xyz.wisecraft.smp.modulation.storage.storagehelpers.StorageHelperMaps;
 import xyz.wisecraft.smp.modules.savinggrace.models.Angel;
 import xyz.wisecraft.smp.modules.savinggrace.storage.AngelStorage;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -58,10 +55,7 @@ public class AngelListeners implements Listener {
 
         Angel angel = angels.get(UUID);
 
-        //todo Prevent items from being destroyed after leaving
-        if (angel.hasDied())
-            angel.safeDelete(UUID);
-        else if (!angel.hasDied())
+        if (angel.isGraceInactive())
             angels.remove(UUID);
     }
 
@@ -70,7 +64,6 @@ public class AngelListeners implements Listener {
      * @param e The PlayerRespawnEvent.
      * @throws Exception comes from kit expand
      */
-    //The
     @EventHandler(priority = EventPriority.NORMAL)
     public void getItemsBack(PlayerRespawnEvent e) throws Exception {
         Player p = e.getPlayer();
@@ -84,7 +77,7 @@ public class AngelListeners implements Listener {
 
         //Does dis person have home?
         if (hasHome || e.isBedSpawn() || e.isAnchorSpawn()) {
-            angel.giveGrace(e);
+            angel.giveGraceMessage(p);
         } else {
             angels.get(e.getPlayer().getUniqueId()).giveStarter(ess, e.getPlayer());
         }
@@ -100,9 +93,7 @@ public class AngelListeners implements Listener {
 
         if (angel.getGraces() <= 0) {return;}
 
-        List<ItemStack> drops = e.getDrops();
-        PlayerInventory inv = e.getEntity().getInventory();
 
-        angel.saveGear(drops, inv);
+        angel.saveGear(e);
     }
 }
