@@ -3,6 +3,8 @@ package xyz.wisecraft.smp.modules.heirloom.util;
 import org.bukkit.Effect;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -10,6 +12,7 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionData;
+import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.modules.heirloom.HeirloomModule;
 import xyz.wisecraft.smp.modules.heirloom.heirlooms.BaseHeirloom;
 import xyz.wisecraft.smp.modules.heirloom.heirlooms.HeirloomType;
@@ -49,5 +52,23 @@ public abstract class UtilRandom {
         if (heirloomBow != null) {
             // BaseHeirloom.createHeirLoom(heirloomBow, HeirloomType.BOWHEIRLOOM);
         }
+    }
+
+    public static boolean checkItemIsHeirloom(ItemStack itemStack) {
+        ItemMeta itemMeta = (itemStack != null) ? itemStack.getItemMeta(): null;
+        PersistentDataContainer pdc = (itemMeta != null) ? itemMeta.getPersistentDataContainer(): null;
+        String pdcTypeString = (pdc != null) ? pdc.get(BaseHeirloom.getHeirloomTypeKey(), PersistentDataType.STRING): null;
+
+        if (pdcTypeString == null || !pdcTypeString.equals(HeirloomType.BOWHEIRLOOM.toString())) {
+            return false;
+        }
+        return true;
+    }
+
+    public static void setPotionNBT(Arrow arrow, Material potionType, NamespacedKey potionkey) {
+        ItemMeta itemMeta = arrow.getItemStack().getItemMeta();
+        PersistentDataContainer data = itemMeta.getPersistentDataContainer();
+        data.set(potionkey, PersistentDataType.STRING, potionType.toString());
+        arrow.getItemStack().setItemMeta(itemMeta);
     }
 }

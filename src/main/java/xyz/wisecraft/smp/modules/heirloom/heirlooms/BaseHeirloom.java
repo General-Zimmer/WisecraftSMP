@@ -6,6 +6,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.modules.heirloom.HeirloomModule;
 import xyz.wisecraft.smp.modules.heirloom.storage.HeirloomStorage;
 
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
+import java.util.logging.Level;
 
 import static xyz.wisecraft.smp.modules.heirloom.util.UtilRandom.checkMainHandForBow;
 
@@ -44,15 +46,21 @@ public abstract class BaseHeirloom {
      * @param item item in players mainhand, item MUST be of a type that is supported in Heirlooms
      * @param type HeirloomType from HeirloomType enum class
      */
-    public static <T extends BaseHeirloom> void createHeirLoom(ItemStack item, HeirloomType type, Class<T> clazz, UUID playerID) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    public static <T extends BaseHeirloom> void createHeirLoom(ItemStack item, HeirloomType type, Class<T> clazz, UUID playerID) {
         ItemMeta itemMeta = item.getItemMeta();
+        PersistentDataContainer data = itemMeta.getPersistentDataContainer();
         UUID uuid = UUID.randomUUID();
-        itemMeta.getPersistentDataContainer().set(BaseHeirloom.getHeirloomTypeKey(), PersistentDataType.STRING, type.toString());
-        itemMeta.getPersistentDataContainer().set(BaseHeirloom.getHeirloomXPKey(), PersistentDataType.FLOAT, 0F);
-        itemMeta.getPersistentDataContainer().set(BaseHeirloom.getHeirloomLVLKey(), PersistentDataType.INTEGER, 0);
-        itemMeta.getPersistentDataContainer().set(BaseHeirloom.getHeirloomIDKey(), PersistentDataType.STRING, uuid.toString());
+        data.set(BaseHeirloom.getHeirloomTypeKey(), PersistentDataType.STRING, type.toString());
+        data.set(BaseHeirloom.getHeirloomXPKey(), PersistentDataType.FLOAT, 0F);
+        data.set(BaseHeirloom.getHeirloomLVLKey(), PersistentDataType.INTEGER, 0);
+        data.set(BaseHeirloom.getHeirloomIDKey(), PersistentDataType.STRING, uuid.toString());
         item.setItemMeta(itemMeta);
-        HeirloomStorage.addHeirloom(uuid, clazz.getConstructor(Integer.TYPE, Float.TYPE, Date.class, UUID.class, UUID.class).newInstance(0, 0F, new Date(), uuid, playerID));
+        try {
+            HeirloomStorage.addHeirloom(uuid, clazz.getConstructor(Integer.TYPE, Float.TYPE, Date.class, UUID.class, UUID.class).newInstance(0, 0F, new Date(), uuid, playerID));
+        } catch (InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
+            HeirloomModule.plugin.getLogger().log(Level.SEVERE, "Could not add heirloom to storage, clazz constructor error", e);
+        }
+
     }
 
     /**
@@ -63,7 +71,23 @@ public abstract class BaseHeirloom {
      * @return BaseHeirloom if it exists in Storage, else return null
      */
     public static BaseHeirloom getHeirloom(ItemStack item) {
-        return null; //Implementation needs to be made
+        /*
+        String uuidString = item.getItemMeta().getPersistentDataContainer().get(heirloomIDKey, PersistentDataType.STRING);
+        UUID uuid = null;
+        try {
+            uuid = UUID.fromString(uuidString);
+        } catch (NullPointerException ex) {
+            HeirloomModule.plugin.getLogger().log(Level.SEVERE, "This bow does not have an ID key even though it's an Heirloom - ZIMMER FIX");
+        }
+
+        if (HeirloomStorage.findHeirloom(uuid) != null) {
+            return HeirloomStorage.findHeirloom(uuid);
+        } else {
+
+        }
+
+         */
+        return null;
     }
 
     public boolean equals(ItemStack itemstack) {

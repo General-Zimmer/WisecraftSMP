@@ -34,14 +34,7 @@ public class CmdSetup extends BukkitCommand {
         if (commandLabel.equalsIgnoreCase(this.getName())) {
             if(sender instanceof Player p) {
                 ItemStack item = p.getInventory().getItemInMainHand();
-                try {
-                    BaseHeirloom.createHeirLoom(item, HeirloomType.BOWHEIRLOOM, BowHeirloom.class, ((Player) sender).getUniqueId());
-                } catch (NoSuchMethodException  |
-                         InstantiationException |
-                         InvocationTargetException |
-                        IllegalAccessException e) {
-                    plugin.getLogger().log(java.util.logging.Level.SEVERE, "Heirloom creation failed", e);
-                }
+                BaseHeirloom.createHeirLoom(item, HeirloomType.BOWHEIRLOOM, BowHeirloom.class, ((Player) sender).getUniqueId());
                 return true;
             }
         }

@@ -14,4 +14,8 @@ public abstract class HeirloomStorage {
     public static HashMap<UUID, BaseHeirloom> getStoredHeirlooms() {
         return new HashMap<>(storedHeirlooms);
     }
+
+    public static BaseHeirloom findHeirloom(UUID uuid) {
+        return storedHeirlooms.get(uuid);
+    }
 }
