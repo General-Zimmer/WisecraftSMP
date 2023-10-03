@@ -7,7 +7,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.CraftItemEvent;
 import xyz.wisecraft.smp.modules.advancements.advs.AdvancementTabNamespaces;
-import xyz.wisecraft.smp.modules.jobsextra.storage.JobsStorage;
 import xyz.wisecraft.smp.storage.OtherStorage;
 
 import java.util.ArrayList;
@@ -25,7 +24,7 @@ public class Blacksmithspec extends TaskAdvancement {
     registerEvent(CraftItemEvent.class, e -> {
       if (e.isCancelled() || !(e.getWhoClicked() instanceof Player p)) return;
 
-      ArrayList<Material> blacksmithCrafts = JobsStorage.getBlacksmithCrafts();
+      ArrayList<Material> blacksmithCrafts = OtherStorage.getBlacksmithCrafts();
       Material craftMaterial = e.getRecipe().getResult().getType();
 
       if (!isGranted(p) && blacksmithCrafts.contains(craftMaterial)) {

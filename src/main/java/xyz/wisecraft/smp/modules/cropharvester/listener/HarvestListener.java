@@ -10,7 +10,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import xyz.wisecraft.smp.modules.cropharvester.events.PrepareCropHarvestEvent;
 import xyz.wisecraft.smp.modules.cropharvester.util.UtilRandom;
-import xyz.wisecraft.smp.modules.savinggrace.storage.AngelStorage;
 import xyz.wisecraft.smp.storage.OtherStorage;
 
 /**
@@ -37,8 +36,8 @@ public class HarvestListener implements Listener {
 
         int BlockAge = ageable.getAge();
 
-        if (AngelStorage.getTools().containsKey(itemInHand.getType()) && BlockAge == ageable.getMaximumAge()) {
-            int size = Integer.parseInt(AngelStorage.getTools().get(itemInHand.getType()).substring(0,1));
+        if (OtherStorage.getTools().containsKey(itemInHand.getType()) && BlockAge == ageable.getMaximumAge()) {
+            int size = Integer.parseInt(OtherStorage.getTools().get(itemInHand.getType()).substring(0,1));
             Player p = e.getPlayer();
             PrepareCropHarvestEvent harvestEvent = new PrepareCropHarvestEvent(p, ageable);
 

@@ -1,7 +1,6 @@
 package xyz.wisecraft.smp.modules.savinggrace.listeners;
 
 import net.ess3.api.IEssentials;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -13,7 +12,6 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import xyz.wisecraft.smp.modules.savinggrace.models.Angel;
-import xyz.wisecraft.smp.modules.savinggrace.storage.AngelStorage;
 import xyz.wisecraft.smp.storage.OtherStorage;
 
 import java.util.HashMap;
@@ -32,12 +30,7 @@ public class AngelListeners implements Listener {
      */
     public AngelListeners(IEssentials ess) {
         this.ess = ess;
-        this.angels = AngelStorage.getAngels();
-        angels.clear();
-        Bukkit.getOnlinePlayers().forEach(p -> {
-            Angel angel = new Angel(p.hasPermission("wisecraft.donator"));
-            angels.put(p.getUniqueId(), angel);
-        });
+        this.angels = OtherStorage.getAngels();
     }
 
     /**

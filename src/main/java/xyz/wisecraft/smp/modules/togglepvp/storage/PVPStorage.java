@@ -40,6 +40,7 @@ public abstract class PVPStorage {
     @Getter
     private static PersistentData PVPDataUtils;
 
+
     /**
      * Set the PVPDataUtils
      * @param PVPDataUtils PersistentData

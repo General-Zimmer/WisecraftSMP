@@ -3,7 +3,6 @@ package xyz.wisecraft.smp.modules.togglepvp;
 import com.nametagedit.plugin.NametagEdit;
 import com.nametagedit.plugin.api.INametagApi;
 import lombok.Getter;
-import org.bukkit.Bukkit;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
@@ -48,15 +47,9 @@ public class TogglePVPModule extends ModuleClass {
         // PVPToggle data
         File PVPData = new File(plugin.getDataFolder(), "togglepvp");
         PVPStorage.setPVPDataUtils(new PersistentData(PVPData));
+
         PVPStorage.setBlockedWorlds(plugin.getConfig().getStringList("SETTINGS.BLOCKED_WORLDS"));
 
-    }
-
-    @Override
-    public void disableModule() {
-
-        PersistentData yeet = PVPStorage.getPVPDataUtils();
-        Bukkit.getOnlinePlayers().forEach(yeet::UpdatePlayerPvPState);
     }
 
     @Override
