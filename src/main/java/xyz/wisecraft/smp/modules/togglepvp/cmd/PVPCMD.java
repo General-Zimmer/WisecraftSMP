@@ -8,6 +8,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.WisecraftSMP;
+import xyz.wisecraft.smp.modulation.storage.storagehelpers.StorageHelperMaps;
 import xyz.wisecraft.smp.modules.togglepvp.utils.UtilChat;
 import xyz.wisecraft.smp.modules.togglepvp.utils.PVPCMDUtil;
 import xyz.wisecraft.smp.modules.togglepvp.utils.UtilPlayers;
@@ -26,7 +27,7 @@ public class PVPCMD extends BukkitCommand {
 
 	private final WisecraftSMP instance = WisecraftSMP.getInstance();
 	private final FileConfiguration config = instance.getConfig();
-	private final HashMap<UUID, Boolean> pvpPlayers = PVPStorage.getPVPPlayers();
+	private final StorageHelperMaps<HashMap<UUID, Boolean>, UUID, Boolean> pvpPlayers = PVPStorage.getPVPPlayers();
 
 	public PVPCMD(String name) {
 		super(name);

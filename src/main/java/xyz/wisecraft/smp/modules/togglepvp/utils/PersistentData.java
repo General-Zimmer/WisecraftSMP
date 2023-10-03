@@ -4,6 +4,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import xyz.wisecraft.smp.WisecraftSMP;
+import xyz.wisecraft.smp.modulation.storage.storagehelpers.StorageHelperMaps;
 import xyz.wisecraft.smp.modules.togglepvp.storage.PVPStorage;
 
 import java.io.File;
@@ -16,7 +17,7 @@ import java.util.UUID;
 public class PersistentData {
 	private final WisecraftSMP plugin = WisecraftSMP.getInstance();
 	private final FileConfiguration config = plugin.getConfig();
-	private final HashMap<UUID, Boolean> pvpPlayers = PVPStorage.getPVPPlayers();
+	private final StorageHelperMaps<HashMap<UUID, Boolean>, UUID, Boolean> pvpPlayers = PVPStorage.getPVPPlayers();
 	private final File dir;
 
 	/**

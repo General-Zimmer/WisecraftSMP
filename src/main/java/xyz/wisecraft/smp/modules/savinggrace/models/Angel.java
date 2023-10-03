@@ -49,15 +49,16 @@ public class Angel {
     private int graces;
     private boolean hasDied = false;
     private final WisecraftSMP plugin;
-    private final HashMap<UUID, Angel> angels = OtherStorage.getAngels();
+    private final HashMap<UUID, Angel> angels;
 
     /**
      * Get the amount of graces the player has left
      * @param hasDonator If the player has donator
      */
-    public Angel(boolean hasDonator) {
+    public Angel(boolean hasDonator, HashMap<UUID, Angel> angels) {
         plugin = WisecraftSMP.getInstance();
         this.resetGrace(hasDonator);
+        this.angels = angels;
     }
 
     /**
@@ -248,8 +249,8 @@ public class Angel {
                 }
 
 
-            }.runTaskLater(plugin, 20*30);
-            // }.runTaskLater(plugin, 20*60*60); // 1 hour
+            //}.runTaskLater(plugin, 20*30);
+            }.runTaskLater(plugin, 20*60*60*2); // 2 hour
             Logger.getLogger("WisecraftSMP").log(Level.INFO, "Grace timer started for: " + Bukkit.getPlayer(UUID));
             this.setGraceActive(true);
         }

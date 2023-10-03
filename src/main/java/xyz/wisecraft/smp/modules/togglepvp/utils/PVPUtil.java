@@ -3,6 +3,7 @@ package xyz.wisecraft.smp.modules.togglepvp.utils;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import xyz.wisecraft.smp.modulation.storage.storagehelpers.StorageHelperMaps;
 import xyz.wisecraft.smp.modules.togglepvp.storage.PVPStorage;
 
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ import java.util.UUID;
  */
 public abstract class PVPUtil {
 
-    private static final HashMap<UUID, Boolean> pvpPlayers = PVPStorage.getPVPPlayers();
+    private static final StorageHelperMaps<HashMap<UUID, Boolean>, UUID, Boolean> pvpPlayers = PVPStorage.getPVPPlayers();
 
     /**
      * Get all positive effects

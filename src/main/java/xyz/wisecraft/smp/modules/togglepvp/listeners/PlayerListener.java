@@ -10,6 +10,8 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import xyz.wisecraft.smp.WisecraftSMP;
+import xyz.wisecraft.smp.modulation.storage.storagehelpers.StorageHelperCollection;
+import xyz.wisecraft.smp.modulation.storage.storagehelpers.StorageHelperMaps;
 import xyz.wisecraft.smp.modules.togglepvp.utils.UtilChat;
 import xyz.wisecraft.smp.modules.togglepvp.utils.PersistentData;
 import xyz.wisecraft.smp.modules.togglepvp.utils.UtilPlayers;
@@ -26,9 +28,9 @@ public class PlayerListener implements Listener {
 
     private final WisecraftSMP plugin = WisecraftSMP.getInstance();
     private final FileConfiguration config = plugin.getConfig();
-    private final HashMap<UUID, Boolean> pvpPlayers = PVPStorage.getPVPPlayers();
-    private final PersistentData PVPDataUtils = PVPStorage.getPVPDataUtils();
-    private final List<String> blockedWorlds = PVPStorage.getBlockedWorlds();
+    private final StorageHelperMaps<HashMap<UUID,Boolean>, UUID, Boolean> pvpPlayers = PVPStorage.getPVPPlayers();
+    private final PersistentData PVPDataUtils = PVPStorage.getPVPDataUtils().get();
+    private final StorageHelperCollection<List<String>, String> blockedWorlds = PVPStorage.getBlockedWorlds();
 
     /**
      * Constructor for the PlayerListener class.

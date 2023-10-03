@@ -30,13 +30,13 @@ public abstract class PVPStorage {
      *  Get the PVPPlayers
      */
     @Getter
-    private static final StorageHelperMaps<HashMap<UUID,Boolean>, UUID, Boolean> PVPPlayers = null;
+    private static StorageHelperMaps<HashMap<UUID,Boolean>, UUID, Boolean> PVPPlayers;
     /**
      * -- GETTER --
      *  Get the cooldowns
      */
     @Getter
-    private static StorageHelperMaps<HashMap<UUID, Date>, UUID, Date> cooldowns = null;
+    private static StorageHelperMaps<HashMap<UUID, Date>, UUID, Date> cooldowns;
     /**
      * -- GETTER --
      *  Get the PVPDataUtils
@@ -52,6 +52,10 @@ public abstract class PVPStorage {
     public static void setPVPDataUtils(ModuleClass module, PersistentData PVPDataUtils) {
         PVPStorage.PVPDataUtils = new StorageHelperGeneric<>(module, "PVPDataUtils");
         getPVPDataUtils().set(PVPDataUtils);
+    }
+
+    public static void setPVPPlayers(ModuleClass module, HashMap<UUID,Boolean> PVPPlayers) {
+        PVPStorage.PVPPlayers = new StorageHelperMaps<>(module, "PVPPlayers", PVPPlayers);
     }
 
     /**
