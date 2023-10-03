@@ -4,17 +4,23 @@ import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.modulation.ModuleClass;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 
 @SuppressWarnings({"unused"})
 public class StorageHelperCollection<T extends Collection<E>, E> extends StorageHelperGeneric<T> implements Collection<E> {
-    private final Class<T> clazz;
+
     protected final WisecraftSMP plugin;
-    public StorageHelperCollection(ModuleClass module, String listKey, Class<T> clazz) {
-        super(module, listKey);
-        this.clazz = clazz;
+    public StorageHelperCollection(ModuleClass module, String key) {
+        super(module, key);
         this.plugin = module.getPlugin();
+    }
+
+    public StorageHelperCollection(ModuleClass module, String key, T list) {
+        this(module, key);
+        set(list);
     }
 
 
@@ -118,12 +124,11 @@ public class StorageHelperCollection<T extends Collection<E>, E> extends Storage
         return null;
     }
 
-    public T copyList() {
-        try {
-            return clazz.getConstructor(Collection.class).newInstance(get());
-        } catch (Exception e) {
-            plugin.getLogger().log(java.util.logging.Level.SEVERE, "Could not copy list", e);
-            return null;
-        }
+    public ArrayList<E> copyToArrayList() {
+        return new ArrayList<>(get());
+    }
+
+    public HashSet<E> copyToHashSet() {
+        return new HashSet<>(get());
     }
 }

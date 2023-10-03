@@ -1,8 +1,8 @@
 package xyz.wisecraft.smp.modules.togglepvp.storage;
 
-import com.google.inject.TypeLiteral;
 import lombok.Getter;
 import xyz.wisecraft.smp.modulation.ModuleClass;
+import xyz.wisecraft.smp.modulation.storage.storagehelpers.StorageHelperCollection;
 import xyz.wisecraft.smp.modulation.storage.storagehelpers.StorageHelperGeneric;
 import xyz.wisecraft.smp.modulation.storage.storagehelpers.StorageHelperMaps;
 import xyz.wisecraft.smp.modules.togglepvp.utils.PersistentData;
@@ -23,14 +23,14 @@ public abstract class PVPStorage {
      *  Get the blocked worlds
      */
     @Getter
-    private static List<String> blockedWorlds;
+    private static StorageHelperCollection<List<String>, String> blockedWorlds;
     /**
      * False is pvp on. True is pvp off
      * -- GETTER --
      *  Get the PVPPlayers
      */
     @Getter
-    private static final HashMap<UUID,Boolean> PVPPlayers = new HashMap<>();
+    private static final StorageHelperMaps<HashMap<UUID,Boolean>, UUID, Boolean> PVPPlayers = null;
     /**
      * -- GETTER --
      *  Get the cooldowns
@@ -58,20 +58,17 @@ public abstract class PVPStorage {
      * Set the blocked worlds
      * @param blockedWorlds List of blocked worlds
      */
-    public static void setBlockedWorlds(List<String> blockedWorlds) {
-        PVPStorage.blockedWorlds = blockedWorlds;
+    public static void setBlockedWorlds(ModuleClass module, List<String> blockedWorlds) {
+
+        PVPStorage.blockedWorlds = new StorageHelperCollection<>(module, "blockedWorlds", blockedWorlds);
     }
 
     /**
-     * Set the cooldowns
-     * @param cooldowns HashMap of cooldowns
+     * Set cooldowns
+     * @param module ModuleClass
      */
-    public static void setCooldowns(ModuleClass module, HashMap<UUID, Date> cooldowns) {
+    public static void setCooldowns(ModuleClass module) {
 
-        TypeLiteral<HashMap<UUID, Date>> yeet = new TypeLiteral<>() {
-        };
-
-        PVPStorage.cooldowns = new StorageHelperMaps<HashMap<UUID, Date>, UUID, Date>(module, "cooldowns", HashMap.class);
-        PVPStorage.cooldowns.set(new HashMap<>(cooldowns));
+        PVPStorage.cooldowns = new StorageHelperMaps<>(module, "cooldowns", new HashMap<>());
     }
 }

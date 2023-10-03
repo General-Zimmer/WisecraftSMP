@@ -6,18 +6,24 @@ import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.modulation.ModuleClass;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 @SuppressWarnings({"unused"})
 public class StorageHelperMaps <T extends Map<K, V>, K, V> extends StorageHelperGeneric<T> implements Map<K, V> {
-    private final Class<T> clazz;
+
     protected final WisecraftSMP plugin;
-    public StorageHelperMaps(ModuleClass module, String key, Class<T> clazz) {
+    public StorageHelperMaps(ModuleClass module, String key) {
         super(module, key);
-        this.clazz = clazz;
         this.plugin = module.getPlugin();
+    }
+
+    public StorageHelperMaps(ModuleClass module, String key, T map) {
+        this(module, key);
+        set(map);
+
     }
 
     @Override
@@ -102,12 +108,7 @@ public class StorageHelperMaps <T extends Map<K, V>, K, V> extends StorageHelper
         return get().entrySet();
     }
 
-    public T copyList() {
-        try {
-            return clazz.getConstructor(Map.class).newInstance(get());
-        } catch (Exception e) {
-            plugin.getLogger().log(java.util.logging.Level.SEVERE, "Could not copy list", e);
-            return null;
-        }
+    public HashMap<K, V> copyToHashMap() {
+        return new HashMap<>(get());
     }
 }
