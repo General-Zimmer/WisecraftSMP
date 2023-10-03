@@ -11,7 +11,6 @@ import org.bukkit.event.inventory.CraftItemEvent;
 import xyz.wisecraft.smp.modules.cropharvester.events.PrepareCropHarvestEvent;
 import xyz.wisecraft.smp.modules.jobsextra.JobsExtrasModule;
 import xyz.wisecraft.smp.modules.jobsextra.storage.JobsStorage;
-import xyz.wisecraft.smp.storage.OtherStorage;
 
 import java.util.ArrayList;
 import java.util.HashMap;

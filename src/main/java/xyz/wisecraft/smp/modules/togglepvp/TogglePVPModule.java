@@ -5,6 +5,7 @@ import com.nametagedit.plugin.api.INametagApi;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.command.defaults.BukkitCommand;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.core.WisecraftCoreApi;
@@ -18,8 +19,7 @@ import xyz.wisecraft.smp.modules.togglepvp.utils.PersistentData;
 import xyz.wisecraft.smp.modules.togglepvp.utils.PlaceholderAPIHook;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Module class for PVPToggle
@@ -47,16 +47,20 @@ public class TogglePVPModule extends ModuleClass {
 
         // PVPToggle data
         File PVPData = new File(plugin.getDataFolder(), "togglepvp");
-        PVPStorage.setPVPDataUtils(new PersistentData(PVPData));
-        PVPStorage.setBlockedWorlds(plugin.getConfig().getStringList("SETTINGS.BLOCKED_WORLDS"));
+        PersistentData pvpDataUtils = new PersistentData(PVPData);
 
-    }
+        PVPStorage.setPVPDataUtils(this, pvpDataUtils);
 
-    @Override
-    public void disableModule() {
+        PVPStorage.setCooldowns(this);
 
-        PersistentData yeet = PVPStorage.getPVPDataUtils();
-        Bukkit.getOnlinePlayers().forEach(yeet::UpdatePlayerPvPState);
+        HashMap<UUID, Boolean> PVPPlayers = new HashMap<>();
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            PVPPlayers.put(player.getUniqueId(), pvpDataUtils.GetPlayerPvPState(player));
+        }
+        PVPStorage.setPVPPlayers(this, PVPPlayers);
+
+        PVPStorage.setBlockedWorlds(this, plugin.getConfig().getStringList("SETTINGS.BLOCKED_WORLDS"));
+
     }
 
     @Override

@@ -44,6 +44,7 @@ public abstract class PVPStorage {
     @Getter
     private static StorageHelperGeneric<PersistentData> PVPDataUtils;
 
+
     /**
      * Set the PVPDataUtils
      * @param PVPDataUtils PersistentData

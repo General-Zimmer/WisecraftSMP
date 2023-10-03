@@ -1,6 +1,5 @@
 package xyz.wisecraft.smp.modules.togglepvp.utils;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -29,7 +28,6 @@ public class PersistentData {
 		//noinspection ResultOfMethodCallIgnored
 		file.mkdir();
 		this.dir = file;
-		Bukkit.getOnlinePlayers().forEach(this::addPlayer);
 	}
 
 	/**
