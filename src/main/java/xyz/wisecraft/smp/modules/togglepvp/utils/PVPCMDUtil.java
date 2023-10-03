@@ -6,6 +6,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import xyz.wisecraft.smp.WisecraftSMP;
+import xyz.wisecraft.smp.modulation.storage.storagehelpers.StorageHelperMaps;
 import xyz.wisecraft.smp.modules.togglepvp.storage.PVPStorage;
 
 import java.util.HashMap;
@@ -17,7 +18,7 @@ import java.util.UUID;
 public abstract class PVPCMDUtil {
     private static final WisecraftSMP plugin = WisecraftSMP.getInstance();
     private static final FileConfiguration config = plugin.getConfig();
-    private static final HashMap<UUID, Boolean> pvpPlayers = PVPStorage.getPVPPlayers();
+    private static final StorageHelperMaps<HashMap<UUID, Boolean>, UUID, Boolean> pvpPlayers = PVPStorage.getPVPPlayers();
 
 
     /**

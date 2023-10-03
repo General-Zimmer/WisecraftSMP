@@ -78,9 +78,6 @@ public class AdvancementsModule extends ModuleClass {
         tutorial_quests.automaticallyGrantRootAdvancement();
         common_quests.automaticallyShowToPlayers();
         common_quests.automaticallyGrantRootAdvancement();
-
-
-
     }
 
     @Override

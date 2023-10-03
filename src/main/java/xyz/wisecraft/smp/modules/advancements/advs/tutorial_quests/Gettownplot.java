@@ -16,7 +16,7 @@ public class Gettownplot extends BaseAdvancement  {
 
 
   public Gettownplot(Advancement parent, float x, float y) {
-    super(KEY.getKey(), new AdvancementDisplay(Material.GRASS_BLOCK, "Rent a plot!", AdvancementFrameType.TASK, true, false, x, y , "By using /plot claim"), parent, 1);
+    super(KEY.getKey(), new AdvancementDisplay(Material.GRASS_BLOCK, "Rent a plot!", AdvancementFrameType.TASK, true, false, x, y , "By using /plot claim and manage it with /plotmenu"), parent, 1);
 
     registerEvent(PlotClaimEvent.class, e -> {
       Player p = (e.getNewResident() != null) ? e.getNewResident().getPlayer() : null;

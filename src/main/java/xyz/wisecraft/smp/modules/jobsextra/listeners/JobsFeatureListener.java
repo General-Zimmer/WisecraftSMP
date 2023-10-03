@@ -10,7 +10,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import xyz.wisecraft.smp.modules.cropharvester.events.PrepareCropHarvestEvent;
 import xyz.wisecraft.smp.modules.jobsextra.JobsExtrasModule;
-import xyz.wisecraft.smp.storage.OtherStorage;
+import xyz.wisecraft.smp.modules.jobsextra.storage.JobsStorage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,14 +36,14 @@ public class JobsFeatureListener implements org.bukkit.event.Listener {
         this.farmer = module.getSpecificJob("Farmer");
         jobLevels.put(farmer, module.plugin.getConfig().getInt("JOBS_SETTINGS.FARMER_ABILITY_LEVEL", defaultLevel));
 
-        OtherStorage.addBlacksmithCraft(Material.DIAMOND_AXE);
-        OtherStorage.addBlacksmithCraft(Material.DIAMOND_HOE);
-        OtherStorage.addBlacksmithCraft(Material.DIAMOND_SHOVEL);
-        OtherStorage.addBlacksmithCraft(Material.DIAMOND_SWORD);
-        OtherStorage.addBlacksmithCraft(Material.DIAMOND_HELMET);
-        OtherStorage.addBlacksmithCraft(Material.DIAMOND_CHESTPLATE);
-        OtherStorage.addBlacksmithCraft(Material.DIAMOND_LEGGINGS);
-        OtherStorage.addBlacksmithCraft(Material.DIAMOND_BOOTS);
+        JobsStorage.addBlacksmithCraft(Material.DIAMOND_AXE);
+        JobsStorage.addBlacksmithCraft(Material.DIAMOND_HOE);
+        JobsStorage.addBlacksmithCraft(Material.DIAMOND_SHOVEL);
+        JobsStorage.addBlacksmithCraft(Material.DIAMOND_SWORD);
+        JobsStorage.addBlacksmithCraft(Material.DIAMOND_HELMET);
+        JobsStorage.addBlacksmithCraft(Material.DIAMOND_CHESTPLATE);
+        JobsStorage.addBlacksmithCraft(Material.DIAMOND_LEGGINGS);
+        JobsStorage.addBlacksmithCraft(Material.DIAMOND_BOOTS);
 
     }
 
@@ -71,7 +71,7 @@ public class JobsFeatureListener implements org.bukkit.event.Listener {
         Job pJob = blacksmith;
         JobsPlayer pJobs = Jobs.getPlayerManager().getJobsPlayer(p);
 
-        ArrayList<Material> blacksmithCrafts = OtherStorage.getBlacksmithCrafts();
+        ArrayList<Material> blacksmithCrafts = JobsStorage.getBlacksmithCrafts();
 
         if (p == null || pJobs.isInJob(pJob) &&
                 pJobs.getJobProgression(pJob).getLevel() >= jobLevels.get(pJob)) return;

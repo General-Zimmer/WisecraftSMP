@@ -5,6 +5,7 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.WisecraftSMP;
+import xyz.wisecraft.smp.modulation.storage.storagehelpers.StorageHelperMaps;
 import xyz.wisecraft.smp.modules.togglepvp.storage.PVPStorage;
 
 import java.util.HashMap;
@@ -16,7 +17,7 @@ import java.util.UUID;
 public class PlaceholderAPIHook extends PlaceholderExpansion {
 
 	private final WisecraftSMP plugin = WisecraftSMP.getInstance();
-	private final HashMap<UUID, Boolean> pvpPlayers = PVPStorage.getPVPPlayers();
+	private final StorageHelperMaps<HashMap<UUID, Boolean>, UUID, Boolean> pvpPlayers = PVPStorage.getPVPPlayers();
 
 	@Override
 	public String onRequest(OfflinePlayer player, @NotNull String identifier) {
