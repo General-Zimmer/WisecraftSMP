@@ -1,12 +1,6 @@
 package xyz.wisecraft.smp.storage;
 
 import lombok.Getter;
-import org.bukkit.Material;
-import xyz.wisecraft.smp.modules.savinggrace.models.Angel;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.UUID;
 
 /**
  * Storage for the plugin to store data in RAM.

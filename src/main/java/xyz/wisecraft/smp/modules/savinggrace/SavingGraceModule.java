@@ -14,7 +14,6 @@ import xyz.wisecraft.smp.modules.savinggrace.storage.AngelStorage;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 /**
  * Module class for SavingGrace

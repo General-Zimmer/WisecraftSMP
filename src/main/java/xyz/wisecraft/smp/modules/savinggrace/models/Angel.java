@@ -12,7 +12,6 @@ import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.modules.tutorialstuff.util.UtilRandom;
-import xyz.wisecraft.smp.storage.OtherStorage;
 
 import java.util.*;
 import java.util.logging.Level;

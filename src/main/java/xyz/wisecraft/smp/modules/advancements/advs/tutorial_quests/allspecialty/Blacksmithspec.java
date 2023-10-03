@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.CraftItemEvent;
 import xyz.wisecraft.smp.modules.advancements.advs.AdvancementTabNamespaces;
 import xyz.wisecraft.smp.modules.jobsextra.storage.JobsStorage;
-import xyz.wisecraft.smp.storage.OtherStorage;
 
 import java.util.ArrayList;
 

@@ -8,7 +8,6 @@ import xyz.wisecraft.smp.modulation.ModuleClass;
 import xyz.wisecraft.smp.modules.cropharvester.listener.CropTrampleListener;
 import xyz.wisecraft.smp.modules.cropharvester.listener.HarvestListener;
 import xyz.wisecraft.smp.modules.cropharvester.storage.HarvestStorage;
-import xyz.wisecraft.smp.storage.OtherStorage;
 
 import java.util.*;
 
