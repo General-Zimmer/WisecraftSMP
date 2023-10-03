@@ -46,7 +46,7 @@ public abstract class ModuleClass implements Module {
     private ModuleInfo moduleInfo;
 
     @Getter
-    private final HashMap<String, Object> collections = new HashMap<>();
+    private final HashMap<String, Object> storage = new HashMap<>();
 
     public ModuleClass(long id) {
         if (!this.getClass().getSimpleName().endsWith("Module")) {
@@ -101,6 +101,7 @@ public abstract class ModuleClass implements Module {
         if (moduleState != ModuleState.SHUTDOWN)
             moduleState = ModuleState.DISABLED;
         refreshTabcompletion();
+        storage.clear();
     }
 
     public void reenableModule() {

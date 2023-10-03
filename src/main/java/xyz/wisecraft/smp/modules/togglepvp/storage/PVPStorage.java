@@ -1,6 +1,10 @@
 package xyz.wisecraft.smp.modules.togglepvp.storage;
 
+import com.google.inject.TypeLiteral;
 import lombok.Getter;
+import xyz.wisecraft.smp.modulation.ModuleClass;
+import xyz.wisecraft.smp.modulation.storage.storagehelpers.StorageHelperGeneric;
+import xyz.wisecraft.smp.modulation.storage.storagehelpers.StorageHelperMaps;
 import xyz.wisecraft.smp.modules.togglepvp.utils.PersistentData;
 
 import java.util.Date;
@@ -32,21 +36,22 @@ public abstract class PVPStorage {
      *  Get the cooldowns
      */
     @Getter
-    private static final HashMap<UUID, Date> cooldowns = new HashMap<>();
+    private static StorageHelperMaps<HashMap<UUID, Date>, UUID, Date> cooldowns = null;
     /**
      * -- GETTER --
      *  Get the PVPDataUtils
      */
     @Getter
-    private static PersistentData PVPDataUtils;
+    private static StorageHelperGeneric<PersistentData> PVPDataUtils;
 
 
     /**
      * Set the PVPDataUtils
      * @param PVPDataUtils PersistentData
      */
-    public static void setPVPDataUtils(PersistentData PVPDataUtils) {
-        PVPStorage.PVPDataUtils = PVPDataUtils;
+    public static void setPVPDataUtils(ModuleClass module, PersistentData PVPDataUtils) {
+        PVPStorage.PVPDataUtils = new StorageHelperGeneric<>(module, "PVPDataUtils");
+        getPVPDataUtils().set(PVPDataUtils);
     }
 
     /**
@@ -57,4 +62,16 @@ public abstract class PVPStorage {
         PVPStorage.blockedWorlds = blockedWorlds;
     }
 
+    /**
+     * Set the cooldowns
+     * @param cooldowns HashMap of cooldowns
+     */
+    public static void setCooldowns(ModuleClass module, HashMap<UUID, Date> cooldowns) {
+
+        TypeLiteral<HashMap<UUID, Date>> yeet = new TypeLiteral<>() {
+        };
+
+        PVPStorage.cooldowns = new StorageHelperMaps<HashMap<UUID, Date>, UUID, Date>(module, "cooldowns", HashMap.class);
+        PVPStorage.cooldowns.set(new HashMap<>(cooldowns));
+    }
 }

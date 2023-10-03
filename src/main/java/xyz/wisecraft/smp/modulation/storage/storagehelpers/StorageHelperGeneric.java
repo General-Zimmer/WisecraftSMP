@@ -11,11 +11,11 @@ public class StorageHelperGeneric<T> {
     private final HashMap<String, Object> storage;
 
     public StorageHelperGeneric(ModuleClass module, String key) {
-        this.storage = module.getCollections();
+        this.storage = module.getStorage();
         this.key = key;
     }
 
-    public T add(@NotNull T value) {
+    public T set(@NotNull T value) {
         return (T) storage.put(key, value);
     }
 
@@ -23,11 +23,15 @@ public class StorageHelperGeneric<T> {
         return (T) storage.get(key);
     }
 
+    /**
+     * Removes the object from storage
+     * @return the object that was removed
+     */
     public T remove() {
         return (T) storage.remove(key);
     }
 
-    public boolean contains(T value) {
+    public boolean storageContains(T value) {
         return storage.containsValue(value);
     }
 

@@ -46,7 +46,7 @@ public class TogglePVPModule extends ModuleClass {
 
         // PVPToggle data
         File PVPData = new File(plugin.getDataFolder(), "togglepvp");
-        PVPStorage.setPVPDataUtils(new PersistentData(PVPData));
+        PVPStorage.setPVPDataUtils(this, new PersistentData(PVPData));
 
         PVPStorage.setBlockedWorlds(plugin.getConfig().getStringList("SETTINGS.BLOCKED_WORLDS"));
 
