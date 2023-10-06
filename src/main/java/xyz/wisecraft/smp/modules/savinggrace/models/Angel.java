@@ -1,7 +1,11 @@
 package xyz.wisecraft.smp.modules.savinggrace.models;
 
 import com.earth2me.essentials.Kit;
+import com.earth2me.essentials.MetaItemStack;
 import com.earth2me.essentials.User;
+import com.earth2me.essentials.textreader.IText;
+import com.earth2me.essentials.textreader.KeywordReplacer;
+import com.earth2me.essentials.textreader.SimpleTextInput;
 import lombok.Getter;
 import net.ess3.api.IEssentials;
 import org.bukkit.*;
@@ -10,13 +14,17 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.NotNull;
+import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 import xyz.wisecraft.smp.WisecraftSMP;
+import xyz.wisecraft.smp.modules.savinggrace.enums.PlayerState;
 import xyz.wisecraft.smp.modules.savinggrace.storage.AngelStorage;
 import xyz.wisecraft.smp.modules.tutorialstuff.util.UtilRandom;
 
 import java.util.*;
 import java.util.logging.Level;
 
+import static com.earth2me.essentials.I18n.tl;
 import static xyz.wisecraft.smp.modules.tutorialstuff.util.UtilRandom.getToolTypes;
 
 /**
@@ -33,7 +41,8 @@ public class Angel {
      */
     @Getter
     private int graces;
-    private boolean hasGraceRecently = false;
+    @Getter
+    private PlayerState hasGraceRecently = PlayerState.STALE;
     private final WisecraftSMP plugin;
 
     /**
@@ -47,21 +56,28 @@ public class Angel {
 
     /**
      * Give player their saved gear
-     * @param e PlayerRespawnEvent
      */
     public void giveGraceMessage(Player p) {
-        hasGraceRecently = false;
 
-        p.sendMessage(ChatColor.AQUA + "Your gear have been saved. You have " + this.getGraces() + " graces left!");
+        if (hasGraceRecently == PlayerState.STARTER_KIT) {
+            p.sendMessage("You have been granted some new items.");
+            p.sendMessage(ChatColor.BLUE + "You didn't /sethome or place a bed!");
+        } else if (hasGraceRecently == PlayerState.GRACE_RECENTLY && this.getGraces() > 0) {
+            p.sendMessage(ChatColor.AQUA + "Your gear have been saved. You have " + this.getGraces() + " graces left!");
+        } else {
+            p.sendMessage("You have no graces left, no gear was saved.");
+        }
+
+        hasGraceRecently = PlayerState.STALE;
     }
 
 
     /**
      * Give starter gear and teleport to tutorial
-     * @param p Player
      * @throws Exception If the kit doesn't exist
      */
-    public void giveStarter(IEssentials ess, Player p) throws Exception {
+    public void giveStarter(IEssentials ess, PlayerDeathEvent e) throws Exception {
+        Player p = e.getEntity();
         World tut = Bukkit.getWorld("tutorial");
         if (tut != null)
             //todo Need a tick delay otherwise they will teleport to essentials spawn. Need to figure out why
@@ -75,13 +91,13 @@ public class Angel {
 
 
         if (ess != null) {
-            User user = ess.getUser(p);
             Kit kit = new Kit("starter", ess);
-            kit.expandItems(user);
-            p.sendMessage("You have been granted some new items.");
+            kit.expandItems(ess.getUser(p));
+            @NotNull List<ItemStack> itemKeep = e.getItemsToKeep();
+            itemKeep.addAll(somethingImportant(ess, ess.getUser(p), kit.getItems()));
         }
 
-        p.sendMessage(ChatColor.BLUE + "You didn't /sethome or place a bed!");
+        hasGraceRecently = PlayerState.STARTER_KIT;
     }
 
 
@@ -100,6 +116,7 @@ public class Angel {
         });
 
         graces--;
+        hasGraceRecently = PlayerState.GRACE_RECENTLY;
         this.safeDelete(e.getPlayer().getUniqueId());
     }
 
@@ -133,7 +150,7 @@ public class Angel {
         HashMap<Integer, ItemStack> armor = new HashMap<>(4);
         ArrayList<Material> containers = UtilRandom.getContainerTypes();
 
-        for (int i = 36; i < 39; i++) {
+        for (int i = 36; i <= 39; i++) {
             ItemStack item = inv.getItem(i);
             if (item != null && !containers.contains(item.getType())) {
                 armor.put(i, item);
@@ -186,6 +203,44 @@ public class Angel {
         }
     }
 
+    private List<ItemStack> somethingImportant(IEssentials ess, User user, List<String> items) throws Exception {
+            final IText input = new SimpleTextInput(items);
+            final IText output = new KeywordReplacer(input, user.getSource(), ess, true, true);
+
+            final boolean allowUnsafe = ess.getSettings().allowUnsafeEnchantments();
+            final List<ItemStack> itemList = new ArrayList<>();
+            for (final String kitItem : output.getLines()) {
+
+                final ItemStack stack;
+
+                if (kitItem.startsWith("@")) {
+                    if (ess.getSerializationProvider() == null) {
+                        ess.getLogger().log(Level.WARNING, tl("kitError3", "starter", user.getName()));
+                        continue;
+                    }
+                    stack = ess.getSerializationProvider().deserializeItem(Base64Coder.decodeLines(kitItem.substring(1)));
+                } else {
+                    final String[] parts = kitItem.split(" +");
+                    final ItemStack parseStack = ess.getItemDb().get(parts[0], parts.length > 1 ? Integer.parseInt(parts[1]) : 1);
+
+                    if (parseStack.getType() == Material.AIR) {
+                        continue;
+                    }
+
+                    final MetaItemStack metaStack = new MetaItemStack(parseStack);
+
+                    if (parts.length > 2) {
+                        // We pass a null sender here because kits should not do perm checks
+                        metaStack.parseStringMeta(null, allowUnsafe, parts, 2, ess);
+                    }
+
+                    stack = metaStack.getItemStack();
+                }
+
+                itemList.add(stack);
+            }
+            return itemList;
+    }
 
     public boolean isGraceInactive() {return this.isGraceInactive;}
 
