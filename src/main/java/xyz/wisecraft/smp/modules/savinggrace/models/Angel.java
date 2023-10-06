@@ -78,28 +78,16 @@ public class Angel {
      */
     public void giveStarter(IEssentials ess, PlayerDeathEvent e) throws Exception {
         Player p = e.getEntity();
-        World tut = Bukkit.getWorld("tutorial");
-        if (tut != null)
-            //todo Need a tick delay otherwise they will teleport to essentials spawn. Need to figure out why
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    Location loc = new Location(tut, 5.5, 204, 8.5, -85, 2);
-                    p.teleport(loc);
-                }
-            }.runTaskLater(plugin, 1);
-
 
         if (ess != null) {
             Kit kit = new Kit("starter", ess);
             kit.expandItems(ess.getUser(p));
             @NotNull List<ItemStack> itemKeep = e.getItemsToKeep();
-            itemKeep.addAll(somethingImportant(ess, ess.getUser(p), kit.getItems()));
+            itemKeep.addAll(getKitItems(ess, ess.getUser(p), kit.getItems()));
         }
 
         hasGraceRecently = PlayerState.STARTER_KIT;
     }
-
 
     public void saveGear(PlayerDeathEvent e) {
         if (this.getGraces() <= 0) {return;}
@@ -203,7 +191,15 @@ public class Angel {
         }
     }
 
-    private List<ItemStack> somethingImportant(IEssentials ess, User user, List<String> items) throws Exception {
+    /**
+     * Gets the items in a kit. Taken from Essentials
+     * @param ess The instance of Essentials
+     * @param user The user to get the kit for
+     * @param items The items in the kit
+     * @return The items in the kit
+     * @throws Exception If the kit doesn't exist
+     */
+    private List<ItemStack> getKitItems(IEssentials ess, User user, List<String> items) throws Exception {
             final IText input = new SimpleTextInput(items);
             final IText output = new KeywordReplacer(input, user.getSource(), ess, true, true);
 
@@ -240,6 +236,24 @@ public class Angel {
                 itemList.add(stack);
             }
             return itemList;
+    }
+
+    public void tpTutorial(Player p) {
+        World tut = Bukkit.getWorld("tutorial");
+        if (tut != null)
+            //todo Need a tick delay otherwise they will teleport to essentials spawn. Need to figure out why
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    Bukkit.getServer().getWorlds().forEach(world -> plugin.getLogger().log(Level.INFO, world.getName()));
+                    Location loc = new Location(tut, 5.54, 204.00, 8.51, -85.80f, -1.58f);
+                    if (!p.teleport(loc)) {
+                        plugin.getLogger().log(Level.INFO, "teleport failed for " + p.getName() + " to tutorial. Using backup method");
+                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "mvtp " + p.getName() + " tutorial");
+                    } else
+                        plugin.getLogger().log(Level.INFO, "Teleported " + p.getName() + " to tutorial");
+                }
+            }.runTaskLater(plugin, 2);
     }
 
     public boolean isGraceInactive() {return this.isGraceInactive;}

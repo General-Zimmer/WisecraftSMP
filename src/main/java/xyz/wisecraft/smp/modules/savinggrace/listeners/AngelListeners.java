@@ -71,6 +71,9 @@ public class AngelListeners implements Listener {
         UUID UUID = p.getUniqueId();
         Angel angel = angels.get(UUID);
 
+        if (angel.getHasGraceRecently() == PlayerState.STARTER_KIT)
+            angel.tpTutorial(p);
+
         angel.giveGraceMessage(p);
     }
 

@@ -42,7 +42,7 @@ public class TogglePVPModule extends ModuleClass {
 
     @Override
     public void onEnable() {
-        setupPAPI();
+
 
 
         // PVPToggle data
@@ -61,6 +61,7 @@ public class TogglePVPModule extends ModuleClass {
 
         PVPStorage.setBlockedWorlds(this, plugin.getConfig().getStringList("SETTINGS.BLOCKED_WORLDS"));
 
+        setupPAPI(); // This always last. Needs storage to be setup first.
     }
 
     @Override
