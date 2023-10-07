@@ -1,9 +1,11 @@
 package xyz.wisecraft.smp.modules.togglepvp.utils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import xyz.wisecraft.smp.WisecraftSMP;
+import xyz.wisecraft.smp.modulation.ModuleClass;
 import xyz.wisecraft.smp.modulation.storage.storagehelpers.StorageHelperMaps;
 import xyz.wisecraft.smp.modules.togglepvp.storage.PVPStorage;
 
@@ -17,17 +19,25 @@ import java.util.UUID;
 public class PersistentData {
 	private final WisecraftSMP plugin = WisecraftSMP.getInstance();
 	private final FileConfiguration config = plugin.getConfig();
-	private final StorageHelperMaps<HashMap<UUID, Boolean>, UUID, Boolean> pvpPlayers = PVPStorage.getPVPPlayers();
+	private final StorageHelperMaps<HashMap<UUID, Boolean>, UUID, Boolean> pvpPlayers;
 	private final File dir;
 
 	/**
 	 * Constructor for the PersistentData class.
 	 * @param file The file.
 	 */
-	public PersistentData(File file) {
+	public PersistentData(File file, ModuleClass module) {
 		//noinspection ResultOfMethodCallIgnored
 		file.mkdir();
 		this.dir = file;
+
+		// setup PVPPlayers
+		HashMap<UUID, Boolean> PVPPlayers = new HashMap<>();
+		for (Player player : Bukkit.getOnlinePlayers()) {
+			PVPPlayers.put(player.getUniqueId(), GetPlayerPvPState(player));
+		}
+		PVPStorage.PVPPlayers = new StorageHelperMaps<>(module, "PVPPlayers", PVPPlayers);
+		this.pvpPlayers = PVPStorage.PVPPlayers;
 	}
 
 	/**

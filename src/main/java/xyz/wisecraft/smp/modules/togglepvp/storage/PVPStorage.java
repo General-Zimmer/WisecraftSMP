@@ -33,7 +33,7 @@ public abstract class PVPStorage {
      *  Get the PVPPlayers
      */
     @Getter
-    private static StorageHelperMaps<HashMap<UUID,Boolean>, UUID, Boolean> PVPPlayers;
+    public static StorageHelperMaps<HashMap<UUID,Boolean>, UUID, Boolean> PVPPlayers;
     /**
      * -- GETTER --
      *  Get the cooldowns
@@ -54,16 +54,9 @@ public abstract class PVPStorage {
     public static void setupTogglePVPData(ModuleClass module) {
         // PVPToggle persistent data
         File PVPData = new File(module.getPlugin().getDataFolder(), "togglepvp");
-        PersistentData persistentData = new PersistentData(PVPData);
+        PersistentData persistentData = new PersistentData(PVPData, module);
         PVPStorage.PVPPersistentData = new StorageHelperGeneric<>(module, "PVPPersistentData");
         PVPStorage.PVPPersistentData.set(persistentData);
-
-        // setup PVPPlayers
-        HashMap<UUID, Boolean> PVPPlayers = new HashMap<>();
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            PVPPlayers.put(player.getUniqueId(), persistentData.GetPlayerPvPState(player));
-        }
-        PVPStorage.PVPPlayers = new StorageHelperMaps<>(module, "PVPPlayers", PVPPlayers);
 
         // setup blocked worlds
         List<String> blockedWorlds = module.getPlugin().getConfig().getStringList("SETTINGS.BLOCKED_WORLDS");
