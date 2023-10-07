@@ -22,7 +22,7 @@ public class Gettownplot extends BaseAdvancement  {
 
     registerEvent(PlotClaimEvent.class, e -> {
       Player p = (e.getNewResident() != null) ? e.getNewResident().getPlayer() : null;
-      if (p!= null && isGranted(p))
+      if (p!= null && !isGranted(p))
         grant(p);
     });
   }

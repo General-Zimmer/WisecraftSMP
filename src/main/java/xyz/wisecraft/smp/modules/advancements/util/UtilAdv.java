@@ -203,12 +203,12 @@ public abstract class UtilAdv {
     }
 
     public static void sendAdvancementGrantedAnnouncementDiscord(Player p, com.fren_gor.ultimateAdvancementAPI.advancement.Advancement adv) {
-        final MessageType channel = MessageType.DefaultTypes.CHAT;
+        final MessageType channel = MessageType.DefaultTypes.ADVANCEMENT;
         final boolean allowGroupMentions = false;
         boolean gameRule = Boolean.TRUE.equals(p.getWorld().getGameRuleValue(GameRule.ANNOUNCE_ADVANCEMENTS));
         @Nullable DiscordService apiDiscord = AdvancementsModule.getModule().getApiDiscord();
 
-        
+
         if (apiDiscord != null && gameRule && adv.getDisplay().doesAnnounceToChat())
             apiDiscord.sendMessage(channel, Arrays.toString(adv.getAnnounceMessage(p)), allowGroupMentions);
     }

@@ -1,12 +1,15 @@
 package xyz.wisecraft.smp.modules.togglepvp.storage;
 
 import lombok.Getter;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import xyz.wisecraft.smp.modulation.ModuleClass;
 import xyz.wisecraft.smp.modulation.storage.storagehelpers.StorageHelperCollection;
 import xyz.wisecraft.smp.modulation.storage.storagehelpers.StorageHelperGeneric;
 import xyz.wisecraft.smp.modulation.storage.storagehelpers.StorageHelperMaps;
 import xyz.wisecraft.smp.modules.togglepvp.utils.PersistentData;
 
+import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -42,37 +45,31 @@ public abstract class PVPStorage {
      *  Get the PVPDataUtils
      */
     @Getter
-    private static StorageHelperGeneric<PersistentData> PVPDataUtils;
+    private static StorageHelperGeneric<PersistentData> PVPPersistentData;
 
 
     /**
      * Set the PVPDataUtils
-     * @param PVPDataUtils PersistentData
      */
-    public static void setPVPDataUtils(ModuleClass module, PersistentData PVPDataUtils) {
-        PVPStorage.PVPDataUtils = new StorageHelperGeneric<>(module, "PVPDataUtils");
-        getPVPDataUtils().set(PVPDataUtils);
-    }
+    public static void setupTogglePVPData(ModuleClass module) {
+        // PVPToggle persistent data
+        File PVPData = new File(module.getPlugin().getDataFolder(), "togglepvp");
+        PersistentData persistentData = new PersistentData(PVPData);
+        PVPStorage.PVPPersistentData = new StorageHelperGeneric<>(module, "PVPPersistentData");
+        PVPStorage.PVPPersistentData.set(persistentData);
 
-    public static void setPVPPlayers(ModuleClass module, HashMap<UUID,Boolean> PVPPlayers) {
+        // setup PVPPlayers
+        HashMap<UUID, Boolean> PVPPlayers = new HashMap<>();
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            PVPPlayers.put(player.getUniqueId(), persistentData.GetPlayerPvPState(player));
+        }
         PVPStorage.PVPPlayers = new StorageHelperMaps<>(module, "PVPPlayers", PVPPlayers);
-    }
 
-    /**
-     * Set the blocked worlds
-     * @param blockedWorlds List of blocked worlds
-     */
-    public static void setBlockedWorlds(ModuleClass module, List<String> blockedWorlds) {
-
+        // setup blocked worlds
+        List<String> blockedWorlds = module.getPlugin().getConfig().getStringList("SETTINGS.BLOCKED_WORLDS");
         PVPStorage.blockedWorlds = new StorageHelperCollection<>(module, "blockedWorlds", blockedWorlds);
-    }
 
-    /**
-     * Set cooldowns
-     * @param module ModuleClass
-     */
-    public static void setCooldowns(ModuleClass module) {
-
+        // setup cooldowns
         PVPStorage.cooldowns = new StorageHelperMaps<>(module, "cooldowns", new HashMap<>());
     }
 }
