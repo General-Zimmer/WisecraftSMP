@@ -9,11 +9,15 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameT
 import com.fren_gor.ultimateAdvancementAPI.util.AdvancementKey;
 import com.fren_gor.ultimateAdvancementAPI.util.CoordAdapter;
 import lombok.Getter;
+import net.essentialsx.api.v2.services.discord.DiscordService;
+import net.essentialsx.api.v2.services.discord.MessageType;
 import net.luckperms.api.LuckPerms;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import xyz.wisecraft.core.WisecraftCoreApi;
 import xyz.wisecraft.smp.modulation.ModuleClass;
 import xyz.wisecraft.smp.modules.advancements.advs.AdvancementTabNamespaces;
@@ -32,6 +36,7 @@ import xyz.wisecraft.smp.modules.advancements.advs.legacy.nobility.Nob_time;
 import xyz.wisecraft.smp.modules.advancements.advs.tutorial_quests.*;
 import xyz.wisecraft.smp.modules.advancements.advs.tutorial_quests.allspecialty.*;
 import xyz.wisecraft.smp.modules.advancements.cmd.AdvCMD;
+import xyz.wisecraft.smp.modules.advancements.listeners.DiscordAdvListener;
 import xyz.wisecraft.smp.modules.advancements.listeners.LegacyRoles;
 import xyz.wisecraft.smp.modules.advancements.listeners.TimberListeners;
 import xyz.wisecraft.smp.modules.advancements.threads.GibRoles;
@@ -61,6 +66,8 @@ public class AdvancementsModule extends ModuleClass {
     private final boolean isVeinMinerEnabled = setupDependency("VeinMiner");
     private final boolean isJobsEnabled = setupDependency("Jobs");
     private final boolean isTownyEnabled = setupDependency("Towny");
+    @Getter
+    private @Nullable DiscordService apiDiscord = Bukkit.getServicesManager().load(DiscordService.class);
 
     public AdvancementsModule(long id) {
         super(id);
@@ -69,6 +76,15 @@ public class AdvancementsModule extends ModuleClass {
 
     @Override
     public void onEnable() {
+
+        // The built-in channel you want to send your message to, in this case the chat channel.
+
+// Set to true if your message should be allowed to ping @everyone, @here, or roles.
+// If you are sending user-generated content, you probably should keep this as false.
+
+// Send the actual message
+
+
 
         plugin.getAdvapi().enableSQLite(new File(plugin.getServer().getWorldContainer().getAbsolutePath() + "/world", "advancements.db"));
         api = UltimateAdvancementAPI.getInstance(plugin);
@@ -86,11 +102,8 @@ public class AdvancementsModule extends ModuleClass {
         if (isTimberEnabled && core != null)
             listeners.add(new TimberListeners(core));
 
-
-
         if (luck == null) return listeners;
 
-        // Check for new citizens. This is async right after this step.
         String servName = OtherStorage.getServer_name();
         if (servName.equalsIgnoreCase("l-gp1")  || servName.equalsIgnoreCase("legacy")) {
             new GibRoles(core, luck).runTaskTimer(plugin, 20*60*10, 20*60*10);

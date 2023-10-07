@@ -7,8 +7,11 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameT
 import com.fren_gor.ultimateAdvancementAPI.util.AdvancementKey;
 import com.fren_gor.ultimateAdvancementAPI.visibilities.VanillaVisibility;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.CraftItemEvent;
+import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.modules.advancements.advs.AdvancementTabNamespaces;
+import xyz.wisecraft.smp.modules.advancements.util.UtilAdv;
 
 import static xyz.wisecraft.smp.modules.advancements.util.UtilAdv.IsCraftedItem;
 
@@ -21,5 +24,11 @@ public class Craft_bundle extends BaseAdvancement implements VanillaVisibility {
     super(KEY.getKey(), new AdvancementDisplay(Material.BUNDLE, "Bundling things together!", AdvancementFrameType.TASK, true, false, x, y , "Craft a bundle. Check our wiki on wisecraft.xyz for recipes"), parent, 1);
 
     registerEvent(CraftItemEvent.class, e -> IsCraftedItem(e, this, Material.BUNDLE));
+  }
+
+  @Override
+  public void onGrant(@NotNull Player player, boolean giveRewards) {
+    super.onGrant(player, giveRewards);
+    UtilAdv.sendAdvancementGrantedAnnouncementDiscord(player, this);
   }
 }

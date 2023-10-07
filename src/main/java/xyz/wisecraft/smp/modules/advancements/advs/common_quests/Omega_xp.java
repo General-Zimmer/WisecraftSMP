@@ -7,7 +7,9 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameT
 import com.fren_gor.ultimateAdvancementAPI.util.AdvancementKey;
 import com.fren_gor.ultimateAdvancementAPI.visibilities.VanillaVisibility;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerLevelChangeEvent;
+import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.modules.advancements.advs.AdvancementTabNamespaces;
 import xyz.wisecraft.smp.modules.advancements.util.UtilAdv;
 
@@ -20,5 +22,11 @@ public class Omega_xp extends BaseAdvancement implements VanillaVisibility {
         super(KEY.getKey(), new AdvancementDisplay(Material.EXPERIENCE_BOTTLE, "OMEEEEEEGA XP!", AdvancementFrameType.CHALLENGE, true, true, x, y, "Level 1000 aquired"), parent, 1000);
 
         registerEvent(PlayerLevelChangeEvent.class, e -> UtilAdv.advLvl(this, e));
+    }
+
+    @Override
+    public void onGrant(@NotNull Player player, boolean giveRewards) {
+        super.onGrant(player, giveRewards);
+        UtilAdv.sendAdvancementGrantedAnnouncementDiscord(player, this);
     }
 }

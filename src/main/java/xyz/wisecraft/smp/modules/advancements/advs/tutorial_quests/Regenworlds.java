@@ -9,7 +9,9 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameT
 import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.modules.advancements.advs.AdvancementTabNamespaces;
+import xyz.wisecraft.smp.modules.advancements.util.UtilAdv;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,5 +36,10 @@ public class Regenworlds extends BaseAdvancement implements VanillaVisibility {
         incrementProgression(p);
       }
     });
+  }
+  @Override
+  public void onGrant(@NotNull Player player, boolean giveRewards) {
+    super.onGrant(player, giveRewards);
+    UtilAdv.sendAdvancementGrantedAnnouncementDiscord(player, this);
   }
 }

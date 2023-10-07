@@ -30,4 +30,10 @@ public class Nobility extends MultiTasksAdvancement implements VanillaVisibility
   public void giveReward(@NotNull Player player) {
     UtilAdv.addRole(player, "noble");
   }
+
+  @Override
+  public void onGrant(@NotNull Player player, boolean giveRewards) {
+    super.onGrant(player, giveRewards);
+    UtilAdv.sendAdvancementGrantedAnnouncementDiscord(player, this);
+  }
 }

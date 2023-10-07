@@ -4,11 +4,14 @@ import com.craftaro.ultimatetimber.events.TreeFellEvent;
 import com.fren_gor.ultimateAdvancementAPI.advancement.BaseAdvancement;
 import com.gamingmesh.jobs.api.JobsLevelUpEvent;
 import com.gamingmesh.jobs.container.Job;
+import net.essentialsx.api.v2.services.discord.DiscordService;
+import net.essentialsx.api.v2.services.discord.MessageType;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.model.group.Group;
 import net.luckperms.api.node.Node;
 import net.luckperms.api.node.types.InheritanceNode;
 import org.bukkit.Bukkit;
+import org.bukkit.GameRule;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.advancement.Advancement;
@@ -17,11 +20,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerLevelChangeEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.modules.advancements.AdvancementsModule;
 import xyz.wisecraft.smp.modules.advancements.advs.tutorial_quests.Firstspecialty;
 import xyz.wisecraft.smp.storage.OtherStorage;
 
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -195,5 +200,16 @@ public abstract class UtilAdv {
         com.fren_gor.ultimateAdvancementAPI.advancement.Advancement first = AdvancementsModule.plugin.getAdvapi().getAdvancement(Firstspecialty.KEY);
         if (first != null)
             first.grant(p);
+    }
+
+    public static void sendAdvancementGrantedAnnouncementDiscord(Player p, com.fren_gor.ultimateAdvancementAPI.advancement.Advancement adv) {
+        final MessageType channel = MessageType.DefaultTypes.CHAT;
+        final boolean allowGroupMentions = false;
+        boolean gameRule = Boolean.TRUE.equals(p.getWorld().getGameRuleValue(GameRule.ANNOUNCE_ADVANCEMENTS));
+        @Nullable DiscordService apiDiscord = AdvancementsModule.getModule().getApiDiscord();
+
+        
+        if (apiDiscord != null && gameRule && adv.getDisplay().doesAnnounceToChat())
+            apiDiscord.sendMessage(channel, Arrays.toString(adv.getAnnounceMessage(p)), allowGroupMentions);
     }
 }

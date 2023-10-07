@@ -3,12 +3,14 @@ package xyz.wisecraft.smp.modules.advancements.advs.tutorial_quests;
 import com.fren_gor.ultimateAdvancementAPI.util.AdvancementKey;
 import com.palmergames.bukkit.towny.event.resident.NewResidentEvent;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.modules.advancements.advs.AdvancementTabNamespaces;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDisplay;
 import com.fren_gor.ultimateAdvancementAPI.advancement.BaseAdvancement;
 import org.bukkit.Material;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
 import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
+import xyz.wisecraft.smp.modules.advancements.util.UtilAdv;
 
 public class Jointown extends BaseAdvancement  {
 
@@ -25,5 +27,10 @@ public class Jointown extends BaseAdvancement  {
       if (p != null && isGranted(p))
         grant(p);
     });
+  }
+  @Override
+  public void onGrant(@NotNull Player player, boolean giveRewards) {
+    super.onGrant(player, giveRewards);
+    UtilAdv.sendAdvancementGrantedAnnouncementDiscord(player, this);
   }
 }

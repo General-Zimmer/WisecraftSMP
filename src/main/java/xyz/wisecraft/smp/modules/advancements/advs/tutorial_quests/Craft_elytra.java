@@ -7,8 +7,11 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameT
 import com.fren_gor.ultimateAdvancementAPI.util.AdvancementKey;
 import com.fren_gor.ultimateAdvancementAPI.visibilities.VanillaVisibility;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.CraftItemEvent;
+import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.modules.advancements.advs.AdvancementTabNamespaces;
+import xyz.wisecraft.smp.modules.advancements.util.UtilAdv;
 
 import static xyz.wisecraft.smp.modules.advancements.util.UtilAdv.IsCraftedItem;
 
@@ -21,5 +24,10 @@ public class Craft_elytra extends BaseAdvancement implements VanillaVisibility {
     super(KEY.getKey(), new AdvancementDisplay(Material.ELYTRA, "Flying craftsmanship", AdvancementFrameType.TASK, true, true, x, y , "Craft an elytra. Check our wiki on wisecraft.xyz for recipes"), parent, 1);
 
     registerEvent(CraftItemEvent.class, e -> IsCraftedItem(e, this, Material.ELYTRA));
+  }
+  @Override
+  public void onGrant(@NotNull Player player, boolean giveRewards) {
+    super.onGrant(player, giveRewards);
+    UtilAdv.sendAdvancementGrantedAnnouncementDiscord(player, this);
   }
 }

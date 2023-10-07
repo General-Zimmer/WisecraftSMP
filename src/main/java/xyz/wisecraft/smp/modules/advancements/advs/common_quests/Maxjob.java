@@ -7,7 +7,10 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameT
 import com.fren_gor.ultimateAdvancementAPI.util.AdvancementKey;
 import com.gamingmesh.jobs.api.JobsLevelUpEvent;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.modules.advancements.advs.AdvancementTabNamespaces;
+import xyz.wisecraft.smp.modules.advancements.util.UtilAdv;
 
 import static xyz.wisecraft.smp.modules.advancements.util.UtilAdv.isJobMaxed;
 
@@ -20,5 +23,10 @@ public class Maxjob extends BaseAdvancement  {
     super(KEY.getKey(), new AdvancementDisplay(Material.FLETCHING_TABLE, "Casually jobbin'", AdvancementFrameType.GOAL, true, true, x, y , "Max out a job"), parent, 1);
 
     registerEvent(JobsLevelUpEvent.class, e -> isJobMaxed(e, this));
+  }
+  @Override
+  public void onGrant(@NotNull Player player, boolean giveRewards) {
+    super.onGrant(player, giveRewards);
+    UtilAdv.sendAdvancementGrantedAnnouncementDiscord(player, this);
   }
 }
