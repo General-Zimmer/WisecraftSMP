@@ -14,7 +14,6 @@ import xyz.wisecraft.smp.modules.savinggrace.enums.PlayerState;
 import xyz.wisecraft.smp.modules.savinggrace.models.Angel;
 import xyz.wisecraft.smp.modules.savinggrace.storage.AngelStorage;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -41,7 +40,7 @@ public class AngelListeners implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
         if (!angels.containsKey(p.getUniqueId())) {
-            Angel angel = new Angel("starter", ess, p);
+            Angel angel = new Angel(p);
             angels.put(p.getUniqueId(), angel);
         }
     }
@@ -57,7 +56,7 @@ public class AngelListeners implements Listener {
 
         Angel angel = angels.get(UUID);
 
-        if (angel.isGraceInactive())
+        if (angel.getGraceTask() == null)
             angels.remove(UUID);
     }
 
@@ -97,7 +96,5 @@ public class AngelListeners implements Listener {
         } else {
             angel.giveStarter(e, ess);
         }
-
-
     }
 }

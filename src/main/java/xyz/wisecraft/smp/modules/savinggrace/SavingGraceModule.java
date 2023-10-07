@@ -32,7 +32,7 @@ public class SavingGraceModule extends ModuleClass {
         AngelStorage.setAngels(new StorageHelperMaps<>(this, "angels", new HashMap<>()));
 
         for (Player p : Bukkit.getOnlinePlayers()) {
-            Angel angel = new Angel("starter", ess, p);
+            Angel angel = new Angel(p);
             AngelStorage.getAngels().put(p.getUniqueId(), angel);
         }
     }

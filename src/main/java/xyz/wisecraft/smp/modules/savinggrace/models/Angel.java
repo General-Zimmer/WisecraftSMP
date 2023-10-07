@@ -14,6 +14,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import org.yaml.snakeyaml.external.biz.base64Coder.Base64Coder;
 import xyz.wisecraft.smp.WisecraftSMP;
@@ -30,24 +31,23 @@ import static xyz.wisecraft.smp.modules.tutorialstuff.util.UtilRandom.getToolTyp
 /**
  * Class for the Angel object.
  */
+@Getter
 public class Angel {
 
-    private boolean isGraceInactive = true;
+    private BukkitTask graceTask = null;
 
     /**
      * -- GETTER --
      *  Gets graces
      *
      */
-    @Getter
     private int graces;
-    @Getter
     private PlayerState hasGraceRecently = PlayerState.STALE;
     private static final WisecraftSMP plugin = WisecraftSMP.getInstance();
     /**
      * Get the amount of graces the player has left
      */
-    public Angel(String starterKit, IEssentials ess, Player p) {
+    public Angel(Player p) {
         this.resetGrace(p.hasPermission("wisecraft.donator"));
     }
 
@@ -199,9 +199,9 @@ public class Angel {
      */
     public void safeDelete(UUID UUID) {
 
-        if (this.isGraceInactive()) {
+        if (graceTask == null) {
 
-            new BukkitRunnable() {
+            graceTask = new BukkitRunnable() {
                 @Override
                 public void run() {
                     Player player = Bukkit.getPlayer(UUID);
@@ -213,16 +213,15 @@ public class Angel {
                     Angel angel = AngelStorage.getAngels().get(UUID);
 
                     angel.resetGrace(player.hasPermission("wisecraft.donator"));
-                    angel.setGraceActive(false);
+                    angel.graceTask = null;
                     plugin.getLogger().log(Level.INFO, "Grace timer stopped for: " + Bukkit.getPlayer(UUID));
                     player.sendMessage(ChatColor.AQUA + "Your graces have been reset");
                 }
 
 
-            }.runTaskLater(plugin, 20*30);
-            //}.runTaskLater(plugin, 20*60*60*2); // 2 hour
+            //}.runTaskLater(plugin, 20*30);
+            }.runTaskLater(plugin, 20*60*60*2); // 2 hour
             plugin.getLogger().log(Level.INFO, "Grace timer started for: " + Bukkit.getPlayer(UUID));
-            this.setGraceActive(true);
         }
     }
 
@@ -290,13 +289,5 @@ public class Angel {
                 }
             }.runTaskLater(plugin, 2);
     }
-
-    public boolean isGraceInactive() {return this.isGraceInactive;}
-
-    /**
-     * Sets whether or not a player has a grace timer active
-     * @param bool Whether or not a player has a grace timer active
-     */
-    public void setGraceActive(boolean bool) {this.isGraceInactive = bool;}
 
 }
