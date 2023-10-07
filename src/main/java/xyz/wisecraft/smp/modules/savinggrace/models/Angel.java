@@ -43,15 +43,12 @@ public class Angel {
     private int graces;
     @Getter
     private PlayerState hasGraceRecently = PlayerState.STALE;
-    private final WisecraftSMP plugin;
-
+    private static final WisecraftSMP plugin = WisecraftSMP.getInstance();
     /**
      * Get the amount of graces the player has left
-     * @param hasDonator If the player has donator
      */
-    public Angel(boolean hasDonator) {
-        plugin = WisecraftSMP.getInstance();
-        this.resetGrace(hasDonator);
+    public Angel(String starterKit, IEssentials ess, Player p) {
+        this.resetGrace(p.hasPermission("wisecraft.donator"));
     }
 
     /**
@@ -61,7 +58,7 @@ public class Angel {
 
         if (hasGraceRecently == PlayerState.STARTER_KIT) {
             p.sendMessage("You have been granted some new items.");
-            p.sendMessage(ChatColor.BLUE + "You didn't /sethome or place a bed!");
+            p.sendMessage(ChatColor.BLUE + "You didn't /sethome!");
         } else if (hasGraceRecently == PlayerState.GRACE_RECENTLY && this.getGraces() > 0) {
             p.sendMessage(ChatColor.AQUA + "Your gear have been saved. You have " + this.getGraces() + " graces left!");
         } else {
@@ -74,19 +71,57 @@ public class Angel {
 
     /**
      * Give starter gear and teleport to tutorial
-     * @throws Exception If the kit doesn't exist
      */
-    public void giveStarter(IEssentials ess, PlayerDeathEvent e) throws Exception {
-        Player p = e.getEntity();
+    public void giveStarter(PlayerDeathEvent e, IEssentials ess) {
 
-        if (ess != null) {
+        ArrayList<ItemStack> kitItems;
+        try {
             Kit kit = new Kit("starter", ess);
-            kit.expandItems(ess.getUser(p));
-            @NotNull List<ItemStack> itemKeep = e.getItemsToKeep();
-            itemKeep.addAll(getKitItems(ess, ess.getUser(p), kit.getItems()));
+            kitItems = new ArrayList<>(getKitItems(ess, ess.getUser(e.getPlayer()), kit.getItems()));
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+
+        @NotNull List<ItemStack> itemKeep = e.getItemsToKeep();
+        kitItems.forEach(item -> itemKeep.add(item.clone()));
+
+        @NotNull List<ItemStack> drops = e.getDrops();
+        Iterator<ItemStack> kitIterator = kitItems.iterator();
+        while (kitIterator.hasNext() && !drops.isEmpty()) {
+            ItemStack item = kitIterator.next();
+            Iterator<ItemStack> dropIterator = drops.iterator();
+            loopThroughDrops(dropIterator, item, kitIterator);
         }
 
         hasGraceRecently = PlayerState.STARTER_KIT;
+    }
+
+    /**
+     * Loop through drops and remove items that are the same as the kit item
+     * @param dropIterator The iterator for the drops
+     * @param item The item to compare to
+     * @param kitIterator The iterator for the kit items
+     */
+    private void loopThroughDrops(Iterator<ItemStack> dropIterator, ItemStack item, Iterator<ItemStack> kitIterator) {
+        // drop loop
+        while (dropIterator.hasNext() && item.getAmount() > 0) {
+            ItemStack drop = dropIterator.next();
+            if (!drop.getType().equals(item.getType())) continue;
+
+            // Logic
+            if (drop.getAmount() < item.getAmount()) {
+                item.setAmount(item.getAmount() - drop.getAmount());
+                dropIterator.remove();
+                if (dropIterator.hasNext()) loopThroughDrops(dropIterator, item, kitIterator);
+            } else if (drop.getAmount() == item.getAmount()) {
+                kitIterator.remove();
+                dropIterator.remove();
+            } else {
+                drop.setAmount(drop.getAmount() - item.getAmount());
+                kitIterator.remove();
+            }
+
+        }
     }
 
     public void saveGear(PlayerDeathEvent e) {

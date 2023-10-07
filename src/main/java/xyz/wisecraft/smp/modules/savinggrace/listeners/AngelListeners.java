@@ -41,7 +41,7 @@ public class AngelListeners implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
         if (!angels.containsKey(p.getUniqueId())) {
-            Angel angel = new Angel(p.hasPermission("wisecraft.donator"));
+            Angel angel = new Angel("starter", ess, p);
             angels.put(p.getUniqueId(), angel);
         }
     }
@@ -82,7 +82,7 @@ public class AngelListeners implements Listener {
      * @param e The PlayerDeathEvent.
      */
     @EventHandler
-    public void savingGrace(PlayerDeathEvent e) throws Exception {
+    public void savingGrace(PlayerDeathEvent e) {
         Player p = e.getPlayer();
         UUID UUID = p.getUniqueId();
         Angel angel = angels.get(UUID);
@@ -95,8 +95,9 @@ public class AngelListeners implements Listener {
         if (hasHome) {
             angel.saveGear(e);
         } else {
-            angel.giveStarter(ess, e);
+            angel.giveStarter(e, ess);
         }
+
 
     }
 }
