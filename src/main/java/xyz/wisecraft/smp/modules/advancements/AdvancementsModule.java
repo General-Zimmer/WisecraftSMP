@@ -70,8 +70,9 @@ public class AdvancementsModule extends ModuleClass {
     private final boolean isVeinMinerEnabled = setupDependency("VeinMiner");
     private final boolean isJobsEnabled = setupDependency("Jobs");
     private final boolean isTownyEnabled = setupDependency("Towny");
+    private final boolean isDiscordEssentialsEnabled = setupDependency("EssentialsDiscord");
     @Getter
-    private final @Nullable DiscordService apiDiscord = Bukkit.getServicesManager().load(DiscordService.class);
+    private final @Nullable DiscordService apiDiscord = isDiscordEssentialsEnabled ? Bukkit.getServicesManager().load(DiscordService.class) : null;
     @Getter
     private static AdvancementMain advapi = null;
     public AdvancementsModule(long id) {
@@ -124,6 +125,25 @@ public class AdvancementsModule extends ModuleClass {
         commands.add(new AdvCMD(core, luck));
 
         return commands;
+    }
+
+
+    private void initModule() {
+        Bukkit.getServer().getOnlinePlayers().forEach( player ->
+                player.kick(
+                        Component.text("Advancements was loaded/reloaded and you were kicked to prevent Data issues. You can rejoin now."),
+                        PlayerKickEvent.Cause.PLUGIN));
+        // Kicking players before advapi.load() is called to probably prevent events from being triggered because they leave. (I don't know if this is needed)
+        // Not kicking them will prevent them from being loaded into AdvAPI's cache. (This is needed)
+        advapi.load();
+        advapi.enableSQLite(new File(plugin.getServer().getWorldContainer().getAbsolutePath() + "/world", "advancements.db"));
+        api = UltimateAdvancementAPI.getInstance(plugin);
+
+        initializeTabs();
+        tutorial_quests.automaticallyShowToPlayers();
+        tutorial_quests.automaticallyGrantRootAdvancement();
+        common_quests.automaticallyShowToPlayers();
+        common_quests.automaticallyGrantRootAdvancement();
     }
 
     public void initializeTabs() {
@@ -279,23 +299,6 @@ public class AdvancementsModule extends ModuleClass {
 
     }
 
-    private void initModule() {
-        Bukkit.getServer().getOnlinePlayers().forEach( player ->
-                player.kick(
-                        Component.text("Advancements was loaded/reloaded and you were kicked to prevent Data issues. You can rejoin now."),
-                        PlayerKickEvent.Cause.PLUGIN));
-        // Kicking players before advapi.load() is called to probably prevent events from being triggered because they leave. (I don't know if this is needed)
-        // Not kicking them will prevent them from being loaded into AdvAPI's cache. (This is needed)
-        advapi.load();
-        advapi.enableSQLite(new File(plugin.getServer().getWorldContainer().getAbsolutePath() + "/world", "advancements.db"));
-        api = UltimateAdvancementAPI.getInstance(plugin);
-
-        initializeTabs();
-        tutorial_quests.automaticallyShowToPlayers();
-        tutorial_quests.automaticallyGrantRootAdvancement();
-        common_quests.automaticallyShowToPlayers();
-        common_quests.automaticallyGrantRootAdvancement();
-    }
 
     @Override
     public boolean hasAllHardDependencies() {

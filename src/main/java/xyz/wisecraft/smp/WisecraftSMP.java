@@ -98,7 +98,9 @@ public class WisecraftSMP extends JavaPlugin {
             } catch (Exception e) {
                 if (module.isErrorMessage(e.getMessage(), ModuleState.DISABLED)) {
                     this.getLogger().log(Level.INFO, module.getModuleName() + " was not enabled");
-                } else {
+                } else if (e.getMessage().equalsIgnoreCase("Module " + module.getModuleName() + " does not have all hard dependencies!")) {
+                    this.getLogger().log(Level.WARNING, "Module " + module.getModuleName() + " does not have all hard dependencies!");
+                }else {
                     this.getLogger().log(java.util.logging.Level.SEVERE, "Could not enable module " + module.getClass().getName(), e);
                 }
             }
