@@ -106,8 +106,6 @@ public class PVPCMD extends BukkitCommand {
 		return true;
 	}
 
-
-	// todo rename pvptoggle to togglepvp
 	@Override
 	public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String alias, @NotNull String[] args) throws IllegalArgumentException {
 		List<String> words = new ArrayList<>();
