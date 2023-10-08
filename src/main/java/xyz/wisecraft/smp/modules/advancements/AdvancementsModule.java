@@ -285,6 +285,7 @@ public class AdvancementsModule extends ModuleClass {
                         Component.text("Advancements was loaded/reloaded and you were kicked to prevent Data issues. You can rejoin now."),
                         PlayerKickEvent.Cause.PLUGIN));
         // Kicking players before advapi.load() is called to probably prevent events from being triggered because they leave. (I don't know if this is needed)
+        // Not kicking them will prevent them from being loaded into AdvAPI's cache. (This is needed)
         advapi.load();
         advapi.enableSQLite(new File(plugin.getServer().getWorldContainer().getAbsolutePath() + "/world", "advancements.db"));
         api = UltimateAdvancementAPI.getInstance(plugin);
