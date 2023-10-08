@@ -202,7 +202,7 @@ public abstract class UtilAdv {
     }
 
     public static void grantFirstSpecialty(Player p) {
-        com.fren_gor.ultimateAdvancementAPI.advancement.Advancement first = AdvancementsModule.plugin.getAdvapi().getAdvancement(Firstspecialty.KEY);
+        com.fren_gor.ultimateAdvancementAPI.advancement.Advancement first = AdvancementsModule.getAdvapi().getAdvancement(Firstspecialty.KEY);
         if (first != null)
             first.grant(p);
     }

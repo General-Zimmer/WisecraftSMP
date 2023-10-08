@@ -1,18 +1,16 @@
 package xyz.wisecraft.smp;
 
-import com.fren_gor.ultimateAdvancementAPI.AdvancementMain;
 import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.reflections.Reflections;
-import xyz.wisecraft.smp.modulation.interfaces.Module;
+import xyz.wisecraft.smp.modulation.ModuleClass;
 import xyz.wisecraft.smp.modulation.UtilModuleCommon;
 import xyz.wisecraft.smp.modulation.cmd.ManageModules;
 import xyz.wisecraft.smp.modulation.enums.ModuleState;
-import xyz.wisecraft.smp.modulation.exceptions.MissingDependencyException;
-import xyz.wisecraft.smp.modulation.ModuleClass;
+import xyz.wisecraft.smp.modulation.interfaces.Module;
 import xyz.wisecraft.smp.modulation.storage.ModulationStorage;
 import xyz.wisecraft.smp.modulation.storage.ModuleSettings;
 import xyz.wisecraft.smp.storage.OtherStorage;
@@ -35,8 +33,6 @@ public class WisecraftSMP extends JavaPlugin {
     @Getter
     private static WisecraftSMP instance;
     @Getter
-    private AdvancementMain advapi;
-    @Getter
     private FileConfiguration moduleConfig;
     @Getter
     private final Boolean isTesting;
@@ -57,9 +53,7 @@ public class WisecraftSMP extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        if (isTesting) return;
-        advapi = new AdvancementMain(this);
-        advapi.load();
+        if (isTesting) return; // Prevents the plugin from loading if it's in testing mode
     }
     @Override
     public void onEnable() {
@@ -101,7 +95,7 @@ public class WisecraftSMP extends JavaPlugin {
             try {
                 if (module.enableModule())
                     ModulationStorage.addModule(module);
-            } catch (MissingDependencyException | IllegalStateException e) {
+            } catch (Exception e) {
                 if (module.isErrorMessage(e.getMessage(), ModuleState.DISABLED)) {
                     this.getLogger().log(Level.INFO, module.getModuleName() + " was not enabled");
                 } else {

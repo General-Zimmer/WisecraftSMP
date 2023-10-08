@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.modulation.ModuleClass;
 import xyz.wisecraft.smp.modulation.UtilModuleCommon;
-import xyz.wisecraft.smp.modulation.models.ModuleInfo;
+import xyz.wisecraft.smp.modulation.storage.ModuleInfo;
 import xyz.wisecraft.smp.modulation.storage.ModulationStorage;
 
 import java.util.ArrayList;
@@ -34,6 +34,7 @@ public interface Module extends Comparable<Module> {
      */
     default void onDisable() {}
 
+    default void onLoad() {}
     /**
      * This method should register all the events for the module.
      */

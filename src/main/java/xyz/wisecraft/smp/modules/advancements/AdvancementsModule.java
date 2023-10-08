@@ -1,5 +1,6 @@
 package xyz.wisecraft.smp.modules.advancements;
 
+import com.fren_gor.ultimateAdvancementAPI.AdvancementMain;
 import com.fren_gor.ultimateAdvancementAPI.AdvancementTab;
 import com.fren_gor.ultimateAdvancementAPI.UltimateAdvancementAPI;
 import com.fren_gor.ultimateAdvancementAPI.advancement.BaseAdvancement;
@@ -11,14 +12,17 @@ import com.fren_gor.ultimateAdvancementAPI.util.CoordAdapter;
 import lombok.Getter;
 import net.essentialsx.api.v2.services.discord.DiscordService;
 import net.essentialsx.api.v2.services.discord.MessageType;
+import net.kyori.adventure.text.Component;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerKickEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.wisecraft.core.WisecraftCoreApi;
+import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.modulation.ModuleClass;
 import xyz.wisecraft.smp.modules.advancements.advs.AdvancementTabNamespaces;
 import xyz.wisecraft.smp.modules.advancements.advs.common_quests.*;
@@ -67,8 +71,9 @@ public class AdvancementsModule extends ModuleClass {
     private final boolean isJobsEnabled = setupDependency("Jobs");
     private final boolean isTownyEnabled = setupDependency("Towny");
     @Getter
-    private @Nullable DiscordService apiDiscord = Bukkit.getServicesManager().load(DiscordService.class);
-
+    private final @Nullable DiscordService apiDiscord = Bukkit.getServicesManager().load(DiscordService.class);
+    @Getter
+    private static AdvancementMain advapi = null;
     public AdvancementsModule(long id) {
         super(id);
         module = this;
@@ -77,17 +82,12 @@ public class AdvancementsModule extends ModuleClass {
     @Override
     public void onEnable() {
 
-
-        Bukkit.getScheduler().runTask(plugin, () -> {
-            plugin.getAdvapi().enableSQLite(new File(plugin.getServer().getWorldContainer().getAbsolutePath() + "/world", "advancements.db"));
-            api = UltimateAdvancementAPI.getInstance(plugin);
-            initializeTabs();
-            tutorial_quests.automaticallyShowToPlayers();
-            tutorial_quests.automaticallyGrantRootAdvancement();
-            common_quests.automaticallyShowToPlayers();
-            common_quests.automaticallyGrantRootAdvancement();
-        });
-
+        if (advapi == null) {
+            advapi = new AdvancementMain(WisecraftSMP.getInstance());
+            initModule();
+            return;
+        }
+        Bukkit.getScheduler().runTask(WisecraftSMP.getInstance(), this::initModule);
     }
 
     @Override
@@ -115,7 +115,7 @@ public class AdvancementsModule extends ModuleClass {
 
     @Override
     public void onDisable() {
-        plugin.getAdvapi().disable();
+        AdvancementsModule.advapi.disable();
     }
 
     @Override
@@ -279,6 +279,22 @@ public class AdvancementsModule extends ModuleClass {
 
     }
 
+    private void initModule() {
+        Bukkit.getServer().getOnlinePlayers().forEach( player ->
+                player.kick(
+                        Component.text("Advancements was loaded/reloaded and you were kicked to prevent Data issues. You can rejoin now."),
+                        PlayerKickEvent.Cause.PLUGIN));
+        // Kicking players before advapi.load() is called to probably prevent events from being triggered because they leave. (I don't know if this is needed)
+        advapi.load();
+        advapi.enableSQLite(new File(plugin.getServer().getWorldContainer().getAbsolutePath() + "/world", "advancements.db"));
+        api = UltimateAdvancementAPI.getInstance(plugin);
+
+        initializeTabs();
+        tutorial_quests.automaticallyShowToPlayers();
+        tutorial_quests.automaticallyGrantRootAdvancement();
+        common_quests.automaticallyShowToPlayers();
+        common_quests.automaticallyGrantRootAdvancement();
+    }
 
     @Override
     public boolean hasAllHardDependencies() {

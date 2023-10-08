@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import xyz.wisecraft.smp.WisecraftSMP;
+import xyz.wisecraft.smp.modules.advancements.AdvancementsModule;
 import xyz.wisecraft.smp.modules.advancements.advs.legacy.Citizen;
 import xyz.wisecraft.smp.modules.advancements.advs.legacy.Nobility;
 import xyz.wisecraft.smp.modules.advancements.util.UtilAdv;
@@ -33,8 +34,8 @@ public class LegacyRoles implements Listener {
 
         Player p = e.getPlayer();
 
-        Advancement advCitizen = plugin.getAdvapi().getAdvancement(Citizen.KEY);
-        Advancement advNoble = plugin.getAdvapi().getAdvancement(Nobility.KEY);
+        Advancement advCitizen = AdvancementsModule.getAdvapi().getAdvancement(Citizen.KEY);
+        Advancement advNoble = AdvancementsModule.getAdvapi().getAdvancement(Nobility.KEY);
 
         if (advCitizen != null)
             UtilAdv.fixRole_AdvMismatch(p, advCitizen, "citizen");
