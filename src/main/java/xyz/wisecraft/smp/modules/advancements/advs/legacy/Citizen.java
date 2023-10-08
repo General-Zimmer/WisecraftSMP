@@ -31,4 +31,5 @@ public class Citizen extends MultiTasksAdvancement implements VanillaVisibility 
   public void giveReward(@NotNull Player player) {
     UtilAdv.addRole(player, "citizen");
   }
+
 }

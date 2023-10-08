@@ -8,7 +8,9 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameT
 import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.modules.advancements.advs.AdvancementTabNamespaces;
+import xyz.wisecraft.smp.modules.advancements.util.UtilAdv;
 
 public class Flying_accident extends BaseAdvancement  {
 
@@ -26,4 +28,5 @@ public class Flying_accident extends BaseAdvancement  {
       }
     });
   }
+
 }

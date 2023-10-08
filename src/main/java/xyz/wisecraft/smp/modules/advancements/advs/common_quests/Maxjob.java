@@ -7,7 +7,10 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameT
 import com.fren_gor.ultimateAdvancementAPI.util.AdvancementKey;
 import com.gamingmesh.jobs.api.JobsLevelUpEvent;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.modules.advancements.advs.AdvancementTabNamespaces;
+import xyz.wisecraft.smp.modules.advancements.util.UtilAdv;
 
 import static xyz.wisecraft.smp.modules.advancements.util.UtilAdv.isJobMaxed;
 
@@ -21,4 +24,5 @@ public class Maxjob extends BaseAdvancement  {
 
     registerEvent(JobsLevelUpEvent.class, e -> isJobMaxed(e, this));
   }
+
 }

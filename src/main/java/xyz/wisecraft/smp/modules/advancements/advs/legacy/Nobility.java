@@ -30,4 +30,5 @@ public class Nobility extends MultiTasksAdvancement implements VanillaVisibility
   public void giveReward(@NotNull Player player) {
     UtilAdv.addRole(player, "noble");
   }
+
 }

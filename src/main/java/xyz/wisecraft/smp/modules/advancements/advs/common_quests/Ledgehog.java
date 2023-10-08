@@ -9,7 +9,9 @@ import com.fren_gor.ultimateAdvancementAPI.visibilities.VanillaVisibility;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.modules.advancements.advs.AdvancementTabNamespaces;
+import xyz.wisecraft.smp.modules.advancements.util.UtilAdv;
 
 import java.util.Objects;
 
@@ -30,4 +32,5 @@ public class Ledgehog extends BaseAdvancement implements VanillaVisibility {
       }
     });
   }
+
 }

@@ -3,12 +3,14 @@ package xyz.wisecraft.smp.modules.advancements.advs.tutorial_quests;
 import com.fren_gor.ultimateAdvancementAPI.util.AdvancementKey;
 import com.gamingmesh.jobs.api.JobsJoinEvent;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.modules.advancements.advs.AdvancementTabNamespaces;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDisplay;
 import com.fren_gor.ultimateAdvancementAPI.advancement.BaseAdvancement;
 import org.bukkit.Material;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
 import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
+import xyz.wisecraft.smp.modules.advancements.util.UtilAdv;
 
 public class Gettingjob extends BaseAdvancement  {
 
@@ -22,8 +24,9 @@ public class Gettingjob extends BaseAdvancement  {
       if (e.isCancelled()) return;
 
       Player p = e.getPlayer().getPlayer();
-      if (isGranted(p))
+      if (!isGranted(p))
         grant(p);
     });
   }
+
 }

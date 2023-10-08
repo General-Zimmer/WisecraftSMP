@@ -3,12 +3,14 @@ package xyz.wisecraft.smp.modules.advancements.advs.tutorial_quests;
 import com.fren_gor.ultimateAdvancementAPI.util.AdvancementKey;
 import com.palmergames.bukkit.towny.event.plot.changeowner.PlotClaimEvent;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.modules.advancements.advs.AdvancementTabNamespaces;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementDisplay;
 import com.fren_gor.ultimateAdvancementAPI.advancement.BaseAdvancement;
 import org.bukkit.Material;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
 import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
+import xyz.wisecraft.smp.modules.advancements.util.UtilAdv;
 
 public class Gettownplot extends BaseAdvancement  {
 
@@ -20,8 +22,9 @@ public class Gettownplot extends BaseAdvancement  {
 
     registerEvent(PlotClaimEvent.class, e -> {
       Player p = (e.getNewResident() != null) ? e.getNewResident().getPlayer() : null;
-      if (p!= null && isGranted(p))
+      if (p!= null && !isGranted(p))
         grant(p);
     });
   }
+
 }

@@ -9,9 +9,12 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameT
 import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventPriority;
+import org.jetbrains.annotations.NotNull;
 import wtf.choco.veinminer.api.event.player.PlayerVeinMineEvent;
+import xyz.wisecraft.smp.modulation.UtilModuleCommon;
 import xyz.wisecraft.smp.modules.advancements.AdvancementsModule;
 import xyz.wisecraft.smp.modules.advancements.advs.AdvancementTabNamespaces;
+import xyz.wisecraft.smp.modules.advancements.util.UtilAdv;
 
 public class Veinmine extends BaseAdvancement implements VanillaVisibility {
 
@@ -26,9 +29,9 @@ public class Veinmine extends BaseAdvancement implements VanillaVisibility {
         if (e.isCancelled()) return;
 
         Player p = e.getPlayer();
-        if (!e.isCancelled()) {
-          incrementProgression(p);
-        }
+        incrementProgression(p);
+
       });
   }
+
 }

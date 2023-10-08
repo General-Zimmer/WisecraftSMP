@@ -5,7 +5,7 @@ api-version: 1.18
 depend: []
 softdepend: [Multiverse-Core, UltimateTimber, Essentials, WisecraftCore,
              LuckPerms, PlaceholderAPI, NametagEdit, VeinMiner, GriefPrevention,
-             Towny, WorldGuard, Jobs]
+             Towny, WorldGuard, Jobs, EssentialsDiscord]
 authors: [General_Zimmer]
 permission:
   wisecraft.manage:

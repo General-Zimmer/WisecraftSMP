@@ -6,7 +6,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import xyz.wisecraft.smp.modulation.enums.ModuleState;
 import xyz.wisecraft.smp.modulation.exceptions.MissingDependencyException;
 import xyz.wisecraft.smp.modulation.interfaces.Module;
-import xyz.wisecraft.smp.modulation.models.ModuleInfo;
+import xyz.wisecraft.smp.modulation.storage.ModuleInfo;
 import xyz.wisecraft.smp.modulation.storage.ModulationStorage;
 import xyz.wisecraft.smp.modulation.storage.ModuleSettings;
 
