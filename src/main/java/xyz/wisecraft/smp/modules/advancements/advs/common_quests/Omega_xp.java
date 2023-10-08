@@ -24,9 +24,4 @@ public class Omega_xp extends BaseAdvancement implements VanillaVisibility {
         registerEvent(PlayerLevelChangeEvent.class, e -> UtilAdv.advLvl(this, e));
     }
 
-    @Override
-    public void onGrant(@NotNull Player player, boolean giveRewards) {
-        super.onGrant(player, giveRewards);
-        UtilAdv.sendAdvancementGrantedAnnouncementDiscord(player, this);
-    }
 }

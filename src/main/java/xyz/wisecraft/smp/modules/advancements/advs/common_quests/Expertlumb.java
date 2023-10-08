@@ -25,9 +25,5 @@ public class Expertlumb extends BaseAdvancement implements ParentGrantedVisibili
     if (AdvancementsModule.getModule().isTimberEnabled())
       registerEvent(TreeFellEvent.class, e -> UtilAdv.checkTimber(e, this));
   }
-  @Override
-  public void onGrant(@NotNull Player player, boolean giveRewards) {
-    super.onGrant(player, giveRewards);
-    UtilAdv.sendAdvancementGrantedAnnouncementDiscord(player, this);
-  }
+
 }

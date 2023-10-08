@@ -24,13 +24,9 @@ public class Gettingjob extends BaseAdvancement  {
       if (e.isCancelled()) return;
 
       Player p = e.getPlayer().getPlayer();
-      if (isGranted(p))
+      if (!isGranted(p))
         grant(p);
     });
   }
-  @Override
-  public void onGrant(@NotNull Player player, boolean giveRewards) {
-    super.onGrant(player, giveRewards);
-    UtilAdv.sendAdvancementGrantedAnnouncementDiscord(player, this);
-  }
+
 }

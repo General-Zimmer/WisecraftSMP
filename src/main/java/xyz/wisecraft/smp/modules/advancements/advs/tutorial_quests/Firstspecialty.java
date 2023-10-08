@@ -19,9 +19,5 @@ public class Firstspecialty extends BaseAdvancement {
     public Firstspecialty(Advancement parent, float x, float y) {
         super(KEY.getKey(), new AdvancementDisplay(Material.DEBUG_STICK, "Use a job's specialty", AdvancementFrameType.TASK, true, true, x, y, "Use a job's specialty"), parent, 1);
     }
-    @Override
-    public void onGrant(@NotNull Player player, boolean giveRewards) {
-        super.onGrant(player, giveRewards);
-        UtilAdv.sendAdvancementGrantedAnnouncementDiscord(player, this);
-    }
+
 }

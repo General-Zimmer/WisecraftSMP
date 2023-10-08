@@ -1,11 +1,14 @@
 package xyz.wisecraft.smp.modules.advancements.cmd;
 
+import com.fren_gor.ultimateAdvancementAPI.UltimateAdvancementAPI;
+import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.defaults.BukkitCommand;
 import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.core.WisecraftCoreApi;
 import xyz.wisecraft.smp.WisecraftSMP;
+import xyz.wisecraft.smp.modules.advancements.advs.tutorial_quests.Trypvp;
 import xyz.wisecraft.smp.modules.advancements.threads.GibRoles;
 
 import java.util.ArrayList;
@@ -44,6 +47,10 @@ public class AdvCMD extends BukkitCommand {
                     new GibRoles(core, luck).runTask(plugin);
                     sender.sendMessage("Auto citizen triggered");
                 }
+                case "pvp" -> {
+                    if (sender instanceof org.bukkit.entity.Player p)
+                        UltimateAdvancementAPI.getInstance(plugin).getAdvancement(Trypvp.KEY).revoke(p);
+                }
             }
             return true;
 
@@ -60,6 +67,7 @@ public class AdvCMD extends BukkitCommand {
                 cmds.add("save");
                 cmds.add("load");
                 cmds.add("rank");
+                cmds.add("pvp");
             }
             return cmds;
         }

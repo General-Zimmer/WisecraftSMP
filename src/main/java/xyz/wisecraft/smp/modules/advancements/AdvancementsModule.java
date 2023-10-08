@@ -54,10 +54,10 @@ public class AdvancementsModule extends ModuleClass {
 
     @Getter
     private static AdvancementsModule module;
-    private UltimateAdvancementAPI api;
-    private AdvancementTab tutorial_quests;
-    private AdvancementTab common_quests;
-    private AdvancementTab legacy;
+    private static UltimateAdvancementAPI api = null;
+    private static AdvancementTab tutorial_quests = null;
+    private static AdvancementTab common_quests = null;
+    private static AdvancementTab legacy = null;
     private final boolean isTimberEnabled = setupDependency("UltimateTimber");
     @Getter
     private final LuckPerms luck = setupDependency(LuckPerms.class);
@@ -77,23 +77,17 @@ public class AdvancementsModule extends ModuleClass {
     @Override
     public void onEnable() {
 
-        // The built-in channel you want to send your message to, in this case the chat channel.
 
-// Set to true if your message should be allowed to ping @everyone, @here, or roles.
-// If you are sending user-generated content, you probably should keep this as false.
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            plugin.getAdvapi().enableSQLite(new File(plugin.getServer().getWorldContainer().getAbsolutePath() + "/world", "advancements.db"));
+            api = UltimateAdvancementAPI.getInstance(plugin);
+            initializeTabs();
+            tutorial_quests.automaticallyShowToPlayers();
+            tutorial_quests.automaticallyGrantRootAdvancement();
+            common_quests.automaticallyShowToPlayers();
+            common_quests.automaticallyGrantRootAdvancement();
+        });
 
-// Send the actual message
-
-
-
-        plugin.getAdvapi().enableSQLite(new File(plugin.getServer().getWorldContainer().getAbsolutePath() + "/world", "advancements.db"));
-        api = UltimateAdvancementAPI.getInstance(plugin);
-        initializeTabs();
-
-        tutorial_quests.automaticallyShowToPlayers();
-        tutorial_quests.automaticallyGrantRootAdvancement();
-        common_quests.automaticallyShowToPlayers();
-        common_quests.automaticallyGrantRootAdvancement();
     }
 
     @Override
@@ -103,6 +97,10 @@ public class AdvancementsModule extends ModuleClass {
             listeners.add(new TimberListeners(core));
 
         if (luck == null) return listeners;
+
+        if (apiDiscord != null) {
+            listeners.add(new DiscordAdvListener(apiDiscord));
+        }
 
         String servName = OtherStorage.getServer_name();
         if (servName.equalsIgnoreCase("l-gp1")  || servName.equalsIgnoreCase("legacy")) {

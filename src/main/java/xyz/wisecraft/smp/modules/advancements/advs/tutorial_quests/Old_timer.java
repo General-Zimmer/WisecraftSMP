@@ -20,9 +20,5 @@ public class Old_timer extends BaseAdvancement implements HiddenVisibility {
   public Old_timer(Advancement parent, float x, float y) {
     super(KEY.getKey(), new AdvancementDisplay(Material.WRITTEN_BOOK, "§aOld Timer", AdvancementFrameType.TASK, true, true, x, y , "You've played for a loooong tiime!"), parent, 1);
   }
-  @Override
-  public void onGrant(@NotNull Player player, boolean giveRewards) {
-    super.onGrant(player, giveRewards);
-    UtilAdv.sendAdvancementGrantedAnnouncementDiscord(player, this);
-  }
+
 }

@@ -29,15 +29,9 @@ public class Veinmine extends BaseAdvancement implements VanillaVisibility {
         if (e.isCancelled()) return;
 
         Player p = e.getPlayer();
-        if (!e.isCancelled() && this.isGranted(p)) {
-          incrementProgression(p);
-        }
+        incrementProgression(p);
+
       });
   }
 
-  @Override
-  public void onGrant(@NotNull Player player, boolean giveRewards) {
-    super.onGrant(player, giveRewards);
-    UtilAdv.sendAdvancementGrantedAnnouncementDiscord(player, this);
-  }
 }

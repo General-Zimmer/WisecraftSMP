@@ -32,9 +32,5 @@ public class Ledgehog extends BaseAdvancement implements VanillaVisibility {
       }
     });
   }
-  @Override
-  public void onGrant(@NotNull Player player, boolean giveRewards) {
-    super.onGrant(player, giveRewards);
-    UtilAdv.sendAdvancementGrantedAnnouncementDiscord(player, this);
-  }
+
 }

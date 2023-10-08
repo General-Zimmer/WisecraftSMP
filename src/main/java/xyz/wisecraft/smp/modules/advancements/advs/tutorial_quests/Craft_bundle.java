@@ -26,9 +26,4 @@ public class Craft_bundle extends BaseAdvancement implements VanillaVisibility {
     registerEvent(CraftItemEvent.class, e -> IsCraftedItem(e, this, Material.BUNDLE));
   }
 
-  @Override
-  public void onGrant(@NotNull Player player, boolean giveRewards) {
-    super.onGrant(player, giveRewards);
-    UtilAdv.sendAdvancementGrantedAnnouncementDiscord(player, this);
-  }
 }

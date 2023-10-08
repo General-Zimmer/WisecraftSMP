@@ -24,9 +24,5 @@ public class Maxjob extends BaseAdvancement  {
 
     registerEvent(JobsLevelUpEvent.class, e -> isJobMaxed(e, this));
   }
-  @Override
-  public void onGrant(@NotNull Player player, boolean giveRewards) {
-    super.onGrant(player, giveRewards);
-    UtilAdv.sendAdvancementGrantedAnnouncementDiscord(player, this);
-  }
+
 }

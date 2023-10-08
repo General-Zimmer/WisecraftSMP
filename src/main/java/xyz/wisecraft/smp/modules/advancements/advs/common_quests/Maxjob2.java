@@ -20,9 +20,5 @@ public class Maxjob2 extends MultiTasksAdvancement implements ParentGrantedVisib
     public Maxjob2(Advancement parent, float x, float y) {
         super(KEY.getKey(), new AdvancementDisplay(Material.FLETCHING_TABLE, "marathon Jobbin'", AdvancementFrameType.CHALLENGE, true, true, x, y, "Max out 5 unique jobs in total"), parent, 5);
     }
-    @Override
-    public void onGrant(@NotNull Player player, boolean giveRewards) {
-        super.onGrant(player, giveRewards);
-        UtilAdv.sendAdvancementGrantedAnnouncementDiscord(player, this);
-    }
+
 }

@@ -20,9 +20,4 @@ public class Allspecialty extends MultiTasksAdvancement  {
     super(KEY.getKey(), new AdvancementDisplay(Material.DEBUG_STICK, "Job hopping", AdvancementFrameType.TASK, true, true, x, y , "Use every job's specialty available"), parent, 5);
   }
 
-  @Override
-  public void onGrant(@NotNull Player player, boolean giveRewards) {
-    super.onGrant(player, giveRewards);
-    UtilAdv.sendAdvancementGrantedAnnouncementDiscord(player, this);
-  }
 }

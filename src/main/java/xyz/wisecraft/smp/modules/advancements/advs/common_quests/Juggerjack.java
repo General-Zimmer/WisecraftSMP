@@ -25,9 +25,5 @@ public class Juggerjack extends BaseAdvancement implements VanillaVisibility {
         if (AdvancementsModule.getModule().isTimberEnabled())
             registerEvent(TreeFellEvent.class, e -> UtilAdv.checkTimber(e, this));
     }
-    @Override
-    public void onGrant(@NotNull Player player, boolean giveRewards) {
-        super.onGrant(player, giveRewards);
-        UtilAdv.sendAdvancementGrantedAnnouncementDiscord(player, this);
-    }
+
 }

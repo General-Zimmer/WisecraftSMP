@@ -21,9 +21,4 @@ public class Maxjob3 extends BaseAdvancement implements VanillaVisibility {
     super(KEY.getKey(), new AdvancementDisplay(Material.FLETCHING_TABLE, "Jobster", AdvancementFrameType.CHALLENGE, true, true, x, y , "Max out 9 unique jobs in total"), parent, 1);
   }
 
-  @Override
-  public void onGrant(@NotNull Player player, boolean giveRewards) {
-    super.onGrant(player, giveRewards);
-    UtilAdv.sendAdvancementGrantedAnnouncementDiscord(player, this);
-  }
 }

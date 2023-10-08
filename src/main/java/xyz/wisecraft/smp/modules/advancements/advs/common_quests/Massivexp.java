@@ -23,9 +23,5 @@ public class Massivexp extends BaseAdvancement implements ParentGrantedVisibilit
 
     registerEvent(PlayerLevelChangeEvent.class, e -> UtilAdv.advLvl(this, e));
   }
-  @Override
-  public void onGrant(@NotNull Player player, boolean giveRewards) {
-    super.onGrant(player, giveRewards);
-    UtilAdv.sendAdvancementGrantedAnnouncementDiscord(player, this);
-  }
+
 }

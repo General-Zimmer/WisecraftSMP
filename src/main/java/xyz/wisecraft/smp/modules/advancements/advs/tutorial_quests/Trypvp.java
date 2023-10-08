@@ -22,14 +22,9 @@ public class Trypvp extends BaseAdvancement  {
     registerEvent(PlayerChangedPVPStateEvent.class, e -> {
       Player p = e.getPlayer();
 
-      if (!isGranted(p))
-        grant(p);
+      incrementProgression(p);
     });
   }
 
-  @Override
-  public void onGrant(@NotNull Player player, boolean giveRewards) {
-    super.onGrant(player, giveRewards);
-    UtilAdv.sendAdvancementGrantedAnnouncementDiscord(player, this);
-  }
+
 }
