@@ -33,7 +33,7 @@ public class DiscordAdvListener implements Listener {
         if (p == null) throw new IllegalStateException("Player was null");
 
         int maxProgr = e.getAdvancement().getMaxProgression();
-        if (!(e.getOldProgression() < maxProgr) && !(e.getNewProgression() >= maxProgr)) return;
+        if (!(e.getOldProgression() < maxProgr) || !(e.getNewProgression() >= maxProgr)) return;
 
         Advancement adv = e.getAdvancement();
         boolean gameRule = Boolean.TRUE.equals(p.getWorld().getGameRuleValue(GameRule.ANNOUNCE_ADVANCEMENTS));
