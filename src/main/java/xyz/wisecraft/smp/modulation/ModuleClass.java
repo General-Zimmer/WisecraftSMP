@@ -18,6 +18,8 @@ import static xyz.wisecraft.smp.modulation.UtilModuleCommon.*;
 /**
  * This class is used to create modules. All classes inhereting this class must end with "Module".
  * <p>
+ *     Note: classes implementing this need to override the constructor with the ID parameter.
+ * <p>
  *     Modulation was created to enable adding extensive features within one singular plugin and to divide and conquer
  *     the code so different developers doesn't need to know or see every feature in the plugin and can focus on their own module.
  *     This makes it easier to maintain the code and to add new features and helps new developers get into
