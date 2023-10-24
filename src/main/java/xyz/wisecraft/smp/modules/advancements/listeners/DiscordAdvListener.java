@@ -2,10 +2,8 @@ package xyz.wisecraft.smp.modules.advancements.listeners;
 
 import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
 import com.fren_gor.ultimateAdvancementAPI.events.advancement.AdvancementProgressionUpdateEvent;
-import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import net.ess3.provider.AbstractAchievementEvent;
 import net.essentialsx.api.v2.services.discord.DiscordService;
-import net.essentialsx.api.v2.services.discord.MessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
