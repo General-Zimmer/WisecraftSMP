@@ -1,13 +1,39 @@
 package xyz.wisecraft.smp.modules.heirloom.listeners;
 
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.PrepareSmithingEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
+import xyz.wisecraft.smp.modules.heirloom.heirlooms.BaseHeirloom;
+import xyz.wisecraft.smp.modules.togglepvp.utils.PersistentData;
 
 public class SmithingListener implements Listener {
 
     @EventHandler
     public void onSmithing(PrepareSmithingEvent e) {
-        e.getInventory();
+        ItemStack in = e.getInventory().getInputEquipment();
+        ItemStack out = e.getInventory().getResult();
+        if (in == null) return;
+
+        if (out != null) {
+            ItemMeta meta = out.getItemMeta();
+            if (meta == null) return;
+            PersistentDataContainer container = meta.getPersistentDataContainer();
+            if (container.get(BaseHeirloom.getHeirloomTypeKey(), PersistentDataType.STRING) == null) return;
+
+            in.getItemMeta().getEnchants().forEach((enchant, level) -> {
+                if (enchant != Enchantment.MENDING)
+                    out.addEnchantment(enchant, level);
+            });
+
+
+        }
+
+
     }
 }
