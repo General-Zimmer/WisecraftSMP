@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.modulation.ModuleClass;
 import xyz.wisecraft.smp.modules.heirloom.cmd.CmdSetup;
 import xyz.wisecraft.smp.modules.heirloom.listeners.BowListener;
+import xyz.wisecraft.smp.modules.heirloom.listeners.SmithingListener;
 import xyz.wisecraft.smp.modules.heirloom.recipes.GeneralRune;
 import xyz.wisecraft.smp.modules.heirloom.recipes.SmithRecipes;
 import xyz.wisecraft.smp.modules.heirloom.threads.GBHeirlooms;
@@ -58,6 +59,7 @@ public class HeirloomModule extends ModuleClass {
     public @NotNull Set<Listener> registerListeners() {
         Set<Listener> listeners = new HashSet<>();
         listeners.add(new BowListener());
+        listeners.add(new SmithingListener());
         return listeners;
     }
 
