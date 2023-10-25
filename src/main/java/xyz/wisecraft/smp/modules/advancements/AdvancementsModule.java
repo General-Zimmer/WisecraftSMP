@@ -11,7 +11,6 @@ import com.fren_gor.ultimateAdvancementAPI.util.AdvancementKey;
 import com.fren_gor.ultimateAdvancementAPI.util.CoordAdapter;
 import lombok.Getter;
 import net.essentialsx.api.v2.services.discord.DiscordService;
-import net.essentialsx.api.v2.services.discord.MessageType;
 import net.kyori.adventure.text.Component;
 import net.luckperms.api.LuckPerms;
 import org.bukkit.Bukkit;
@@ -100,7 +99,7 @@ public class AdvancementsModule extends ModuleClass {
         if (luck == null) return listeners;
 
         if (apiDiscord != null) {
-            listeners.add(new DiscordAdvListener(apiDiscord));
+            listeners.add(new DiscordAdvListener());
         }
 
         String servName = OtherStorage.getServer_name();

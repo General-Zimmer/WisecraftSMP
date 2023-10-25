@@ -7,10 +7,7 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.BaseAdvancement;
 import org.bukkit.Material;
 import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameType;
 import com.fren_gor.ultimateAdvancementAPI.advancement.Advancement;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.modules.advancements.advs.AdvancementTabNamespaces;
-import xyz.wisecraft.smp.modules.advancements.util.UtilAdv;
 
 public class Old_timer extends BaseAdvancement implements HiddenVisibility {
 

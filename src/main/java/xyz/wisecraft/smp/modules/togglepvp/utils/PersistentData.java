@@ -19,7 +19,7 @@ import java.util.UUID;
 public class PersistentData {
 	private final WisecraftSMP plugin = WisecraftSMP.getInstance();
 	private final FileConfiguration config = plugin.getConfig();
-	private final StorageHelperMaps<HashMap<UUID, Boolean>, UUID, Boolean> pvpPlayers;
+	private final StorageHelperMaps<UUID, Boolean> pvpPlayers;
 	private final File dir;
 
 	/**

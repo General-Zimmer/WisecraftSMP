@@ -7,17 +7,12 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import xyz.wisecraft.smp.WisecraftSMP;
-import xyz.wisecraft.smp.modulation.storage.storagehelpers.StorageHelperCollection;
-import xyz.wisecraft.smp.modulation.storage.storagehelpers.StorageHelperMaps;
 import xyz.wisecraft.smp.modules.togglepvp.TogglePVPModule;
 import xyz.wisecraft.smp.modules.togglepvp.events.PlayerChangedPVPStateEvent;
 import xyz.wisecraft.smp.modules.togglepvp.storage.PVPStorage;
 
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 
 /**
@@ -26,9 +21,9 @@ import java.util.UUID;
 public abstract class UtilPlayers {
 	private static final WisecraftSMP plugin = WisecraftSMP.getInstance();
 	private static final FileConfiguration config = plugin.getConfig();
-	private static final StorageHelperMaps<HashMap<UUID, Boolean>, UUID, Boolean> pvpPlayers = PVPStorage.getPVPPlayers();
-	private static final StorageHelperCollection<List<String>, String> blockedWorlds = PVPStorage.getBlockedWorlds();
-	private static final StorageHelperMaps<HashMap<UUID, Date>, UUID, Date> cooldowns = PVPStorage.getCooldowns();
+	private static final Map<UUID, Boolean> pvpPlayers = PVPStorage.getPVPPlayers();
+	private static final Collection<String> blockedWorlds = PVPStorage.getBlockedWorlds();
+	private static final Map<UUID, Date> cooldowns = PVPStorage.getCooldowns();
 	private static final float radius = .75f;
 
 	/**

@@ -7,10 +7,7 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.tasks.MultiTasksAdvanceme
 import com.fren_gor.ultimateAdvancementAPI.util.AdvancementKey;
 import com.fren_gor.ultimateAdvancementAPI.visibilities.ParentGrantedVisibility;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.modules.advancements.advs.AdvancementTabNamespaces;
-import xyz.wisecraft.smp.modules.advancements.util.UtilAdv;
 
 public class Maxjob2 extends MultiTasksAdvancement implements ParentGrantedVisibility {
 

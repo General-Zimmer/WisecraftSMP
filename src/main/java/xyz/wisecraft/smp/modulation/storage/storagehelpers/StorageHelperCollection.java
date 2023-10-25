@@ -58,7 +58,7 @@ public class StorageHelperCollection<T extends Collection<E>, E> extends Storage
 
     @NotNull
     @Override
-    public <T> T @NotNull [] toArray(@NotNull T @NotNull [] a) {
+    public <A> A @NotNull [] toArray(@NotNull A @NotNull [] a) {
         return get().toArray(a);
     }
 

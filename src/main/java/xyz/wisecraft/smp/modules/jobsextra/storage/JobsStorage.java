@@ -2,12 +2,9 @@ package xyz.wisecraft.smp.modules.jobsextra.storage;
 
 import org.bukkit.Material;
 import xyz.wisecraft.smp.modulation.ModuleClass;
-import xyz.wisecraft.smp.modulation.storage.storagehelpers.StorageHelperCollection;
+import xyz.wisecraft.smp.modulation.storage.storagehelpers.StorageHelperSet;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.*;
 
 public abstract class JobsStorage {
 
@@ -27,14 +24,14 @@ public abstract class JobsStorage {
         elytraDrop.remove(uuid);
     }
 
-    private static StorageHelperCollection<ArrayList<Material>, Material> blacksmithCrafts;
+    private static Set<Material> blacksmithCrafts;
 
     public static void setBlacksmithCrafts(ModuleClass module) {
-        blacksmithCrafts = new StorageHelperCollection<>(module, "blacksmithCrafts", new ArrayList<>());
+        blacksmithCrafts = new StorageHelperSet<>(module, "blacksmithCrafts");
     }
 
-    public static ArrayList<Material> getBlacksmithCrafts() {
-        return new ArrayList<>(blacksmithCrafts);
+    public static Set<Material> getBlacksmithCrafts() {
+        return new HashSet<>(blacksmithCrafts);
     }
 
     public static void addBlacksmithCraft(Material material) {

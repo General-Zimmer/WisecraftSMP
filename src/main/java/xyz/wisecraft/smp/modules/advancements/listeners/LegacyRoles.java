@@ -5,24 +5,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.modules.advancements.AdvancementsModule;
 import xyz.wisecraft.smp.modules.advancements.advs.legacy.Citizen;
 import xyz.wisecraft.smp.modules.advancements.advs.legacy.Nobility;
 import xyz.wisecraft.smp.modules.advancements.util.UtilAdv;
 
 public class LegacyRoles implements Listener {
-
-    private final WisecraftSMP plugin;
-
-    /**
-     * Constructor for LegacyRoles
-     *
-     */
-    public LegacyRoles() {
-        this.plugin = WisecraftSMP.getInstance();
-    }
-
 
 
     /**

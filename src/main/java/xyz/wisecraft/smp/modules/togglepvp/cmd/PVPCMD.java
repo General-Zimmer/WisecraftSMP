@@ -14,10 +14,7 @@ import xyz.wisecraft.smp.modules.togglepvp.utils.PVPCMDUtil;
 import xyz.wisecraft.smp.modules.togglepvp.utils.UtilPlayers;
 import xyz.wisecraft.smp.modules.togglepvp.storage.PVPStorage;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 
 /**
@@ -27,7 +24,7 @@ public class PVPCMD extends BukkitCommand {
 
 	private final WisecraftSMP instance = WisecraftSMP.getInstance();
 	private final FileConfiguration config = instance.getConfig();
-	private final StorageHelperMaps<HashMap<UUID, Boolean>, UUID, Boolean> pvpPlayers = PVPStorage.getPVPPlayers();
+	private final Map<UUID, Boolean> pvpPlayers = PVPStorage.getPVPPlayers();
 
 	public PVPCMD(String name) {
 		super(name);

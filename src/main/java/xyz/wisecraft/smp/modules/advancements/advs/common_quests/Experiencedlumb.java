@@ -8,8 +8,6 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.display.AdvancementFrameT
 import com.fren_gor.ultimateAdvancementAPI.util.AdvancementKey;
 import com.fren_gor.ultimateAdvancementAPI.visibilities.VanillaVisibility;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.modules.advancements.AdvancementsModule;
 import xyz.wisecraft.smp.modules.advancements.advs.AdvancementTabNamespaces;
 import xyz.wisecraft.smp.modules.advancements.util.UtilAdv;

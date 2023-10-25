@@ -48,8 +48,13 @@ public class AdvCMD extends BukkitCommand {
                     sender.sendMessage("Auto citizen triggered");
                 }
                 case "pvp" -> {
+                    Advancement adv = UltimateAdvancementAPI.getInstance(plugin).getAdvancement(Trypvp.KEY);
+                    if (adv == null) {
+                        sender.sendMessage("Advancement not found");
+                        return true;
+                    }
                     if (sender instanceof org.bukkit.entity.Player p)
-                        UltimateAdvancementAPI.getInstance(plugin).getAdvancement(Trypvp.KEY).revoke(p);
+                        adv.revoke(p);
                 }
             }
             return true;

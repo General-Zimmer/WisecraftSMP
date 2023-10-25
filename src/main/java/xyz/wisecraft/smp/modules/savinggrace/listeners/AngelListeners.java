@@ -9,12 +9,11 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import xyz.wisecraft.smp.modulation.storage.storagehelpers.StorageHelperMaps;
 import xyz.wisecraft.smp.modules.savinggrace.enums.PlayerState;
 import xyz.wisecraft.smp.modules.savinggrace.models.Angel;
 import xyz.wisecraft.smp.modules.savinggrace.storage.AngelStorage;
 
-import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -23,7 +22,7 @@ import java.util.UUID;
 public class AngelListeners implements Listener {
 
     private final IEssentials ess;
-    private final StorageHelperMaps<HashMap<UUID, Angel>, UUID, Angel> angels;
+    private final Map<UUID, Angel> angels;
     /**
      * Constructor for the class.
      */

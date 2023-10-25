@@ -10,17 +10,12 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import xyz.wisecraft.smp.WisecraftSMP;
-import xyz.wisecraft.smp.modulation.storage.storagehelpers.StorageHelperCollection;
-import xyz.wisecraft.smp.modulation.storage.storagehelpers.StorageHelperGeneric;
-import xyz.wisecraft.smp.modulation.storage.storagehelpers.StorageHelperMaps;
 import xyz.wisecraft.smp.modules.togglepvp.utils.UtilChat;
 import xyz.wisecraft.smp.modules.togglepvp.utils.PersistentData;
 import xyz.wisecraft.smp.modules.togglepvp.utils.UtilPlayers;
 import xyz.wisecraft.smp.modules.togglepvp.storage.PVPStorage;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Listener class for player events.
@@ -29,9 +24,9 @@ public class PlayerListener implements Listener {
 
     private final WisecraftSMP plugin = WisecraftSMP.getInstance();
     private final FileConfiguration config = plugin.getConfig();
-    private final StorageHelperMaps<HashMap<UUID,Boolean>, UUID, Boolean> pvpPlayers = PVPStorage.getPVPPlayers();
-    private final StorageHelperGeneric<PersistentData> PVPDataUtils = PVPStorage.getPVPPersistentData();
-    private final StorageHelperCollection<List<String>, String> blockedWorlds = PVPStorage.getBlockedWorlds();
+    private final Map<UUID,Boolean> pvpPlayers = PVPStorage.getPVPPlayers();
+    private final PersistentData PVPDataUtils = PVPStorage.getPVPPersistentData().get();
+    private final Set<String> blockedWorlds = PVPStorage.getBlockedWorlds();
 
     /**
      * Constructor for the PlayerListener class.
@@ -41,8 +36,8 @@ public class PlayerListener implements Listener {
             if(!config.getBoolean("SETTINGS.PERSISTENT_PVP_STATE")) {
                 pvpPlayers.put(p.getUniqueId(), config.getBoolean("SETTINGS.DEFAULT_PVP_OFF"));
             } else {
-                PVPDataUtils.get().addPlayer(p);
-                pvpPlayers.put(p.getUniqueId(), PVPDataUtils.get().GetPlayerPvPState(p));
+                PVPDataUtils.addPlayer(p);
+                pvpPlayers.put(p.getUniqueId(), PVPDataUtils.GetPlayerPvPState(p));
             }
             if(!pvpPlayers.get(p.getUniqueId())) {
                 if(config.getBoolean("SETTINGS.PARTICLES")) {
@@ -65,8 +60,8 @@ public class PlayerListener implements Listener {
         if(!config.getBoolean("SETTINGS.PERSISTENT_PVP_STATE")) {
             pvpPlayers.put(p.getUniqueId(), config.getBoolean("SETTINGS.DEFAULT_PVP_OFF"));
         } else {
-            PVPDataUtils.get().addPlayer(p);
-            pvpPlayers.put(p.getUniqueId(), PVPDataUtils.get().GetPlayerPvPState(p));
+            PVPDataUtils.addPlayer(p);
+            pvpPlayers.put(p.getUniqueId(), PVPDataUtils.GetPlayerPvPState(p));
         }
         if(!pvpPlayers.get(p.getUniqueId())) {
             if(config.getBoolean("SETTINGS.PARTICLES")) {
@@ -86,7 +81,7 @@ public class PlayerListener implements Listener {
     public void onQuit(PlayerQuitEvent event) {
         Player p = event.getPlayer();
         if(config.getBoolean("SETTINGS.PERSISTENT_PVP_STATE")) {
-            PVPDataUtils.get().UpdatePlayerPvPState(p);
+            PVPDataUtils.UpdatePlayerPvPState(p);
         }
         pvpPlayers.remove(p.getUniqueId());
     }

@@ -12,8 +12,8 @@ import xyz.wisecraft.smp.modules.cropharvester.events.PrepareCropHarvestEvent;
 import xyz.wisecraft.smp.modules.jobsextra.JobsExtrasModule;
 import xyz.wisecraft.smp.modules.jobsextra.storage.JobsStorage;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  * This class is for extra jobs features.
@@ -71,7 +71,7 @@ public class JobsFeatureListener implements org.bukkit.event.Listener {
         Job pJob = blacksmith;
         JobsPlayer pJobs = Jobs.getPlayerManager().getJobsPlayer(p);
 
-        ArrayList<Material> blacksmithCrafts = JobsStorage.getBlacksmithCrafts();
+        Set<Material> blacksmithCrafts = JobsStorage.getBlacksmithCrafts();
 
         if (p == null || pJobs.isInJob(pJob) &&
                 pJobs.getJobProgression(pJob).getLevel() >= jobLevels.get(pJob)) return;
@@ -81,7 +81,7 @@ public class JobsFeatureListener implements org.bukkit.event.Listener {
         if (blacksmithCrafts.contains(craftType)) {
             e.setCancelled(true);
             p.sendMessage("You need to have the job \"blacksmith\" to craft diamond gear! " +
-                    "Except for diamond pickaxe and diamond chestplate");
+                    "Except for diamond pickaxe");
         }
     }
 
