@@ -2,7 +2,6 @@ package xyz.wisecraft.smp.modulation.storage.storagehelpers;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.modulation.ModuleClass;
 
 import java.util.Collection;
@@ -12,18 +11,16 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 @SuppressWarnings({"unused"})
-public class StorageHelperMaps <T extends Map<K, V>, K, V> extends StorageHelperGeneric<T> implements Map<K, V> {
+public class StorageHelperMaps<K, V> extends StorageHelperGeneric<Map<K, V>> implements Map<K, V> {
 
-    protected final WisecraftSMP plugin;
     public StorageHelperMaps(ModuleClass module, String key) {
         super(module, key);
-        this.plugin = module.getPlugin();
+        set(new HashMap<>());
     }
 
-    public StorageHelperMaps(ModuleClass module, String key, T map) {
+    public StorageHelperMaps(ModuleClass module, String key, Map<K, V> map) {
         this(module, key);
         set(map);
-
     }
 
     @Override

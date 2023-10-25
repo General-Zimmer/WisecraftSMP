@@ -6,12 +6,11 @@ import org.bukkit.Material;
 import xyz.wisecraft.smp.modulation.ModuleClass;
 import xyz.wisecraft.smp.modulation.storage.storagehelpers.StorageHelperCollection;
 import xyz.wisecraft.smp.modulation.storage.storagehelpers.StorageHelperMaps;
-import xyz.wisecraft.smp.modules.jobsextra.JobsExtrasModule;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.UUID;
+import java.util.HashSet;
+import java.util.Set;
 
 public abstract class JobsStorage {
 
@@ -36,8 +35,8 @@ public abstract class JobsStorage {
 
 
 
-    public static ArrayList<Material> getBlacksmithCrafts() {
-        return new ArrayList<>(blacksmithCrafts);
+    public static Set<Material> getBlacksmithCrafts() {
+        return new HashSet<>(blacksmithCrafts);
     }
 
     public static void addBlacksmithCraft(Material material) {

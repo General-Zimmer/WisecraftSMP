@@ -12,16 +12,14 @@ import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.weather.LightningStrikeEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import xyz.wisecraft.smp.WisecraftSMP;
-import xyz.wisecraft.smp.modulation.storage.storagehelpers.StorageHelperCollection;
-import xyz.wisecraft.smp.modulation.storage.storagehelpers.StorageHelperMaps;
-import xyz.wisecraft.smp.modules.togglepvp.utils.UtilChat;
-import xyz.wisecraft.smp.modules.togglepvp.utils.PVPUtil;
-import xyz.wisecraft.smp.modules.togglepvp.utils.UtilPlayers;
 import xyz.wisecraft.smp.modules.togglepvp.storage.PVPStorage;
+import xyz.wisecraft.smp.modules.togglepvp.utils.PVPUtil;
+import xyz.wisecraft.smp.modules.togglepvp.utils.UtilChat;
+import xyz.wisecraft.smp.modules.togglepvp.utils.UtilPlayers;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -30,8 +28,8 @@ import java.util.UUID;
 public class PvPListener implements Listener {
 
 	private final WisecraftSMP plugin = WisecraftSMP.getInstance();
-	private final StorageHelperMaps<HashMap<UUID,Boolean>, UUID, Boolean> pvpPlayers = PVPStorage.getPVPPlayers();
-	private final StorageHelperCollection<List<String>, String> blockedWorlds = PVPStorage.getBlockedWorlds();
+	private final Map<UUID,Boolean> pvpPlayers = PVPStorage.getPVPPlayers();
+	private final Set<String> blockedWorlds = PVPStorage.getBlockedWorlds();
 
 	// todo prevent placing fire and lava near players
 

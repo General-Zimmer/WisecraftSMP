@@ -68,9 +68,8 @@ public abstract class ModuleClass implements Module {
      * Will register all necessary events and commands for the module's function to work.
      * <p>
      *     Note: This method should only be called in the initialization of the module.
-     * @return ModuleInfo if the module was enabled or null if it wasn't.
      */
-    public boolean enableModule() {
+    public void enableModule() {
 
         if (getModuleState() == ModuleState.DISABLED || getModuleState() == ModuleState.ENABLED)
             throw new IllegalStateException(getErrorMessage());
@@ -80,10 +79,9 @@ public abstract class ModuleClass implements Module {
         onEnable(); // THIS BEFORE INFO. OTHERWISE DIS NO WORKIE!!!!!
         this.moduleInfo = new ModuleInfo(getModuleName(), registerListeners(), registerCommands());
         reenableModule();
-        return true;
     }
 
-    // todo prevent disabling modules that are required by other modules.
+    // todo prevent disabling modules that are required by other enabled modules.
     /**
      * This method is called when the module is being disabled.
      */

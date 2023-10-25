@@ -20,6 +20,7 @@ import java.util.Set;
  * @see ModuleInfo
  * @see ModuleClass ModuleClass for the class that implements this interface and should be used to create objects with.
  */
+@SuppressWarnings("unused")
 public interface Module extends Comparable<Module> {
 
     WisecraftSMP plugin = WisecraftSMP.getInstance();

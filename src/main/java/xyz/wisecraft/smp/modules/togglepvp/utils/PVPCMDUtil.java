@@ -6,10 +6,9 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import xyz.wisecraft.smp.WisecraftSMP;
-import xyz.wisecraft.smp.modulation.storage.storagehelpers.StorageHelperMaps;
 import xyz.wisecraft.smp.modules.togglepvp.storage.PVPStorage;
 
-import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -18,7 +17,7 @@ import java.util.UUID;
 public abstract class PVPCMDUtil {
     private static final WisecraftSMP plugin = WisecraftSMP.getInstance();
     private static final FileConfiguration config = plugin.getConfig();
-    private static final StorageHelperMaps<HashMap<UUID, Boolean>, UUID, Boolean> pvpPlayers = PVPStorage.getPVPPlayers();
+    private static final Map<UUID, Boolean> pvpPlayers = PVPStorage.getPVPPlayers();
 
 
     /**
@@ -40,7 +39,7 @@ public abstract class PVPCMDUtil {
             UtilChat.send(p, "NO_PLAYER", args[1]);
         } else {
             Boolean current = pvpPlayers.get(other.getUniqueId());
-            UtilChat.send(p, "PVP_STATUS_OTHERS", other.getName(), current);
+            UtilChat.send(p, "PVP_STATUS_OTHERS", other.getName(), null);
         }
     }
 
@@ -154,7 +153,7 @@ public abstract class PVPCMDUtil {
                 }
 
                 Boolean current = pvpPlayers.get(other.getUniqueId());
-                UtilChat.send(console, "PVP_STATE_CHANGED_OTHERS", other.getName(), current);
+                UtilChat.send(console, "PVP_STATE_CHANGED_OTHERS", other.getName(), null);
             }
 
         }

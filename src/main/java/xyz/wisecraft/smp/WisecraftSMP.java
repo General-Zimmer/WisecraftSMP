@@ -54,6 +54,7 @@ public class WisecraftSMP extends JavaPlugin {
     @Override
     public void onLoad() {
         if (isTesting) return; // Prevents the plugin from loading if it's in testing mode
+        this.getLogger().log(Level.INFO, "Loading WisecraftSMP");
     }
     @Override
     public void onEnable() {
@@ -93,8 +94,8 @@ public class WisecraftSMP extends JavaPlugin {
         // Start/load modules
         sortedModules.forEach(module -> {
             try {
-                if (module.enableModule())
-                    ModulationStorage.addModule(module);
+                module.enableModule();
+                ModulationStorage.addModule(module);
             } catch (Exception e) {
                 if (module.isErrorMessage(e.getMessage(), ModuleState.DISABLED)) {
                     this.getLogger().log(Level.INFO, module.getModuleName() + " was not enabled");

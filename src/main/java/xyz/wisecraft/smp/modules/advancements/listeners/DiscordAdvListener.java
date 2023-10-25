@@ -10,7 +10,6 @@ import org.bukkit.GameRule;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.wisecraft.smp.modules.advancements.AdvancementsModule;
 
@@ -18,12 +17,6 @@ import java.util.Objects;
 
 public class DiscordAdvListener implements Listener {
 
-
-    final DiscordService apiDiscord;
-
-    public DiscordAdvListener(@NotNull DiscordService apiDiscord) {
-        this.apiDiscord = apiDiscord;
-    }
 
     @EventHandler
     public void onUpdate(AdvancementProgressionUpdateEvent e) {

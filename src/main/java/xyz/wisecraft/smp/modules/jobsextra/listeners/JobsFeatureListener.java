@@ -19,8 +19,8 @@ import xyz.wisecraft.smp.modules.heirloom.util.UtilRandom;
 import xyz.wisecraft.smp.modules.jobsextra.JobsExtrasModule;
 import xyz.wisecraft.smp.modules.jobsextra.storage.JobsStorage;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import static xyz.wisecraft.smp.modules.jobsextra.storage.JobsStorage.getJobLevel;
 import static xyz.wisecraft.smp.modules.jobsextra.util.UtilCommon.sendNoMessage;
@@ -77,7 +77,7 @@ public class JobsFeatureListener implements org.bukkit.event.Listener {
         Job pJob = blacksmith;
         JobsPlayer pJobs = Jobs.getPlayerManager().getJobsPlayer(p);
 
-        ArrayList<Material> blacksmithCrafts = JobsStorage.getBlacksmithCrafts();
+        Set<Material> blacksmithCrafts = JobsStorage.getBlacksmithCrafts();
 
         if (p == null || pJobs.isInJob(pJob) &&
                 pJobs.getJobProgression(pJob).getLevel() >= getJobLevel(pJob)) return;

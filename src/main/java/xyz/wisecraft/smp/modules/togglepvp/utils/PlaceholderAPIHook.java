@@ -9,6 +9,7 @@ import xyz.wisecraft.smp.modulation.storage.storagehelpers.StorageHelperMaps;
 import xyz.wisecraft.smp.modules.togglepvp.storage.PVPStorage;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -17,7 +18,7 @@ import java.util.UUID;
 public class PlaceholderAPIHook extends PlaceholderExpansion {
 
 	private final WisecraftSMP plugin = WisecraftSMP.getInstance();
-	private final StorageHelperMaps<HashMap<UUID, Boolean>, UUID, Boolean> pvpPlayers = PVPStorage.getPVPPlayers();
+	private final Map<UUID, Boolean> pvpPlayers = PVPStorage.getPVPPlayers();
 
 	@Override
 	public String onRequest(OfflinePlayer player, @NotNull String identifier) {

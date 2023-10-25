@@ -14,6 +14,7 @@ import java.util.*;
 /**
  * CropHarvesterModule
  */
+@SuppressWarnings("unused")
 public class CropHarvesterModule extends ModuleClass {
     private final boolean isGriefpreventionEnabled = setupDependency("GriefPrevention");
     private final boolean isWorldGuardEnabled = setupDependency("WorldGuard");
