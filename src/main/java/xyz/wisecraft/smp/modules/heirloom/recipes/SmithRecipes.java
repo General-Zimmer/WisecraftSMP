@@ -24,11 +24,11 @@ public abstract class SmithRecipes {
 
     public static List<Recipe> setupSmithRecipes() {
         recipe = new ArrayList<>();
-        smithRecipe();
+        bowHeirloomRecipe();
         return recipe;
     }
 
-    private static void smithRecipe() {
+    private static void bowHeirloomRecipe() {
         ItemStack bow = new ItemStack(Material.BOW);
         BaseHeirloom.createHeirLoom(bow, HeirloomType.BOWHEIRLOOM, BowHeirloom.class);
         ItemMeta meta = bow.getItemMeta();

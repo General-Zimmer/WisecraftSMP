@@ -20,7 +20,6 @@ public abstract class GeneralRune {
     @Getter
     private static ItemStack rune;
 
-    // todo future me or Daniel, please get a better name for this. I'm begging me.
     // todo Also, maybe use adventure text component for name. I'm not sure if that's possible (It is copilot), but it would be cool. (Yes it would, copilot)
     public static List<Recipe> setupRune() {
         recipe = new ArrayList<>();
@@ -38,9 +37,10 @@ public abstract class GeneralRune {
 
         GeneralRune.rune.setItemMeta(meta);
         ShapedRecipe recipe = new ShapedRecipe(runeKey, GeneralRune.rune);
-        recipe.shape("NDN", "DND", "NDN");
-        recipe.setIngredient('D', new RecipeChoice.MaterialChoice.MaterialChoice.MaterialChoice(Material.DIAMOND_BLOCK, Material.DIAMOND));
-        recipe.setIngredient('N', new RecipeChoice.MaterialChoice.MaterialChoice.MaterialChoice(Material.NETHERITE_BLOCK, Material.AIR));
+        recipe.shape("ANA", "NLN", "ANA");
+        recipe.setIngredient('A', new RecipeChoice.MaterialChoice(Material.LAPIS_BLOCK));
+        recipe.setIngredient('N', new RecipeChoice.MaterialChoice(Material.NETHERITE_INGOT, Material.DIAMOND_BLOCK));
+        recipe.setIngredient('L', new RecipeChoice.MaterialChoice(Material.MAGMA_CREAM, Material.LAVA_BUCKET));
         GeneralRune.recipe.add(recipe);
     }
 

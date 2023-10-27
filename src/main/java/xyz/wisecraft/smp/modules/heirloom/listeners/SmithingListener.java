@@ -12,6 +12,10 @@ import xyz.wisecraft.smp.modules.heirloom.heirlooms.BaseHeirloom;
 
 public class SmithingListener implements Listener {
 
+    /**
+     * Prevents heirlooms from being smithed and adds the enchantments from the input item to the output item
+     * @param e The event
+     */
     @EventHandler
     public void onSmithing(PrepareSmithingEvent e) {
         ItemStack in = e.getInventory().getInputEquipment();
@@ -21,19 +25,15 @@ public class SmithingListener implements Listener {
         if (out != null) {
             ItemMeta meta = out.getItemMeta();
             if (meta == null) return;
-            PersistentDataContainer container = meta.getPersistentDataContainer();
-            if (container.get(BaseHeirloom.getHeirloomTypeKey(), PersistentDataType.STRING) == null) return;
+            PersistentDataContainer pdc = meta.getPersistentDataContainer();
+            if (pdc.get(BaseHeirloom.getHeirloomTypeKey(), PersistentDataType.STRING) == null) return;
 
             in.getItemMeta().getEnchants().forEach((enchant, level) -> {
                 if (enchant != Enchantment.MENDING)
                     meta.addEnchant(enchant, level, true);
             });
-
             out.setItemMeta(meta);
-
             e.setResult(out);
         }
-
-
     }
 }
