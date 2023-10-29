@@ -1,13 +1,16 @@
 package xyz.wisecraft.smp.modules.heirloom.util;
 
 import org.bukkit.Effect;
+import org.bukkit.Keyed;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.ThrownPotion;
+import org.bukkit.inventory.CraftingRecipe;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.SmithingRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -21,6 +24,7 @@ import xyz.wisecraft.smp.modules.heirloom.heirlooms.HeirloomType;
 import xyz.wisecraft.smp.modules.heirloom.storage.HeirloomStorage;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public abstract class UtilRandom {
@@ -84,5 +88,18 @@ public abstract class UtilRandom {
         }
 
         return (BowHeirloom) HeirloomStorage.findHeirloom(UUID.fromString(bowHeirloomUUID));
+    }
+
+    public static boolean isRecipe(List<? extends Keyed> recipes, Keyed recipe) {
+        boolean hasRecipe = false;
+
+        for (Keyed r : recipes) {
+            if (r.getKey().equals(recipe.getKey())) {
+                hasRecipe = true;
+                break;
+            }
+        }
+
+        return hasRecipe;
     }
 }

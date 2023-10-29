@@ -11,7 +11,6 @@ import xyz.wisecraft.smp.modules.cropharvester.CropHarvesterModule;
 import xyz.wisecraft.smp.modules.jobsextra.listeners.ExplorerListener;
 import xyz.wisecraft.smp.modules.jobsextra.listeners.JobsFeatureListener;
 import xyz.wisecraft.smp.modules.jobsextra.storage.JobsStorage;
-import xyz.wisecraft.smp.modules.jobsextra.threads.RemoveOldElytraDrops;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -23,7 +22,6 @@ import java.util.Set;
 @SuppressWarnings("unused")
 public class JobsExtrasModule extends ModuleClass {
     private final boolean jobs = setupDependency("Jobs");
-    BukkitTask removeOldElytraDrops;
 
     public JobsExtrasModule(long id) {
         super(id);
@@ -32,15 +30,9 @@ public class JobsExtrasModule extends ModuleClass {
     @Override
     public void onEnable() {
 
-        JobsStorage.setBlacksmithCrafts(this);
-
-        removeOldElytraDrops = new RemoveOldElytraDrops().runTaskTimerAsynchronously(plugin, 20*60*5, 20*60*5);
+        JobsStorage.init(this);
     }
 
-    @Override
-    public void onDisable() {
-        removeOldElytraDrops.cancel();
-    }
 
     @Override
     public @NotNull Set<Listener> registerListeners() {
@@ -55,21 +47,10 @@ public class JobsExtrasModule extends ModuleClass {
         return jobs;
     }
 
-    /**
-     * Gets the module dependencies of other modules. This method should be overridden if the module has dependencies.
-     * @return The module dependencies.
-     */
     public ArrayList<Class<? extends Module>> getModuleDepends() {
         ArrayList<Class<? extends Module>> depends = new ArrayList<>();
         depends.add(CropHarvesterModule.class);
         return depends;
     }
 
-    public Job getSpecificJob(String name) {
-        for (Job job : Jobs.getJobs()) {
-            if (job.getName().equalsIgnoreCase(name))
-                return job;
-        }
-        return null;
-    }
 }

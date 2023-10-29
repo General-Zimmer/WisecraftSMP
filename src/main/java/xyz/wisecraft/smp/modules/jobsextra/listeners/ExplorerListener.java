@@ -6,20 +6,22 @@ import com.gamingmesh.jobs.container.JobsPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Cancellable;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
+import org.bukkit.event.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.modules.jobsextra.JobsExtrasModule;
 import xyz.wisecraft.smp.modules.jobsextra.event.ExplorerObtainsElytraEvent;
 import xyz.wisecraft.smp.modules.jobsextra.storage.JobsStorage;
@@ -29,37 +31,66 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.UUID;
 
+import static xyz.wisecraft.smp.modules.jobsextra.storage.JobsStorage.getJobLevel;
+import static xyz.wisecraft.smp.modules.jobsextra.util.UtilCommon.sendNoMessage;
+
 public class ExplorerListener implements Listener {
-    private final HashMap<Job, Integer> jobLevels = new HashMap<>();
     private final Job explorer;
+    private final NamespacedKey elytraKey = new NamespacedKey("jobsextra", "elytra");
 
     public ExplorerListener(JobsExtrasModule module) {
-        int defaultLevel = module.plugin.getConfig().getInt("JOBS_SETTINGS.DEFAULT_ABILITY_LEVEL");
-        this.explorer = module.getSpecificJob("Explorer");
-        jobLevels.put(explorer, module.plugin.getConfig().getInt("JOBS_SETTINGS.EXPLORER_ABILITY_LEVEL", defaultLevel));
+        explorer = JobsStorage.setJobLevel(module, "Explorer");
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onExplorerPickup(PlayerAttemptPickupItemEvent e) {
         Player p = explorerChecks(e.getPlayer(), e.getItem());
         if (p == null) return;
 
         JobsPlayer pJobs = Jobs.getPlayerManager().getJobsPlayer(p);
-        HashMap<UUID, Date> elytraDrops = JobsStorage.getElytraDrop();
         Item item = e.getItem();
-        UUID id = item.getUniqueId();
 
+        if (item.getPersistentDataContainer().get(elytraKey, PersistentDataType.STRING) != null) return;
 
-        if (elytraDrops.containsKey(id)) {
-            elytraDrops.remove(id);
-            return;
-        }
-
-        if ((!(pJobs.isInJob(explorer) && pJobs.getJobProgression(explorer).getLevel() >= jobLevels.get(explorer))))
+        if (pJobs.isInJob(explorer) && pJobs.getJobProgression(explorer).getLevel() >= getJobLevel(explorer))
+            callElytraObtainedEvent(e, p);
+        else
             e.setCancelled(true);
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
+    public void onEndContainer(InventoryClickEvent e) {
+
+        Player p = explorerChecks(e.getWhoClicked());
+        if (p == null) return;
+        Inventory clickedInv = e.getClickedInventory();
+        if (clickedInv == null) {
+            return;
+        } else if (e.getCurrentItem() != null && !clickedInv.equals(p.getInventory()) && e.getCurrentItem().getType().equals(Material.ELYTRA)) {
+            e.setResult(Event.Result.DENY);
+            e.setCancelled(true);
+            return;
+        }
+
+        if (clickedInv.equals(p.getInventory()) || !e.getCursor().getType().equals(Material.ELYTRA)) return;
+        e.setResult(Event.Result.DENY);
+        e.setCancelled(true);
+
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
+    public void onEndContainer(InventoryDragEvent e) {
+        Player p = explorerChecks(e.getWhoClicked());
+        if (p == null) return;
+
+        Inventory clickedInv = e.getInventory();
+
+        if (clickedInv.equals(p.getInventory()) || !e.getOldCursor().getType().equals(Material.ELYTRA)) return;
+
+        e.setCancelled(true);
+    }
+
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onExplorerBreak(EntityDamageByEntityEvent e) {
         if (!(e.getEntity() instanceof ItemFrame)) return;
         Player p = explorerChecks(e.getDamager(), ((ItemFrame) e.getEntity()).getItem());
@@ -68,13 +99,11 @@ public class ExplorerListener implements Listener {
 
         JobsPlayer pJobs = Jobs.getPlayerManager().getJobsPlayer(p);
         boolean isInJob = pJobs.isInJob(explorer);
-        int lvl = jobLevels.get(explorer);
+        int lvl = getJobLevel(explorer);
 
-        if (isInJob && pJobs.getJobProgression(explorer).getLevel() >= lvl) {
-            callElytraObtainedEvent(e, p);
-        } else {
+        if (!(isInJob && pJobs.getJobProgression(explorer).getLevel() >= lvl)) {
             e.setCancelled(true);
-            p.sendMessage("You need to have the job \"explorer\" and be level " + lvl +"+ to get Elytras from the end!");
+            sendNoMessage(p, explorer, "obtain elytras from the end!");
         }
     }
 
@@ -82,38 +111,30 @@ public class ExplorerListener implements Listener {
     public void onElytraDrop(PlayerDropItemEvent e) {
         if (explorerChecks(e.getPlayer(), e.getItemDrop()) == null) return;
 
-        UUID uuid = e.getItemDrop().getUniqueId();
-
-        JobsStorage.addElytraDrop(uuid, new Date());
+        @NotNull Item droppedItem = e.getItemDrop();
+        droppedItem.getPersistentDataContainer().set(elytraKey, PersistentDataType.STRING, "bypass explorer restriction");
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
-    public void onElytraDeath(PlayerDeathEvent e) {
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
+    public void onElytraDeath(PlayerDeathEvent e) { // I Forgot why this is necessary. I guess it's nice if someone just dies and never returns or a friend is nearby
         Player p = explorerChecks(e.getEntity());
 
         if (p == null) return;
 
-        p.getInventory().contains(Material.ELYTRA);
-        final HashSet<ItemStack> items = new HashSet<>();
-
         e.getDrops().removeIf(item -> {
             if (item.getType().equals(Material.ELYTRA)) {
-                items.add(item);
+                Location loc = p.getLocation();
+
+                Item droppedItem = p.getWorld().spawn(loc, Item.class, itemEntity -> itemEntity.setItemStack(item));
+                droppedItem.getPersistentDataContainer().set(elytraKey, PersistentDataType.STRING, "bypass explorer restriction");
                 return true;
             }
             return false;
         });
 
-        Location loc = p.getLocation();
-
-        items.forEach(item -> {
-            Item floutyItem = p.getWorld().spawn(loc, Item.class, itemEntity -> itemEntity.setItemStack(item));
-
-            JobsStorage.addElytraDrop(floutyItem.getUniqueId(), new Date());
-        });
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     public void onElytraCraft(CraftItemEvent e) {
         Player p = explorerChecks(e.getWhoClicked(), e.getRecipe().getResult());
 
@@ -123,11 +144,11 @@ public class ExplorerListener implements Listener {
 
         boolean isInJob = pJobs.isInJob(explorer);
 
-        if (isInJob && pJobs.getJobProgression(explorer).getLevel() >= jobLevels.get(explorer)) {
+        if (isInJob && pJobs.getJobProgression(explorer).getLevel() >= getJobLevel(explorer)) {
             callElytraObtainedEvent(e, p);
         } else {
             e.setCancelled(true);
-            p.sendMessage("You need to have the job \"explorer\" and be level " + jobLevels.get(explorer) + "+ to craft elytras!");
+            sendNoMessage(p, explorer, "craft elytras!");
         }
     }
 
@@ -173,6 +194,11 @@ public class ExplorerListener implements Listener {
         return player;
     }
 
+    /**
+     * Call an event when a player obtains an elytra
+     * @param e Event to cancel if this event is cancelled
+     * @param p The player to pass to the event
+     */
     private void callElytraObtainedEvent(Cancellable e, Player p) {
         ExplorerObtainsElytraEvent event = new ExplorerObtainsElytraEvent(p);
         Bukkit.getPluginManager().callEvent(event);

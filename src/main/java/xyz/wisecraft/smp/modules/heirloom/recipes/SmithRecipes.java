@@ -3,10 +3,7 @@ package xyz.wisecraft.smp.modules.heirloom.recipes;
 import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Recipe;
-import org.bukkit.inventory.RecipeChoice;
-import org.bukkit.inventory.SmithingTransformRecipe;
+import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
 import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.modules.heirloom.heirlooms.BaseHeirloom;
@@ -19,10 +16,10 @@ import java.util.List;
 public abstract class SmithRecipes {
 
     @Getter
-    private static List<Recipe> recipe;
+    private static List<SmithingRecipe> recipe;
     public static final NamespacedKey smithKey = new NamespacedKey(WisecraftSMP.getInstance(), "smithing_heirloom");
 
-    public static List<Recipe> setupSmithRecipes() {
+    public static List<SmithingRecipe> setupSmithRecipes() {
         recipe = new ArrayList<>();
         bowHeirloomRecipe();
         return recipe;
@@ -37,7 +34,7 @@ public abstract class SmithRecipes {
 
         RecipeChoice base = new RecipeChoice.MaterialChoice(Material.BOW);
         RecipeChoice template = new RecipeChoice.MaterialChoice(Material.AIR);
-        RecipeChoice rune = new RecipeChoice.ExactChoice(GeneralRune.getRune());
+        RecipeChoice rune = new RecipeChoice.ExactChoice(HeirloomRunes.getGeneralRune());
         SmithingTransformRecipe recipe = new SmithingTransformRecipe(SmithRecipes.smithKey, bow, template, base, rune, false);
         SmithRecipes.recipe.add(recipe);
     }

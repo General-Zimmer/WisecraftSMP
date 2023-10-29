@@ -8,33 +8,39 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.inventory.SmithItemEvent;
+import org.bukkit.inventory.CraftingRecipe;
+import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.SmithingRecipe;
 import xyz.wisecraft.smp.modules.cropharvester.events.PrepareCropHarvestEvent;
+import xyz.wisecraft.smp.modules.heirloom.recipes.HeirloomRunes;
+import xyz.wisecraft.smp.modules.heirloom.recipes.SmithRecipes;
+import xyz.wisecraft.smp.modules.heirloom.util.UtilRandom;
 import xyz.wisecraft.smp.modules.jobsextra.JobsExtrasModule;
 import xyz.wisecraft.smp.modules.jobsextra.storage.JobsStorage;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
+
+import static xyz.wisecraft.smp.modules.jobsextra.storage.JobsStorage.getJobLevel;
+import static xyz.wisecraft.smp.modules.jobsextra.util.UtilCommon.sendNoMessage;
 
 /**
  * This class is for extra jobs features.
  */
 public class JobsFeatureListener implements org.bukkit.event.Listener {
 
-    private final HashMap<Job, Integer> jobLevels = new HashMap<>();
     private final Job miner;
     private final Job blacksmith;
     private final Job farmer;
+    private final Job runesmith;
 
     public JobsFeatureListener(JobsExtrasModule module) {
-        int defaultLevel = module.plugin.getConfig().getInt("JOBS_SETTINGS.DEFAULT_ABILITY_LEVEL");
 
-        // todo make a method for getting job ability level
-        this.miner = module.getSpecificJob("Miner");
-        jobLevels.put(miner, module.plugin.getConfig().getInt("JOBS_SETTINGS.MINER_ABILITY_LEVEL", defaultLevel));
-        this.blacksmith = module.getSpecificJob("Blacksmith");
-        jobLevels.put(blacksmith, module.plugin.getConfig().getInt("JOBS_SETTINGS.BLACKSMITH_ABILITY_LEVEL", defaultLevel));
-        this.farmer = module.getSpecificJob("Farmer");
-        jobLevels.put(farmer, module.plugin.getConfig().getInt("JOBS_SETTINGS.FARMER_ABILITY_LEVEL", defaultLevel));
+        this.runesmith = JobsStorage.setJobLevel(module, "Runesmith");
+        this.farmer = JobsStorage.setJobLevel(module, "Farmer");
+        this.miner = JobsStorage.setJobLevel(module, "Miner");
+        this.blacksmith = JobsStorage.setJobLevel(module, "Blacksmith");
 
         JobsStorage.addBlacksmithCraft(Material.DIAMOND_AXE);
         JobsStorage.addBlacksmithCraft(Material.DIAMOND_HOE);
@@ -54,7 +60,7 @@ public class JobsFeatureListener implements org.bukkit.event.Listener {
         JobsPlayer pJobs = Jobs.getPlayerManager().getJobsPlayer(p);
 
         // Check if player is in miner
-        if (pJobs.isInJob(pJob) && pJobs.getJobProgression(pJob).getLevel() >= jobLevels.get(pJob))
+        if (pJobs.isInJob(pJob) && pJobs.getJobProgression(pJob).getLevel() >= getJobLevel(pJob))
             return;
 
         Material type = e.getBlock().getType();
@@ -74,14 +80,13 @@ public class JobsFeatureListener implements org.bukkit.event.Listener {
         ArrayList<Material> blacksmithCrafts = JobsStorage.getBlacksmithCrafts();
 
         if (p == null || pJobs.isInJob(pJob) &&
-                pJobs.getJobProgression(pJob).getLevel() >= jobLevels.get(pJob)) return;
+                pJobs.getJobProgression(pJob).getLevel() >= getJobLevel(pJob)) return;
 
         Material craftType = e.getRecipe().getResult().getType();
 
         if (blacksmithCrafts.contains(craftType)) {
             e.setCancelled(true);
-            p.sendMessage("You need to have the job \"blacksmith\" to craft diamond gear! " +
-                    "Except for diamond pickaxe and diamond chestplate");
+            sendNoMessage(p, pJob, "craft diamond gear! Except for diamond pickaxe");
         }
     }
 
@@ -92,9 +97,53 @@ public class JobsFeatureListener implements org.bukkit.event.Listener {
         JobsPlayer pJobs = Jobs.getPlayerManager().getJobsPlayer(p);
         boolean isInJob = pJobs.isInJob(pJob);
 
-        if (!(isInJob && pJobs.getJobProgression(pJob).getLevel() >= jobLevels.get(pJob))) {
+        if (!(isInJob && pJobs.getJobProgression(pJob).getLevel() >= getJobLevel(pJob))) {
             e.setCancelled(true);
+            sendNoMessage(p, pJob, "use cropharvester!");
         }
+    }
+
+    @EventHandler
+    public void onRuneCraft(SmithItemEvent e) {
+        if (e.isCancelled() || !(e.getWhoClicked() instanceof Player p)) return;
+
+        Recipe re = e.getInventory().getRecipe();
+
+        if (!(re instanceof SmithingRecipe recipe)) return;
+
+        List<SmithingRecipe> recipes = SmithRecipes.getRecipe();
+        boolean hasRecipe = UtilRandom.isRecipe(recipes, recipe);
+
+        if (!hasRecipe) return;
+
+        Job pJob = runesmith;
+        JobsPlayer pJobs = Jobs.getPlayerManager().getJobsPlayer(p);
+        boolean isInJob = pJobs.isInJob(pJob);
+
+        if (!(isInJob && pJobs.getJobProgression(pJob).getLevel() >= getJobLevel(pJob))) {
+            e.setCancelled(true);
+            sendNoMessage(p, pJob, "craft heirlooms!");
+        }
+
+    }
+
+    @EventHandler
+    public void onHeirloomCraft(CraftItemEvent e) {
+        if (e.isCancelled() || !(e.getWhoClicked() instanceof Player p)) return;
+        Job pJob = runesmith;
+        JobsPlayer pJobs = Jobs.getPlayerManager().getJobsPlayer(p);
+
+        if (pJobs.isInJob(pJob) && pJobs.getJobProgression(pJob).getLevel() >= getJobLevel(pJob)) return;
+        if (!(e.getRecipe() instanceof CraftingRecipe recipe)) return;
+
+        List<CraftingRecipe> recipes = HeirloomRunes.getRecipe();
+        boolean hasRecipe = UtilRandom.isRecipe(recipes, recipe);
+
+        if (hasRecipe) {
+            e.setCancelled(true);
+            sendNoMessage(p, pJob, "craft runes!");
+        }
+
     }
 
 
