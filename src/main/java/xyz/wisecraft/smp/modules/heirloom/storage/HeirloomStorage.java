@@ -6,7 +6,8 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public abstract class HeirloomStorage {
-    private final static HashMap<UUID, BaseHeirloom> storedHeirlooms = new HashMap<>();
+    private final static HashMap<UUID, BaseHeirloom> storedHeirlooms = new HashMap<>(); // This is not in a helper
+                                                                // because we want it to be persistent across reloads.
 
     public static void addHeirloom(UUID uuid, BaseHeirloom baseHeirloom) {
         storedHeirlooms.put(uuid, baseHeirloom);

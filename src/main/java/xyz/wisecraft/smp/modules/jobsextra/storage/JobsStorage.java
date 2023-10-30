@@ -4,21 +4,20 @@ import com.gamingmesh.jobs.Jobs;
 import com.gamingmesh.jobs.container.Job;
 import org.bukkit.Material;
 import xyz.wisecraft.smp.modulation.ModuleClass;
-import xyz.wisecraft.smp.modulation.storage.storagehelpers.StorageHelperCollection;
 import xyz.wisecraft.smp.modulation.storage.storagehelpers.StorageHelperMaps;
+import xyz.wisecraft.smp.modulation.storage.storagehelpers.StorageHelperSet;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
 public abstract class JobsStorage {
 
-    private static StorageHelperCollection<ArrayList<Material>, Material> blacksmithCrafts;
-    private static StorageHelperMaps<HashMap<Job, Integer>, Job, Integer> jobLevels;
+    private static Set<Material> blacksmithCrafts;
+    private static StorageHelperMaps<Job, Integer> jobLevels;
 
     public static void init(ModuleClass module) {
-        blacksmithCrafts = new StorageHelperCollection<>(module, "blacksmithCrafts", new ArrayList<>());
+        blacksmithCrafts = new StorageHelperSet<>(module, "blacksmithCrafts");
         jobLevels = new StorageHelperMaps<>(module, "jobsLevel", new HashMap<>());
     }
 
