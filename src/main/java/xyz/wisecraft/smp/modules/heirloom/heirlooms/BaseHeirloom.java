@@ -1,5 +1,6 @@
 package xyz.wisecraft.smp.modules.heirloom.heirlooms;
 
+import lombok.Getter;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -14,6 +15,7 @@ import xyz.wisecraft.smp.modules.heirloom.util.PDCUtil;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -21,15 +23,20 @@ import java.util.logging.Level;
 import static xyz.wisecraft.smp.modules.heirloom.util.UtilRandom.checkMainHandForBow;
 
 public abstract class BaseHeirloom {
+    @Getter
     private int level;
+    @Getter
     private float xp;
+    @Getter
     private HeirloomType type;
+    @Getter
     private UUID ID;
-    private static final NamespacedKey heirloomTypeKey = new NamespacedKey(HeirloomModule.plugin, "heirloomTypeKey");
-    private static final NamespacedKey heirloomXPKey = new NamespacedKey(HeirloomModule.plugin, "heirloomXPKey");
-    private static final NamespacedKey heirloomLVLKey = new NamespacedKey(HeirloomModule.plugin, "heirloomLVLKey");
-    private static final NamespacedKey heirloomIDKey = new NamespacedKey(HeirloomModule.plugin, "heirloomIDKey");
-    private Date objectCreated; // Getting todays date for constructor will be a problem when using just Date. Only LocalDate will work for that
+    public static final NamespacedKey heirloomTypeKey = new NamespacedKey(HeirloomModule.plugin, "heirloomTypeKey");
+    public static final NamespacedKey heirloomXPKey = new NamespacedKey(HeirloomModule.plugin, "heirloomXPKey");
+    public static final NamespacedKey heirloomLVLKey = new NamespacedKey(HeirloomModule.plugin, "heirloomLVLKey");
+    public static final NamespacedKey heirloomIDKey = new NamespacedKey(HeirloomModule.plugin, "heirloomIDKey");
+    @Getter
+    private final Date objectCreated; // Getting todays date for constructor will be a problem when using just Date. Only LocalDate will work for that
 
 
     public BaseHeirloom(int level, float xp, HeirloomType type, Date created, UUID id) {
@@ -49,10 +56,10 @@ public abstract class BaseHeirloom {
         ItemMeta itemMeta = item.getItemMeta();
         PersistentDataContainer data = itemMeta.getPersistentDataContainer();
         UUID uuid = UUID.randomUUID();
-        data.set(BaseHeirloom.getHeirloomTypeKey(), PersistentDataType.STRING, type.toString());
-        data.set(BaseHeirloom.getHeirloomXPKey(), PersistentDataType.FLOAT, 0F);
-        data.set(BaseHeirloom.getHeirloomLVLKey(), PersistentDataType.INTEGER, 0);
-        data.set(BaseHeirloom.getHeirloomIDKey(), PersistentDataType.STRING, uuid.toString());
+        data.set(heirloomTypeKey, PersistentDataType.STRING, type.toString());
+        data.set(heirloomXPKey, PersistentDataType.FLOAT, 0F);
+        data.set(heirloomLVLKey, PersistentDataType.INTEGER, 1);
+        data.set(heirloomIDKey, PersistentDataType.STRING, uuid.toString());
         item.setItemMeta(itemMeta);
         try {
             HeirloomStorage.addHeirloom(uuid, clazz.getConstructor(Integer.TYPE, Float.TYPE, Date.class, UUID.class).newInstance(0, 0F, new Date(), uuid));
@@ -69,13 +76,13 @@ public abstract class BaseHeirloom {
      * @param item in players main hand
      * @return BaseHeirloom if it exists in Storage, else return null
      */
-    public static <T extends BaseHeirloom> T getHeirloom(ItemStack item, Class<T> clazz) {
+    public static @NotNull <T extends BaseHeirloom> T getHeirloom(ItemStack item, Class<T> clazz) {
         PersistentDataContainer nbtContainer = item.getItemMeta().getPersistentDataContainer();
         String uuidString = item.getItemMeta().getPersistentDataContainer().get(heirloomIDKey, PersistentDataType.STRING);
 
         String heirloomTypeValue = item.getItemMeta().getPersistentDataContainer().get(heirloomTypeKey,PersistentDataType.STRING);
         if (!clazz.getSimpleName().equalsIgnoreCase(heirloomTypeValue)) {
-            return null;
+            throw new IllegalArgumentException("ItemStack is not of heirloom type " + clazz.getSimpleName());
         }
 
         UUID uuid = null;
@@ -88,7 +95,7 @@ public abstract class BaseHeirloom {
         if (HeirloomStorage.findHeirloom(uuid) != null) {
             return (T) HeirloomStorage.findHeirloom(uuid);
         } else {
-            return (T) PDCUtil.importHeirloom(nbtContainer,clazz);
+            return PDCUtil.importHeirloom(nbtContainer,clazz);
         }
 
     }
@@ -96,39 +103,8 @@ public abstract class BaseHeirloom {
     public boolean equals(ItemStack itemstack) {
         ItemMeta itemMeta = (itemstack != null) ? itemstack.getItemMeta(): null;
         PersistentDataContainer pdc = (itemMeta != null) ? itemMeta.getPersistentDataContainer(): null;
-        String pdcString = (pdc != null) ? pdc.get(BaseHeirloom.getHeirloomTypeKey(), PersistentDataType.STRING): null;
+        String pdcString = (pdc != null) ? pdc.get(heirloomTypeKey, PersistentDataType.STRING): null;
         return pdcString != null && pdcString.equals(type.toString());
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public float getXp() {
-        return xp;
-    }
-
-    public HeirloomType getType() {
-        return type;
-    }
-
-    public static NamespacedKey getHeirloomTypeKey() {
-        return heirloomTypeKey;
-    }
-
-    public static NamespacedKey getHeirloomXPKey() {
-        return heirloomXPKey;
-    }
-
-    public static NamespacedKey getHeirloomLVLKey() {
-        return heirloomLVLKey;
-    }
-    public static NamespacedKey getHeirloomIDKey() {
-        return heirloomIDKey;
-    }
-
-    public UUID getID() {
-        return ID;
     }
 
     public void setLevel(int level) {
@@ -138,8 +114,39 @@ public abstract class BaseHeirloom {
     /**
      * Adds 10 XP to the Heirloom
      */
-    public void giveXP() {
+    public void giveXP(Player p) {
         this.xp += 10;
+
+        if (this.xp >= 100*(level)*1.7) {
+            this.xp = 0;
+            this.level += 1;
+            p.sendMessage("Your Heirloom has leveled up!");
+        }
+
+        for (int i = 0; i < p.getInventory().getSize(); i++) {
+            ItemStack item = p.getInventory().getItem(i);
+            if (item == null) continue;
+
+            ItemMeta itemMeta = item.getItemMeta();
+            PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
+            String heirloomID = pdc.get(heirloomIDKey, PersistentDataType.STRING);
+
+            if (heirloomID != null && heirloomID.equals(ID.toString())) {
+
+
+            }
+        }
+    }
+
+    private void updateItem(@NotNull ItemStack item) {
+        ItemMeta meta = item.getItemMeta();
+        ArrayList<String> lore = new ArrayList<>();
+        lore.add("Epic BowHeirloom");
+        lore.add("Level: " + level);
+        PersistentDataContainer pdc = meta.getPersistentDataContainer();
+        pdc.set(heirloomLVLKey, PersistentDataType.INTEGER, level);
+        pdc.set(heirloomXPKey, PersistentDataType.FLOAT, xp);
+        item.setItemMeta(meta);
     }
 
 

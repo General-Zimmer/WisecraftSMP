@@ -5,27 +5,24 @@ import org.bukkit.Keyed;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Arrow;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.ThrownPotion;
-import org.bukkit.inventory.CraftingRecipe;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.SmithingRecipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionData;
-import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.modules.heirloom.HeirloomModule;
-import xyz.wisecraft.smp.modules.heirloom.heirlooms.BaseHeirloom;
 import xyz.wisecraft.smp.modules.heirloom.heirlooms.BowHeirloom;
 import xyz.wisecraft.smp.modules.heirloom.heirlooms.HeirloomType;
+import xyz.wisecraft.smp.modules.heirloom.listeners.BowListener;
 import xyz.wisecraft.smp.modules.heirloom.storage.HeirloomStorage;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import static xyz.wisecraft.smp.modules.heirloom.heirlooms.BaseHeirloom.heirloomTypeKey;
 
 public abstract class UtilRandom {
 
@@ -56,33 +53,23 @@ public abstract class UtilRandom {
         return null;
     }
 
-    public static void createBowHeirLoom(Player player) {
-        ItemStack heirloomBow = checkMainHandForBow(player);
-        if (heirloomBow != null) {
-            // BaseHeirloom.createHeirLoom(heirloomBow, HeirloomType.BOWHEIRLOOM);
-        }
-    }
-
-    public static boolean checkItemIsHeirloom(ItemStack itemStack) {
+    public static boolean checkItemIsHeirloom(ItemStack itemStack, HeirloomType heirloomType) {
         ItemMeta itemMeta = (itemStack != null) ? itemStack.getItemMeta(): null;
         PersistentDataContainer pdc = (itemMeta != null) ? itemMeta.getPersistentDataContainer(): null;
-        String pdcTypeString = (pdc != null) ? pdc.get(BaseHeirloom.getHeirloomTypeKey(), PersistentDataType.STRING): null;
+        String pdcTypeString = (pdc != null) ? pdc.get(heirloomTypeKey, PersistentDataType.STRING): null;
 
-        if (pdcTypeString == null || !pdcTypeString.equals(HeirloomType.BOWHEIRLOOM.toString())) {
-            return false;
-        }
-        return true;
+        return pdcTypeString != null && pdcTypeString.equals(heirloomType.toString());
     }
 
-    public static void setPotionNBT(Arrow arrow, Material potionType, NamespacedKey potionkey, NamespacedKey arrowHeirloomIdentifier, UUID bowUUID) {
+    public static void setArrowPDC(Arrow arrow, Material potionType, UUID bowUUID, UUID playerUUID) {
         PersistentDataContainer data = arrow.getPersistentDataContainer();
-        data.set(potionkey, PersistentDataType.STRING, potionType.toString());
-        data.set(arrowHeirloomIdentifier, PersistentDataType.STRING, bowUUID.toString());
+        data.set(BowListener.potionKey, PersistentDataType.STRING, potionType.toString());
+        data.set(BowListener.heirloomArrowKey, PersistentDataType.STRING, bowUUID.toString());
+        data.set(BowListener.playerToXPKey, PersistentDataType.STRING, playerUUID.toString());
     }
 
-    public static BowHeirloom getBowHeirloomFromThrownPotion(ThrownPotion thrownPotion) {
-        PersistentDataContainer nbtData = thrownPotion.getItem().getItemMeta().getPersistentDataContainer();
-        String bowHeirloomUUID = nbtData.get(bowHeirloomKey, PersistentDataType.STRING);
+    public static BowHeirloom getBowHeirloomFromPDC(PersistentDataContainer PDC) {
+        String bowHeirloomUUID = PDC.get(bowHeirloomKey, PersistentDataType.STRING);
         if (bowHeirloomUUID == null) {
             return null;
         }

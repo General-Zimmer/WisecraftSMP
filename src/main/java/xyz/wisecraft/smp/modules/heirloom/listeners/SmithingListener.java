@@ -10,6 +10,8 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import xyz.wisecraft.smp.modules.heirloom.heirlooms.BaseHeirloom;
 
+import static xyz.wisecraft.smp.modules.heirloom.heirlooms.BaseHeirloom.heirloomTypeKey;
+
 public class SmithingListener implements Listener {
 
     /**
@@ -26,7 +28,7 @@ public class SmithingListener implements Listener {
             ItemMeta meta = out.getItemMeta();
             if (meta == null) return;
             PersistentDataContainer pdc = meta.getPersistentDataContainer();
-            if (pdc.get(BaseHeirloom.getHeirloomTypeKey(), PersistentDataType.STRING) == null) return;
+            if (pdc.get(heirloomTypeKey, PersistentDataType.STRING) == null) return;
 
             in.getItemMeta().getEnchants().forEach((enchant, level) -> {
                 if (enchant != Enchantment.MENDING)
