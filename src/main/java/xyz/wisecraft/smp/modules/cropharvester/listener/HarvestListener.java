@@ -1,6 +1,7 @@
 package xyz.wisecraft.smp.modules.cropharvester.listener;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
 import org.bukkit.entity.Player;
@@ -11,6 +12,8 @@ import org.bukkit.inventory.ItemStack;
 import xyz.wisecraft.smp.modules.cropharvester.events.PrepareCropHarvestEvent;
 import xyz.wisecraft.smp.modules.cropharvester.storage.HarvestStorage;
 import xyz.wisecraft.smp.modules.cropharvester.util.UtilRandom;
+
+import java.util.HashMap;
 
 /**
  * HarvestListener
@@ -35,8 +38,9 @@ public class HarvestListener implements Listener {
 
 
         int BlockAge = ageable.getAge();
+        HashMap<Material, String> tools = HarvestStorage.getTools();
 
-        if (HarvestStorage.getTools().containsKey(itemInHand.getType()) && BlockAge == ageable.getMaximumAge()) {
+        if (tools.containsKey(itemInHand.getType()) && BlockAge == ageable.getMaximumAge()) {
             int size = Integer.parseInt(HarvestStorage.getTools().get(itemInHand.getType()).substring(0,1));
             Player p = e.getPlayer();
             PrepareCropHarvestEvent harvestEvent = new PrepareCropHarvestEvent(p, ageable);

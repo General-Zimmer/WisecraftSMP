@@ -30,7 +30,7 @@ public class CropHarvesterModule extends ModuleClass {
     @Override
     public void onEnable() {
 
-        HarvestStorage.setTools(this);
+        HarvestStorage.init(this);
 
         // Harvest lists for Harvest logic
         List<String> tools = plugin.getConfig().getStringList("FARM_SETTINGS");
