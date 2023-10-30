@@ -47,7 +47,7 @@ MESSAGES:
   RELOAD: "&cConfig reloaded"
 
 FARM_SETTINGS:
-  tools:
+  TOOLS:
     - "0x0 WOOD_HOE"
     - "0X0 STONE_HOE"
     - "3x3 IRON_HOE"

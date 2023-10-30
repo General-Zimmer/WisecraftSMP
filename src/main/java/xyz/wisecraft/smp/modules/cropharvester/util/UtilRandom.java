@@ -105,29 +105,10 @@ public abstract class UtilRandom {
         farmLocations = findOptimalFarmArea(height, width, mainLocation.getBlockX(), mainLocation.getBlockZ(),mainLocation, item, player, 0, new ArrayList<>());
 
         for (Location lc: farmLocations) {
-            farmCropWithHoe(mainLocation, (int)lc.getX(), lc.getBlockZ(), item, player);
+            farmCropWithHoe(mainLocation, lc.getBlockX(), lc.getBlockZ(), item, player);
         }
     }
-
-    public static boolean canFarmThisBlock(Location mainLocation, int x, int z, Player player) {
-        boolean blockFarmAble = false;
-        Location checkLocation = new Location(mainLocation.getWorld(),
-                (mainLocation.getX() + x), mainLocation.getY() + 0, mainLocation.getZ() + z);
-        Block currentBlock = checkLocation.getBlock();
-
-        if (!(currentBlock.getBlockData() instanceof Ageable)) { // This can be put into getAgeAbleFromBlock
-            return false;
-        }
-
-        // Grief plugin checks
-        boolean canBreak = canPlayerBreak(player, currentBlock);
-
-        if (getAgeAbleFromBlock(currentBlock).getAge() == getAgeAbleFromBlock(currentBlock).getMaximumAge() && canBreak) {
-            blockFarmAble = true;
-        }
-
-        return blockFarmAble;
-    }
+    
 
     public static ArrayList<Location> findOptimalFarmArea(int height, int width,int xStart, int zStart, Location mainLocation, ItemStack item, Player player, int count, ArrayList<Location> optimalLocations) {
          ArrayList<Location> tempLocations;
@@ -143,7 +124,7 @@ public abstract class UtilRandom {
         }
         Location checkLocation = new Location(mainLocation.getWorld(),
                 (mainLocation.getX() + xStart), mainLocation.getY() + 0, mainLocation.getZ() + zStart);
-        tempLocations = createSubFarmGrid(mainLocation,player,xStart - (height - 1),zStart - (width - 1),height,width);
+        tempLocations = createSubFarmGrid(mainLocation,xStart - (height - 1),zStart - (width - 1),height,width);
         count++;
         zStart++;
 
@@ -156,15 +137,19 @@ public abstract class UtilRandom {
         return findOptimalFarmArea(height,width,xStart, zStart,checkLocation,item, player, count, optimalLocations);
     }
 
-    private static ArrayList<Location> createSubFarmGrid(Location startLocation, Player player, int startRow, int startCol, int rowSize, int colSize) {
+    private static ArrayList<Location> createSubFarmGrid(Location startLocation, int startRow, int startCol, int rowSize, int colSize) {
         ArrayList<Location> locations = new ArrayList<>();
+
         for (int x = startRow; x < (startRow + rowSize); x++) {
 
             for (int z = startCol; z < (startCol + colSize); z++) {
-                if (canFarmThisBlock(startLocation, x, z, player)) {
-                    Location tempLocation = new Location(startLocation.getWorld(),
-                            (startLocation.getX() + x), startLocation.getY() + 0, startLocation.getZ() + z);
-                    locations.add(tempLocation);
+                Location tempLocation = new Location(startLocation.getWorld(),
+                        (startLocation.getX() + x), startLocation.getY() + 0, startLocation.getZ() + z);
+                Block currentBlock = tempLocation.getBlock();
+                if ((currentBlock.getBlockData() instanceof Ageable)) {
+                    if (getAgeAbleFromBlock(currentBlock).getAge() == getAgeAbleFromBlock(currentBlock).getMaximumAge()) {
+                        locations.add(tempLocation);
+                    }
                 }
             }
         }
