@@ -47,12 +47,13 @@ MESSAGES:
   RELOAD: "&cConfig reloaded"
 
 FARM_SETTINGS:
-  - "0x0 WOOD_HOE"
-  - "0X0 STONE_HOE"
-  - "3x3 IRON_HOE"
-  - "0X0 GOLDEN_HOE"
-  - "3x3 DIAMOND_HOE"
-  - "5x5 NETHERITE_HOE"
+  tools:
+    - "0x0 WOOD_HOE"
+    - "0X0 STONE_HOE"
+    - "3x3 IRON_HOE"
+    - "0X0 GOLDEN_HOE"
+    - "3x3 DIAMOND_HOE"
+    - "5x5 NETHERITE_HOE"
   FARM_BY_HAND: true
 
 JOBS_SETTINGS:

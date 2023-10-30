@@ -17,6 +17,7 @@ import org.bukkit.inventory.meta.Damageable;
 import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.modules.cropharvester.CropHarvesterModule;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -82,6 +83,7 @@ public abstract class UtilRandom {
 
         Location mainLocation = block.getLocation();
 
+
         int size = width / (-2);
         if (width == 0) {
             farmCropWithHoe(mainLocation, 0, 0, item, player);
@@ -94,6 +96,79 @@ public abstract class UtilRandom {
                 farmCropWithHoe(mainLocation, x, z, item, player);
             }
         }
+    }
+
+    public static void newFarmBlocksXByX(int width,int height, Block block, ItemStack item, Player player) {
+        ArrayList<Location> farmLocations = new ArrayList<>();
+        Location mainLocation = block.getLocation();
+
+        farmLocations = findOptimalFarmArea(height, width, mainLocation.getBlockX(), mainLocation.getBlockZ(),mainLocation, item, player, 0, new ArrayList<>());
+
+        for (Location lc: farmLocations) {
+            farmCropWithHoe(mainLocation, (int)lc.getX(), lc.getBlockZ(), item, player);
+        }
+    }
+
+    public static boolean canFarmThisBlock(Location mainLocation, int x, int z, Player player) {
+        boolean blockFarmAble = false;
+        Location checkLocation = new Location(mainLocation.getWorld(),
+                (mainLocation.getX() + x), mainLocation.getY() + 0, mainLocation.getZ() + z);
+        Block currentBlock = checkLocation.getBlock();
+
+        if (!(currentBlock.getBlockData() instanceof Ageable)) { // This can be put into getAgeAbleFromBlock
+            return false;
+        }
+
+        // Grief plugin checks
+        boolean canBreak = canPlayerBreak(player, currentBlock);
+
+        if (getAgeAbleFromBlock(currentBlock).getAge() == getAgeAbleFromBlock(currentBlock).getMaximumAge() && canBreak) {
+            blockFarmAble = true;
+        }
+
+        return blockFarmAble;
+    }
+
+    public static ArrayList<Location> findOptimalFarmArea(int height, int width,int xStart, int zStart, Location mainLocation, ItemStack item, Player player, int count, ArrayList<Location> optimalLocations) {
+         ArrayList<Location> tempLocations;
+
+        // Base case
+        if (count == width * 2) {
+            return optimalLocations;
+        }
+
+        if (count == width) {
+            xStart += (height - 1);
+            zStart -= width;
+        }
+        Location checkLocation = new Location(mainLocation.getWorld(),
+                (mainLocation.getX() + xStart), mainLocation.getY() + 0, mainLocation.getZ() + zStart);
+        tempLocations = createSubFarmGrid(mainLocation,player,xStart - (height - 1),zStart - (width - 1),height,width);
+        count++;
+        zStart++;
+
+        if (tempLocations.size() == (width * height)-1) {
+            return tempLocations;
+        }
+        if (tempLocations.size() > optimalLocations.size()) {
+            optimalLocations = tempLocations;
+        }
+        return findOptimalFarmArea(height,width,xStart, zStart,checkLocation,item, player, count, optimalLocations);
+    }
+
+    private static ArrayList<Location> createSubFarmGrid(Location startLocation, Player player, int startRow, int startCol, int rowSize, int colSize) {
+        ArrayList<Location> locations = new ArrayList<>();
+        for (int x = startRow; x < (startRow + rowSize); x++) {
+
+            for (int z = startCol; z < (startCol + colSize); z++) {
+                if (canFarmThisBlock(startLocation, x, z, player)) {
+                    Location tempLocation = new Location(startLocation.getWorld(),
+                            (startLocation.getX() + x), startLocation.getY() + 0, startLocation.getZ() + z);
+                    locations.add(tempLocation);
+                }
+            }
+        }
+        return locations;
     }
 
     private static boolean canPlayerBreak(Player player, Block currentBlock) {

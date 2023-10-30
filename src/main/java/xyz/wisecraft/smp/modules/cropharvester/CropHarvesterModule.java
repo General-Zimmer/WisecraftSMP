@@ -37,7 +37,7 @@ public class CropHarvesterModule extends ModuleClass {
 
         // If FARM_BY_HAND ENABLED, ADD air material to the tools that can farm list
         if (plugin.getConfig().getBoolean("FARM_SETTINGS.FARM_BY_HAND")) {
-            OtherStorage.addTool(Material.AIR, "0");
+            HarvestStorage.addTool(Material.AIR, "0");
         }
 
         for (String material: tools) {
