@@ -96,7 +96,7 @@ public abstract class UtilRandom {
         }
     }
 
-    public static void initBlocks(int width,int height, Block block, ItemStack item, Player player) {
+    public static Block[][] initBlocks(int width,int height, Block block, ItemStack item, Player player) {
         int rows = 0;
         int cols = 0;
         int biggest = 0;
@@ -136,6 +136,7 @@ public abstract class UtilRandom {
         }
 
 
+        /*
         // Loop to test break of full Array
         for (int i = 0; i < blockField.length; i++) {
 
@@ -146,7 +147,9 @@ public abstract class UtilRandom {
             }
         }
 
-        //  return blockField;
+         */
+
+        return blockField;
     }
 
 
@@ -167,25 +170,20 @@ public abstract class UtilRandom {
 
 
     public static void farmAreaWithMostCrops(int width,int height, Block block, ItemStack item, Player player) {
-        // Block[][] blockField = initBlocks(width,height, block);
-        // int rows = blockField.length;
-        // int cols = blockField[0].length;
+        Block[][] blockField = initBlocks(width,height, block, item, player);
+        int rows = blockField.length;
+        int cols = blockField[0].length;
 
-        /*
-        int xStart = 5;
+
+        int xStart = 4;
         int zStart = 4;
-        Block[][] blocksToFarm = createSubFarmGrid(blockField, xStart, zStart, height, width);
+        ArrayList<Block> blocksToFarm = createSubFarmGrid(blockField, xStart, zStart, height, width);
 
-        for (int i = 0; i < blocksToFarm.length; i++) {
-
-            for (int j = 0; j < blocksToFarm[i].length; i++) {
-                if (blocksToFarm[i][j] != null) {
-                    farmCropWithHoe(blocksToFarm[i][j], item, player);
-                }
-            }
+        player.sendMessage("" + blocksToFarm.size());
+        for (Block b: blocksToFarm) {
+            farmCropWithHoe(b, item, player);
         }
 
-         */
     }
     private static ArrayList<Block> findOptimalFarmArea(int height, int width,int xStart, int zStart, Block startBlock, int count, Block[][] blockField, ArrayList<Block> optimalFarmBlocks) {
 
@@ -201,7 +199,7 @@ public abstract class UtilRandom {
         }
         Block tempBlock = startBlock.getWorld().getBlockAt(startBlock.getX() - xStart,startBlock.getY(), startBlock.getZ() - zStart);
 
-        /*
+
         currentCheckedBlocks = createSubFarmGrid(blockField,xStart - (height - 1),zStart - (width - 1),height,width);
         count++;
         zStart++;
@@ -213,13 +211,12 @@ public abstract class UtilRandom {
             optimalFarmBlocks = currentCheckedBlocks;
         }
 
-         */
         return findOptimalFarmArea(height,width,xStart, zStart,tempBlock, count, blockField,optimalFarmBlocks);
     }
 
-    private static Block[][] createSubFarmGrid(Block[][] field, int startRow, int startCol, int rowSize, int colSize) {
+    private static ArrayList<Block> createSubFarmGrid(Block[][] field, int startRow, int startCol, int rowSize, int colSize) {
         Block[][] farmArray = new Block[field.length][field[0].length];
-        // ArrayList<Block> blocks = new ArrayList<>();
+        ArrayList<Block> blocks = new ArrayList<>();
 
         for (int x = startRow; x < (startRow + rowSize); x++) {
 
@@ -227,12 +224,13 @@ public abstract class UtilRandom {
                Block currentBlock = field[x][z];
                 if (currentBlock != null && (currentBlock.getBlockData() instanceof Ageable)) {
                     if (getAgeAbleFromBlock(currentBlock).getAge() == getAgeAbleFromBlock(currentBlock).getMaximumAge()) {
-                        farmArray[x][z] = currentBlock;
+                        blocks.add(currentBlock);
+                        // farmArray[x][z] = currentBlock;
                     }
                 }
             }
         }
-        return farmArray;
+        return blocks;
     }
 
     private static boolean canPlayerBreak(Player player, Block currentBlock) {
