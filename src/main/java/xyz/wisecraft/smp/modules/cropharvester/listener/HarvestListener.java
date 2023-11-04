@@ -49,7 +49,8 @@ public class HarvestListener implements Listener {
             if (harvestEvent.isCancelled()) return;
 
 
-            UtilRandom.newFarmBlocksXByX(5,2, clickedBlock, itemInHand, p);
+            UtilRandom.initBlocks(2,5,clickedBlock, itemInHand, p);
+            // UtilRandom.initBlocks(4,2,clickedBlock, itemInHand, p);
         }
     }
 

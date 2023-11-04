@@ -8,6 +8,7 @@ import me.ryanhamshire.GriefPrevention.ClaimPermission;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
 import org.bukkit.enchantments.Enchantment;
@@ -18,6 +19,7 @@ import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.modules.cropharvester.CropHarvesterModule;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -38,24 +40,20 @@ public abstract class UtilRandom {
     /**
      * Type what this does and relevent information
      *
-     * @param mainLocation Location of the block that was interacted with
-     * @param x            X coordinate
-     * @param z            Z coordinate
+     * @param blockToFarm  Block that will be farmed
      * @param item         Item used to break block naturally
      * @param player       Player to get mainhand item from
      */
-    private static void farmCropWithHoe(Location mainLocation, int x, int z, ItemStack item, Player player) {
+    private static void farmCropWithHoe(Block blockToFarm, ItemStack item, Player player) {
         boolean blockWasBroken = false;
-        Location checkLocation = new Location(mainLocation.getWorld(),
-                (mainLocation.getX() + x), mainLocation.getY() + 0, mainLocation.getZ() + z);
-        Block currentBlock = checkLocation.getBlock();
+        Block currentBlock = blockToFarm;
 
         if (!(currentBlock.getBlockData() instanceof Ageable)) { // This can be put into getAgeAbleFromBlock
             return;
         }
 
         // Grief plugin checks
-        boolean canBreak = canPlayerBreak(player, currentBlock);
+        boolean canBreak = true; // canPlayerBreak(player, currentBlock);
 
         if (getAgeAbleFromBlock(currentBlock).getAge() == getAgeAbleFromBlock(currentBlock).getMaximumAge() && canBreak) {
             Material blockMaterial = currentBlock.getBlockData().getMaterial();
@@ -86,18 +84,73 @@ public abstract class UtilRandom {
 
         int size = width / (-2);
         if (width == 0) {
-            farmCropWithHoe(mainLocation, 0, 0, item, player);
+            // farmCropWithHoe(mainLocation, 0, 0, item, player);
             return;
         }
 
         for (int z = size; z <= size * (-1); z++) {
 
             for (int x = size; x <= size * (-1); x++) {
-                farmCropWithHoe(mainLocation, x, z, item, player);
+                // farmCropWithHoe(mainLocation, x, z, item, player);
             }
         }
     }
 
+    public static void initBlocks(int width,int height, Block block, ItemStack item, Player player) {
+        int rows = 0;
+        int cols = 0;
+        int biggest = 0;
+        int smallest = 0;
+        if (width > height) {
+            biggest = width;
+            smallest = height;
+        } else {
+            biggest = height;
+            smallest = width;
+        }
+        rows = (biggest * 2) - 1;
+        cols = (biggest * 2) - 1;
+        Block[][] blockField = new Block[rows][cols];
+
+        int xStart = block.getX() - ((rows / 2));
+        int zStart = block.getZ() - ((cols / 2));
+        int yStart = block.getY();
+
+
+        int xMax = (height * 2) - 1;
+        int zMax = (height * 2) - 1;
+
+        World world = block.getWorld();
+
+        // Loop for all
+        for (int x = 0; x < xMax; x++) {
+
+            for (int z = 0; z < zMax; z++) {
+                int checker = biggest-smallest;
+                if ((x < checker && z < checker) || (x < checker && z >= zMax-checker) || (x >= zMax-checker && z < checker) || (x >= zMax-checker && z >= zMax-checker)) {
+                    continue;
+                }
+                Block blockToBreak = world.getBlockAt(xStart + x,yStart, zStart + z);
+                blockField[x][z] = blockToBreak;
+            }
+        }
+
+
+        // Loop to test break of full Array
+        for (int i = 0; i < blockField.length; i++) {
+
+            for (int j = 0; j < blockField[i].length; j++) {
+                if (blockField[i][j] != null) {
+                    farmCropWithHoe(blockField[i][j],item, player);
+                }
+            }
+        }
+
+        //  return blockField;
+    }
+
+
+    /*
     public static void newFarmBlocksXByX(int width,int height, Block block, ItemStack item, Player player) {
         ArrayList<Location> farmLocations = new ArrayList<>();
         Location mainLocation = block.getLocation();
@@ -108,52 +161,78 @@ public abstract class UtilRandom {
             farmCropWithHoe(mainLocation, lc.getBlockX(), lc.getBlockZ(), item, player);
         }
     }
-    
 
-    public static ArrayList<Location> findOptimalFarmArea(int height, int width,int xStart, int zStart, Location mainLocation, ItemStack item, Player player, int count, ArrayList<Location> optimalLocations) {
-         ArrayList<Location> tempLocations;
+     */
 
+
+
+    public static void farmAreaWithMostCrops(int width,int height, Block block, ItemStack item, Player player) {
+        // Block[][] blockField = initBlocks(width,height, block);
+        // int rows = blockField.length;
+        // int cols = blockField[0].length;
+
+        /*
+        int xStart = 5;
+        int zStart = 4;
+        Block[][] blocksToFarm = createSubFarmGrid(blockField, xStart, zStart, height, width);
+
+        for (int i = 0; i < blocksToFarm.length; i++) {
+
+            for (int j = 0; j < blocksToFarm[i].length; i++) {
+                if (blocksToFarm[i][j] != null) {
+                    farmCropWithHoe(blocksToFarm[i][j], item, player);
+                }
+            }
+        }
+
+         */
+    }
+    private static ArrayList<Block> findOptimalFarmArea(int height, int width,int xStart, int zStart, Block startBlock, int count, Block[][] blockField, ArrayList<Block> optimalFarmBlocks) {
+
+        ArrayList<Block> currentCheckedBlocks;
         // Base case
         if (count == width * 2) {
-            return optimalLocations;
+            return optimalFarmBlocks;
         }
 
         if (count == width) {
             xStart += (height - 1);
             zStart -= width;
         }
-        Location checkLocation = new Location(mainLocation.getWorld(),
-                (mainLocation.getX() + xStart), mainLocation.getY() + 0, mainLocation.getZ() + zStart);
-        tempLocations = createSubFarmGrid(mainLocation,xStart - (height - 1),zStart - (width - 1),height,width);
+        Block tempBlock = startBlock.getWorld().getBlockAt(startBlock.getX() - xStart,startBlock.getY(), startBlock.getZ() - zStart);
+
+        /*
+        currentCheckedBlocks = createSubFarmGrid(blockField,xStart - (height - 1),zStart - (width - 1),height,width);
         count++;
         zStart++;
 
-        if (tempLocations.size() == (width * height)-1) {
-            return tempLocations;
+        if (currentCheckedBlocks.size() == (width * height)-1) {
+            return currentCheckedBlocks;
         }
-        if (tempLocations.size() > optimalLocations.size()) {
-            optimalLocations = tempLocations;
+        if (currentCheckedBlocks.size() > optimalFarmBlocks.size()) {
+            optimalFarmBlocks = currentCheckedBlocks;
         }
-        return findOptimalFarmArea(height,width,xStart, zStart,checkLocation,item, player, count, optimalLocations);
+
+         */
+        return findOptimalFarmArea(height,width,xStart, zStart,tempBlock, count, blockField,optimalFarmBlocks);
     }
 
-    private static ArrayList<Location> createSubFarmGrid(Location startLocation, int startRow, int startCol, int rowSize, int colSize) {
-        ArrayList<Location> locations = new ArrayList<>();
+    private static Block[][] createSubFarmGrid(Block[][] field, int startRow, int startCol, int rowSize, int colSize) {
+        Block[][] farmArray = new Block[field.length][field[0].length];
+        // ArrayList<Block> blocks = new ArrayList<>();
 
         for (int x = startRow; x < (startRow + rowSize); x++) {
 
             for (int z = startCol; z < (startCol + colSize); z++) {
-                Location tempLocation = new Location(startLocation.getWorld(),
-                        (startLocation.getX() + x), startLocation.getY() + 0, startLocation.getZ() + z);
-                Block currentBlock = tempLocation.getBlock();
-                if ((currentBlock.getBlockData() instanceof Ageable)) {
+               Block currentBlock = field[x][z];
+                if (currentBlock != null && (currentBlock.getBlockData() instanceof Ageable)) {
                     if (getAgeAbleFromBlock(currentBlock).getAge() == getAgeAbleFromBlock(currentBlock).getMaximumAge()) {
-                        locations.add(tempLocation);
+                        farmArray[x][z] = currentBlock;
                     }
                 }
             }
         }
-        return locations;
+        return farmArray;
     }
 
     private static boolean canPlayerBreak(Player player, Block currentBlock) {
