@@ -9,7 +9,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.potion.*;
+import org.bukkit.potion.PotionData;
+import org.bukkit.potion.PotionType;
 import org.bukkit.projectiles.ProjectileSource;
 import xyz.wisecraft.smp.WisecraftSMP;
 import xyz.wisecraft.smp.modules.heirloom.HeirloomModule;
@@ -18,7 +19,6 @@ import xyz.wisecraft.smp.modules.heirloom.heirlooms.BowHeirloom;
 import xyz.wisecraft.smp.modules.heirloom.heirlooms.HeirloomType;
 import xyz.wisecraft.smp.modules.heirloom.util.UtilRandom;
 
-import java.util.Objects;
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -87,41 +87,48 @@ public class BowListener implements Listener {
 
         PotionMeta potionMeta = (PotionMeta) arrow.getItemStack().getItemMeta();
         Material potionType = Material.valueOf(getTypeString);
-        final ItemStack itemStack = new ItemStack(potionType);
-        itemStack.setItemMeta(potionMeta);
+        final ItemStack newPotion = new ItemStack(potionType);
+        newPotion.setItemMeta(potionMeta);
 
-            if (itemStack.getType().equals(Material.SPLASH_POTION) || itemStack.getType() == Material.LINGERING_POTION) {
-                Entity hitEntity = event.getHitEntity();
-                final boolean hasHitEntity;
-                if (hitEntity instanceof LivingEntity le) {
-                    le.setNoDamageTicks(0);
-                    hasHitEntity = true;
-                    BaseHeirloom.getHeirloom(arrow.getItemStack(), BowHeirloom.class).giveXP((Player) arrow.getShooter());
-                } else {
-                    hasHitEntity = false;
+        if (newPotion.getType().equals(Material.SPLASH_POTION) || newPotion.getType() == Material.LINGERING_POTION) {
+            Entity hitEntity = event.getHitEntity();
+            final boolean hasHitEntity;
+            String playerUUID = arrow.getPersistentDataContainer().get(playerToXPKey, PersistentDataType.STRING);
+
+            if (hitEntity instanceof LivingEntity le) {
+                le.setNoDamageTicks(0);
+                hasHitEntity = true;
+                if (playerUUID != null) {
+                    Player p = Bukkit.getPlayer(playerUUID);
+                    if (!arrow.getShooter().equals(event.getHitEntity()))
+                        BaseHeirloom.giveXP(p, arrowKey);
                 }
-                final World world = event.getEntity().getWorld();
-                final Location location = event.getEntity().getLocation();
 
-                Bukkit.getServer().getScheduler().runTask(plugin, () -> {
-                    ThrownPotion thrownPotion = (ThrownPotion) world.spawnEntity(location, EntityType.SPLASH_POTION);
-                    thrownPotion.setShooter(arrow.getShooter());
-                    thrownPotion.setItem(itemStack);
-                    thrownPotion.getPersistentDataContainer().set(heirloomArrowKey, PersistentDataType.STRING, arrowKey);
-                    thrownPotion.getPersistentDataContainer().set(hasXpEvent, PersistentDataType.BOOLEAN, hasHitEntity);
-                    thrownPotion.getPersistentDataContainer().set(playerToXPKey, PersistentDataType.STRING,
-                            Objects.requireNonNull(
-                                    arrow.getPersistentDataContainer().get(playerToXPKey, PersistentDataType.STRING),
-                                    "heirloom Arrow didn't have player UUID")); //todo prevent thrown potion from being spawned if dis is null
-                    thrownPotion.splash();
-                });
-                if (event.getHitBlock() != null) {
-                    arrow.setBasePotionData(new PotionData(PotionType.UNCRAFTABLE));
-                } else if (event.getHitEntity() != null) {
-                    arrow.setBasePotionData(new PotionData(PotionType.UNCRAFTABLE));
-
-                }
+            } else {
+                hasHitEntity = false;
             }
+
+            final World world = event.getEntity().getWorld();
+            final Location location = event.getEntity().getLocation();
+
+            Bukkit.getServer().getScheduler().runTask(plugin, () -> {
+                ThrownPotion thrownPotion = (ThrownPotion) world.spawnEntity(location, EntityType.SPLASH_POTION);
+                thrownPotion.setShooter(arrow.getShooter());
+                thrownPotion.setItem(newPotion);
+                thrownPotion.getPersistentDataContainer().set(heirloomArrowKey, PersistentDataType.STRING, arrowKey);
+                thrownPotion.getPersistentDataContainer().set(hasXpEvent, PersistentDataType.BOOLEAN, hasHitEntity);
+                if (playerUUID != null)
+                    thrownPotion.getPersistentDataContainer().set(playerToXPKey, PersistentDataType.STRING, playerUUID);
+                thrownPotion.splash();
+            });
+
+            if (event.getHitBlock() != null) {
+                arrow.setBasePotionData(new PotionData(PotionType.UNCRAFTABLE));
+            } else if (event.getHitEntity() != null) {
+                arrow.setBasePotionData(new PotionData(PotionType.UNCRAFTABLE));
+
+            }
+        }
     }
 
     @EventHandler
@@ -141,13 +148,14 @@ public class BowListener implements Listener {
 
         if (bowHeirloom != null) {
             if (!pse.getAffectedEntities().isEmpty()) {
+                // todo prevent xp from shooter shooting themself
 
                 String uuid = thrownPotion.getPersistentDataContainer().get(playerToXPKey, PersistentDataType.STRING);
                 if (uuid == null) {
                     WisecraftSMP.getInstance().getLogger().log(Level.SEVERE, "ThrownPotion does not have a player UUID");
                     return;
                 }
-                bowHeirloom.giveXP(Bukkit.getPlayer(UUID.fromString(uuid)));
+                BowHeirloom.giveXP(Bukkit.getPlayer(UUID.fromString(uuid)), thrownPotion.getPersistentDataContainer().get(heirloomArrowKey, PersistentDataType.STRING));
             }
         }
     }
@@ -161,17 +169,18 @@ public class BowListener implements Listener {
         }
 
         BowHeirloom bowHeirloom = UtilRandom.getBowHeirloomFromPDC(cloud.getPersistentDataContainer());
-        boolean BowRecXPForthisPot = cloud.getPersistentDataContainer().get(hasXpEvent, PersistentDataType.BOOLEAN);
+        boolean BowRecXPForThisPot = cloud.getPersistentDataContainer().get(hasXpEvent, PersistentDataType.BOOLEAN);
 
         if (!aecae.getAffectedEntities().isEmpty() && bowHeirloom != null) {
-            if (!BowRecXPForthisPot) {
+            if (!BowRecXPForThisPot) {
                 cloud.getPersistentDataContainer().set(hasXpEvent, PersistentDataType.BOOLEAN, true);
                 String uuid = cloud.getPersistentDataContainer().get(playerToXPKey, PersistentDataType.STRING);
                 if (uuid == null) {
                     WisecraftSMP.getInstance().getLogger().log(Level.SEVERE, "ThrownPotion does not have a player UUID");
                     return;
                 }
-                bowHeirloom.giveXP(Bukkit.getPlayer(UUID.fromString(uuid)));
+                // todo prevent xp from shooter shooting themself
+                BowHeirloom.giveXP(Bukkit.getPlayer(UUID.fromString(uuid)), cloud.getPersistentDataContainer().get(heirloomArrowKey, PersistentDataType.STRING));
             }
         }
     }

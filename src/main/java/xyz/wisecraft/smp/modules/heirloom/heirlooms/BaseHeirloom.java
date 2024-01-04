@@ -13,14 +13,10 @@ import xyz.wisecraft.smp.modules.heirloom.storage.HeirloomStorage;
 import xyz.wisecraft.smp.modules.heirloom.util.PDCUtil;
 
 import java.lang.reflect.InvocationTargetException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 import java.util.logging.Level;
-
-import static xyz.wisecraft.smp.modules.heirloom.util.UtilRandom.checkMainHandForBow;
 
 public abstract class BaseHeirloom {
     @Getter
@@ -114,28 +110,23 @@ public abstract class BaseHeirloom {
     /**
      * Adds 10 XP to the Heirloom
      */
-    public void giveXP(Player p) {
-        this.xp += 10;
+    public static void giveXP(Player p, @NotNull ItemStack item, BaseHeirloom heirloom) {
+        heirloom.xp += 1;
 
-        if (this.xp >= 100*(level)*1.7) {
-            this.xp = 0;
-            this.level += 1;
+        if (heirloom.xp >= 50*(heirloom.level)*1.7) {
+            heirloom.xp = 0;
+            heirloom.level += 1;
             p.sendMessage("Your Heirloom has leveled up!");
         }
 
-        for (int i = 0; i < p.getInventory().getSize(); i++) {
-            ItemStack item = p.getInventory().getItem(i);
-            if (item == null) continue;
+        heirloom.updateItem(item);
 
-            ItemMeta itemMeta = item.getItemMeta();
-            PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
-            String heirloomID = pdc.get(heirloomIDKey, PersistentDataType.STRING);
+    }
 
-            if (heirloomID != null && heirloomID.equals(ID.toString())) {
-
-
-            }
-        }
+    public static void giveXP(Player p, String id) {
+        ItemStack item = findHeirloom(p, id);
+        BaseHeirloom heirloom = getHeirloom(item, BowHeirloom.class);
+        giveXP(p, item, heirloom);
     }
 
     private void updateItem(@NotNull ItemStack item) {
@@ -143,10 +134,28 @@ public abstract class BaseHeirloom {
         ArrayList<String> lore = new ArrayList<>();
         lore.add("Epic BowHeirloom");
         lore.add("Level: " + level);
+        meta.setLore(lore);
         PersistentDataContainer pdc = meta.getPersistentDataContainer();
         pdc.set(heirloomLVLKey, PersistentDataType.INTEGER, level);
         pdc.set(heirloomXPKey, PersistentDataType.FLOAT, xp);
         item.setItemMeta(meta);
+    }
+
+    private static ItemStack findHeirloom(Player p, String ID) {
+        for (int i = 0; i < p.getInventory().getSize(); i++) {
+            ItemStack item = p.getInventory().getItem(i);
+            if (item == null) continue;
+
+
+            ItemMeta itemMeta = item.getItemMeta();
+            PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
+            String heirloomID = pdc.get(heirloomIDKey, PersistentDataType.STRING);
+
+            if (heirloomID != null && heirloomID.equals(ID)) {
+                return item;
+            }
+        }
+        return null;
     }
 
 
