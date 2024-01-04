@@ -8,7 +8,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import xyz.wisecraft.smp.modules.heirloom.heirlooms.BaseHeirloom;
 
 import static xyz.wisecraft.smp.modules.heirloom.heirlooms.BaseHeirloom.heirloomTypeKey;
 

@@ -1,13 +1,9 @@
 package xyz.wisecraft.smp.modules.heirloom.util;
 
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import xyz.wisecraft.smp.modules.heirloom.HeirloomModule;
 import xyz.wisecraft.smp.modules.heirloom.heirlooms.BaseHeirloom;
-import xyz.wisecraft.smp.modules.heirloom.heirlooms.HeirloomType;
 import xyz.wisecraft.smp.modules.heirloom.storage.HeirloomStorage;
 
 import java.util.Date;

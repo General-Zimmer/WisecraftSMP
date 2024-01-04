@@ -4,9 +4,7 @@ import com.fren_gor.ultimateAdvancementAPI.advancement.tasks.AbstractMultiTasksA
 import com.fren_gor.ultimateAdvancementAPI.advancement.tasks.TaskAdvancement;
 import com.fren_gor.ultimateAdvancementAPI.util.AdvancementKey;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.SmithItemEvent;
-import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.SmithingRecipe;
 import xyz.wisecraft.smp.modules.advancements.advs.AdvancementTabNamespaces;
 import xyz.wisecraft.smp.modules.heirloom.recipes.SmithRecipes;

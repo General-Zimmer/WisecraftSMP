@@ -4,8 +4,6 @@ import com.gamingmesh.jobs.container.Job;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-
 import static xyz.wisecraft.smp.modules.jobsextra.storage.JobsStorage.getJobLevel;
 
 public class UtilCommon {

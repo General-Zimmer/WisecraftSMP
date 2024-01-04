@@ -9,11 +9,8 @@ import xyz.wisecraft.smp.modules.heirloom.heirlooms.BaseHeirloom;
 import xyz.wisecraft.smp.modules.heirloom.heirlooms.BowHeirloom;
 import xyz.wisecraft.smp.modules.heirloom.heirlooms.HeirloomType;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static xyz.wisecraft.smp.modulation.ModuleClass.plugin;
 
 public class CmdSetup extends BukkitCommand {
 

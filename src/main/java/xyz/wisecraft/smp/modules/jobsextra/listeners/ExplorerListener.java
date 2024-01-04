@@ -19,17 +19,11 @@ import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import xyz.wisecraft.smp.modules.jobsextra.JobsExtrasModule;
 import xyz.wisecraft.smp.modules.jobsextra.event.ExplorerObtainsElytraEvent;
 import xyz.wisecraft.smp.modules.jobsextra.storage.JobsStorage;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.UUID;
 
 import static xyz.wisecraft.smp.modules.jobsextra.storage.JobsStorage.getJobLevel;
 import static xyz.wisecraft.smp.modules.jobsextra.util.UtilCommon.sendNoMessage;

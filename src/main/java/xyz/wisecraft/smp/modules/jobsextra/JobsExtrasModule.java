@@ -1,12 +1,9 @@
 package xyz.wisecraft.smp.modules.jobsextra;
 
-import com.gamingmesh.jobs.Jobs;
-import com.gamingmesh.jobs.container.Job;
 import org.bukkit.event.Listener;
-import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
-import xyz.wisecraft.smp.modulation.interfaces.Module;
 import xyz.wisecraft.smp.modulation.ModuleClass;
+import xyz.wisecraft.smp.modulation.interfaces.Module;
 import xyz.wisecraft.smp.modules.cropharvester.CropHarvesterModule;
 import xyz.wisecraft.smp.modules.jobsextra.listeners.ExplorerListener;
 import xyz.wisecraft.smp.modules.jobsextra.listeners.JobsFeatureListener;

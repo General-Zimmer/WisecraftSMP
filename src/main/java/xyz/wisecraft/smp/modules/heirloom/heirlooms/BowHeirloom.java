@@ -9,7 +9,6 @@ import xyz.wisecraft.smp.modules.heirloom.HeirloomModule;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 public class BowHeirloom extends BaseHeirloom {
