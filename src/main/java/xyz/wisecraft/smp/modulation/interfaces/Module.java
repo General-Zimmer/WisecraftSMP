@@ -99,11 +99,7 @@ public interface Module extends Comparable<Module> {
      * Gets the module dependencies of other modules. This method should be overridden if the module has dependencies.
      * @return The module dependencies.
      */
-    @SuppressWarnings("UnnecessaryLocalVariable")
-    default ArrayList<Class<? extends Module>> getModuleDepends() {
-        ArrayList<Class<? extends Module>> depends = new ArrayList<>();
-        return depends;
-    }
+    ArrayList<Class<? extends Module>> getModuleDepends();
 
     /**
      * Gets the module ID. Will return -1 if the id does not exist.

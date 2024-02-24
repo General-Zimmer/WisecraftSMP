@@ -28,6 +28,7 @@ public class JobsExtrasModule extends ModuleClass {
     public void onEnable() {
 
         JobsStorage.init(this);
+        this.addModuleDepend(CropHarvesterModule.class);
     }
 
 
@@ -42,12 +43,6 @@ public class JobsExtrasModule extends ModuleClass {
     @Override
     public boolean hasAllHardDependencies() {
         return jobs;
-    }
-
-    public ArrayList<Class<? extends Module>> getModuleDepends() {
-        ArrayList<Class<? extends Module>> depends = new ArrayList<>();
-        depends.add(CropHarvesterModule.class);
-        return depends;
     }
 
 }

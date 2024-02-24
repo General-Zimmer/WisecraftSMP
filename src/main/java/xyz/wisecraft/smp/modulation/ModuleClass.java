@@ -11,6 +11,7 @@ import xyz.wisecraft.smp.modulation.storage.ModulationStorage;
 import xyz.wisecraft.smp.modulation.storage.ModuleSettings;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import static xyz.wisecraft.smp.modulation.UtilModuleCommon.*;
@@ -47,6 +48,7 @@ public abstract class ModuleClass implements Module {
     @Getter
     private ModuleInfo moduleInfo;
 
+    private final ArrayList<Class<? extends Module>> depends = new ArrayList<>();
     @Getter
     private final HashMap<String, Object> storage = new HashMap<>();
 
@@ -79,6 +81,31 @@ public abstract class ModuleClass implements Module {
         onEnable(); // THIS BEFORE INFO. OTHERWISE DIS NO WORKIE!!!!!
         this.moduleInfo = new ModuleInfo(getModuleName(), registerListeners(), registerCommands());
         reenableModule();
+    }
+
+    /**
+     * Gets the module dependencies of other modules. This method should be overridden if the module has dependencies.
+     * @return The module dependencies.
+     */
+    @Override
+    public ArrayList<Class<? extends Module>> getModuleDepends() {
+        return depends;
+    }
+
+    /**
+     * Adds a dependency to the module.
+     * @param clazz The class of the dependency.
+     */
+    protected boolean addModuleDepend(Class<? extends Module> clazz) {
+        return depends.add(clazz);
+    }
+
+    /**
+     * Removes a dependency from the module.
+     * @param clazz The class of the dependency.
+     */
+    protected boolean removeModuleDepend(Class<? extends Module> clazz) {
+        return depends.remove(clazz);
     }
 
     // todo prevent disabling modules that are required by other enabled modules.
