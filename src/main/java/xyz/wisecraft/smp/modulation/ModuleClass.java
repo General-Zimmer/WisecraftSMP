@@ -182,6 +182,4 @@ public abstract class ModuleClass implements Module {
         else
             return ("Module " + getModuleName() + " is already " + moduleState + "!").equalsIgnoreCase(message);
     }
-
-
 }
