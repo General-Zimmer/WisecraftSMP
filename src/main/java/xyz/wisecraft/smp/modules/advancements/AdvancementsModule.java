@@ -130,9 +130,9 @@ public class AdvancementsModule extends ModuleClass {
     private void initModule() {
         Bukkit.getServer().getOnlinePlayers().forEach( player ->
                 player.kick(
-                        Component.text("Advancements was loaded/reloaded and you were kicked to prevent Data issues. You can rejoin now."),
+                        Component.text("Advancements was loaded/reloaded and you were kicked to prevent Data issues. You can rejoin immediately."),
                         PlayerKickEvent.Cause.PLUGIN));
-        // Kicking players before advapi.load() is called to probably prevent events from being triggered because they leave. (I don't know if this is needed)
+        // Kicking players before advapi.load() to probably prevent events from being triggered because they leave. (I don't know if this is needed)
         // Not kicking them will prevent them from being loaded into AdvAPI's cache. (This is needed)
         advapi.load();
         advapi.enableSQLite(new File(plugin.getServer().getWorldContainer().getAbsolutePath() + "/world", "advancements.db"));

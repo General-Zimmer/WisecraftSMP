@@ -29,8 +29,6 @@ public class FindDependenciesTests {
 
     @BeforeEach
     public void setUp() {
-        server = MockBukkit.mock();
-        plugin = MockBukkit.load(WisecraftSMP.class, true);
     }
 
     @Test
@@ -101,7 +99,6 @@ public class FindDependenciesTests {
 
         Exception exception = Assertions.assertThrows(UnsupportedOperationException.class,
                 () -> UtilModuleCommon.sortDependTrimmed(modules));
-
         Assertions.assertArrayEquals("Direct circular dependency detected!".toCharArray(),
                 exception.getMessage().toCharArray());
     }

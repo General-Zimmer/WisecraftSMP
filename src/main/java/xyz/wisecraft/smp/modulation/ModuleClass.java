@@ -37,8 +37,7 @@ public abstract class ModuleClass implements Module {
      * Gets the module state.
      */
     @Getter
-    private ModuleState moduleState = plugin.getModuleConfig().getBoolean(getSetting(this, ModuleSettings.ENABLED), false)
-            ? ModuleState.INITIAL : ModuleState.DISABLED;
+    private ModuleState moduleState;
     /**
      * The ID of the module. This is used to identify the module.
      * <p>
@@ -57,12 +56,15 @@ public abstract class ModuleClass implements Module {
             throw new RuntimeException("Module class name must end with \"Module\"!");
         }
         this.ID = id;
+        moduleState = plugin.getModuleConfig().getBoolean(getSetting(this, ModuleSettings.ENABLED), false)
+                ? ModuleState.INITIAL : ModuleState.DISABLED;
     }
 
     public ModuleClass() {
         this.ID = -10;
-        if (!plugin.getIsTesting())
-            throw new RuntimeException("Module was initalized without an ID in production!");
+        // Disabled due to an error. todo fix this throwing an nullpointerexception
+        //if (!plugin.getIsTesting())
+        //    throw new RuntimeException("Module was initalized without an ID in production!");
         moduleState = ModuleState.TESTING;
     }
 

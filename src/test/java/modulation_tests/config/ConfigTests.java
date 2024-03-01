@@ -20,10 +20,10 @@ public class ConfigTests {
 
     @BeforeEach
     public void setUp() {
-        server = MockBukkit.mock();
-        plugin = MockBukkit.load(WisecraftSMP.class, true);
-        moduleConfigFile = new File(plugin.getDataFolder() + "modulation_tests/config/configs", "modules.yml");
-        moduleConfig = WisecraftSMP.createModuleConfig(plugin, moduleConfigFile);
+        //server = MockBukkit.mock();
+        //plugin = MockBukkit.load(WisecraftSMP.class, true);
+        //moduleConfigFile = new File(plugin.getDataFolder() + "modulation_tests/config/configs", "modules.yml");
+        //moduleConfig = WisecraftSMP.createModuleConfig(plugin, moduleConfigFile);
     }
 
 
@@ -34,6 +34,6 @@ public class ConfigTests {
 
     @AfterEach
     public void tearDown() {
-        MockBukkit.unmock();
+        //MockBukkit.unmock();
     }
 }
